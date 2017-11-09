@@ -21,7 +21,7 @@ namespace :wax do
         @layout = coll['layout'].to_s
 
         if @src.empty? || @key.empty? || @dir.empty? || @layout.empty?
-    				raise "wax:pagemaster :: your collection is missing one or more of the required parameters (source, key, directory, layout) in config. please fix and rerun."
+          raise "wax:pagemaster :: your collection is missing one or more of the required parameters (source, key, directory, layout) in config. please fix and rerun."
     		else
           @ext = File.extname(@src).strip.downcase[1..-1]
           unless @ext == 'yaml' || @ext == 'csv'
