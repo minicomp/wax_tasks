@@ -15,7 +15,7 @@ collections:
     key: id
     directory: test
     layout: test-page
-  test_collection:
+  test_collection2:
     output: true
     source: test_collection2.yaml
     key: id
