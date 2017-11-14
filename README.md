@@ -1,4 +1,4 @@
-# wax-tasks
+# wax_tasks
 various rake tasks for the jekyll-wax project
 
 #### ex 1: generate md pages from csv or yaml files:
