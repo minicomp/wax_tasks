@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary     = "Rake tasks for DH Static Sites."
   s.description = "Rake tasks for DH Static Sites, as part of the Jekyll-Wax project."
 
-  s.files = Dir['Rakefile', 'README*', 'Gemfile', 'lib/**/*']
+  s.files = Dir['README*', 'Gemfile', 'lib/**/*']
 
   s.add_dependency "rake", "~> 12.2"
 end
