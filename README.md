@@ -20,14 +20,6 @@ various rake tasks for the jekyll-wax project
 ```
 2. create a `Rakefile` in the root of your jekyll site and add the following to load the wax_tasks:
 ```
-begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
-end
-
-require 'bundler/gem_tasks'
-
 spec = Gem::Specification.find_by_name 'wax_tasks'
 Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each {|r| load r}
 ```
