@@ -1,5 +1,6 @@
 require 'find'
 require 'iiif_s3'
+require 'tqdm'
 
 namespace :wax do
   task :iiif => :config do
@@ -8,7 +9,7 @@ namespace :wax do
     imagedata = []
     id_counter = 0
 
-    @argv.each do |a|
+    @argv.with_progress.each do |a|
       @dirpath = './_iiif/' + a
       unless Dir.exist?(@dirpath)
         raise ">> wax:iiif :: " + @dirpath + " directory does not exist. Exiting."
