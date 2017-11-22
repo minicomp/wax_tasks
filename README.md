@@ -28,6 +28,7 @@ Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each {|r| load r}
 ```
 3. configure the collection information in your site's `_config.yaml`:
 ```yaml
+# Collection params (for wax:pagemaster and wax:iiif)
 collections:
   paintings:
     output: true
@@ -42,7 +43,23 @@ collections:
     directory: artists
     layout: author-info-page
 ```
-
+4. If generating a Lunrjs search index, add Lunr Params to `_confid.yaml`:
+```bash
+# Lunr Search Params (for wax:lunr)
+lunr:
+  content: true
+  meta:
+    - dir: "_projects"
+      fields:
+        - title
+        - era
+        - tags
+    - dir: "_posts"
+      fields:
+        - title
+        - category
+        - tags
+```
 ### to use:
 ```bash
 $ bundle exec rake wax:<task_name> <options>
