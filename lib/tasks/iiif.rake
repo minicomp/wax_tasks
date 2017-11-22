@@ -1,9 +1,11 @@
-require 'find'
-require 'iiif_s3'
-require 'tqdm'
-
 namespace :wax do
   task :iiif => :config do
+    begin
+      require 'iiif_s3'
+    rescue LoadError
+      puts "This task requires the iiif_s3 gem. Please add to your Gemfile and re-run."
+      next
+    end
 
     FileUtils::mkdir_p 'tiles'
     imagedata = []
