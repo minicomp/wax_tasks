@@ -56,5 +56,5 @@ $ bundle exec rake wax:iiif paintings
 ```
 #### ex 3: publish `_site` to `gh-pages` branch
 ```bash
-$ bundle exec rake wax:gh-publish
+$ bundle exec rake wax:gitpub
 ```
