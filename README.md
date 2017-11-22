@@ -1,5 +1,6 @@
-# wax_tasks
-various rake tasks for the jekyll-wax project
+# wax_tasks [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks)
+
+## [minicomp](https://github.com/minicomp) rake tasks for jekyll [wax](https://minicomp.github.io/wax)
 
 ### current tasks:
 
