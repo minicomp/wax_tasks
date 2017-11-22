@@ -7,7 +7,7 @@ various rake tasks for the jekyll-wax project
 
 `wax:iiif`: generates iiif image tiles and associated json for jekyll collections from local jpgs. (uses [`iiif_s3`](https://github.com/cmoa/iiif_s3) gem).
 
-`wax:gh-publish`: builds your jekyll site and overwrites the `gh-pages` branch to publish your compiled `_site` directory.
+`wax:gitpub`: builds your jekyll site and overwrites the `gh-pages` branch to publish your compiled `_site` directory.
 
 ### tasks in progress:
 
