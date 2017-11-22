@@ -13,5 +13,4 @@ Gem::Specification.new do |s|
   s.files = Dir['README*', 'Gemfile', 'lib/**/*']
 
   s.add_dependency "rake", "~> 12.2"
-  s.add_dependency "tqdm", "~> 0.3.0"
 end
