@@ -43,7 +43,7 @@ collections:
     directory: artists
     layout: author-info-page
 ```
-4. If generating a Lunrjs search index, add Lunr Params to `_confid.yaml`:
+4. If generating a Lunrjs search index, add Lunr Params to `_config.yaml`:
 ```bash
 # Lunr Search Params (for wax:lunr)
 lunr:
