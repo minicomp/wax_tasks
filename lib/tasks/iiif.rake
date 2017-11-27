@@ -11,10 +11,10 @@ namespace :wax do
     imagedata = []
     id_counter = 0
 
-    @argv.with_progress.each do |a|
+    @argv.each do |a|
       @dirpath = './_iiif/' + a
       unless Dir.exist?(@dirpath)
-        raise ">> wax:iiif :: " + @dirpath + " directory does not exist. Exiting."
+        raise "wax:iiif :: " + @dirpath + " directory does not exist. Exiting."
       else
         id_counter = id_counter + 1
         imagefiles = Dir[@dirpath + "/*"].sort!
@@ -25,6 +25,7 @@ namespace :wax do
           opts = {}
 
           opts[:id] = basename
+          opts[:verbose] = true
           opts[:is_document] = true
           opts[:path] = imagefile
           opts[:label] = @config["title"] + " - " + a + " - " + basename

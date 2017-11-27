@@ -5,7 +5,8 @@ namespace :wax do
     Jekyll::Site.new(Jekyll.configuration({
       "source"      => ".",
       "destination" => _site,
-      "config" => "_config.yml"
+      "config" => "_config.yml",
+      "verbose" => true
     })).process
 
     origin = `git config --get remote.origin.url`

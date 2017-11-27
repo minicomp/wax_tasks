@@ -5,12 +5,12 @@ namespace :wax do
   task :pagemaster => :config do
     @collections = @config['collections']
     @argv.each do |a|
-      coll = @collections[a]
-      unless coll.nil?
-        @src = coll['source'].to_s
-        @key = coll['key'].to_s
-        @dir = coll['directory'].to_s
-        @layout = coll['layout'].to_s
+      collection = @collections[a]
+      unless collection.nil?
+        @src = collection['source'].to_s
+        @key = collection['key'].to_s
+        @dir = collection['directory'].to_s
+        @layout = collection['layout'].to_s
 
         if @src.empty? || @key.empty? || @dir.empty? || @layout.empty?
           raise "wax:pagemaster :: your collection is missing one or more of the required parameters (source, key, directory, layout) in config. please fix and rerun."
@@ -22,7 +22,7 @@ namespace :wax do
 
     				@targetdir = "_" + @dir.downcase.gsub(/[^\0-9a-z]/, '').to_s
     				FileUtils::mkdir_p @targetdir
-    				puts ">> wax:pagemaster :: made directory " + @targetdir + " in root."
+    				puts "wax:pagemaster :: made directory " + @targetdir + " in root."
 
       			def ingest(src) # takes + opens src file
       				begin
