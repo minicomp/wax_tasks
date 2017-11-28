@@ -12,5 +12,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['README*', 'Gemfile', 'lib/**/*']
 
-  s.add_dependency "rake", "~> 12.2"
+  s.add_runtime_dependency "rake"
+  s.add_runtime_dependency "iiif_s3", '~> 0.1'
+  s.add_runtime_dependency"bundler", "~> 1"
 end
