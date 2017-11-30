@@ -1,4 +1,4 @@
-# wax_tasks [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks)
+# wax_tasks [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks)
 
 ## [minicomp](https://github.com/minicomp) rake tasks for jekyll [wax](https://minicomp.github.io/wax)
 
@@ -19,7 +19,7 @@
 ### set-up:
 1. add the `wax_tasks` gem to your jekyll site's `Gemfile` and install with `bundle install`:
 ```
- gem 'wax_tasks', :git => 'https://github.com/mnyrop/wax_tasks.git'
+ gem 'wax_tasks'
 ```
 2. create a `Rakefile` in the root of your jekyll site and add the following to load the wax_tasks:
 ```
