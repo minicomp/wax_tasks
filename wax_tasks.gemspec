@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version     = "1.0.0.pre"
   s.authors     = ["Marii Nyröp"]
   s.email       = ["m.nyrop@columbia.edu"]
-  s.license  = 'MIT'
+  s.license     = "MIT"
   s.homepage    = "https://github.com/mnyrop/wax_tasks"
   s.summary     = "Rake tasks for minimal exhibitions."
   s.description = "Rake tasks for minimal exhibition sites with Jekyll. See: minicomp/wax."
