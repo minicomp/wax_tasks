@@ -22,11 +22,9 @@ namespace :wax do
 
     				@targetdir = "_" + @dir.downcase.gsub(/[^\0-9a-z]/, '').to_s
     				FileUtils::mkdir_p @targetdir
-    				puts "wax:pagemaster :: made directory " + @targetdir + " in root."
 
       			def ingest(src) # takes + opens src file
       				begin
-      					puts ">> wax:pagemaster :: loaded " + src + "."
                 if @ext == 'yaml'
                   return YAML.load_file('_data/' + src)
                 else
@@ -78,9 +76,9 @@ namespace :wax do
       			end
 
       			# log outcomes
-      			puts ">> wax:pagemaster :: " + valid.to_s + " pages were generated from " + @src + " to " + @targetdir + " directory."
-      			puts ">> wax:pagemaster :: " + nonunique.to_s + " items were skipped because of non-unique names."
-      			puts ">> wax:pagemaster :: " + untitled.to_s + " items were skipped because of missing titles."
+      			puts valid.to_s + " pages were generated from " + @src + " to " + @targetdir + " directory."
+      			puts nonunique.to_s + " items were skipped because of non-unique names."
+      			puts untitled.to_s + " items were skipped because of missing titles."
           end
         end
       end
