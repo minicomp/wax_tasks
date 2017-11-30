@@ -3,7 +3,7 @@ namespace :wax do
     begin
       require 'iiif_s3'
     rescue LoadError
-      puts "This task requires the iiif_s3 gem. Please add to your Gemfile and re-run."
+      puts "This task requires the iiif_s3 gem. Please add to your Gemfile and re-run. Note that you will also need ImageMagick Installed."
       next
     end
 
