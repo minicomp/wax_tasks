@@ -3,12 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "wax_tasks"
-  s.version     = "0.0.1"
-  s.authors     = ["marii nyröp"]
+  s.version     = "1.0.0.pre"
+  s.authors     = ["Marii Nyröp"]
   s.email       = ["m.nyrop@columbia.edu"]
+  s.license  = 'MIT'
   s.homepage    = "https://github.com/mnyrop/wax_tasks"
-  s.summary     = "Rake tasks for DH Static Sites."
-  s.description = "Rake tasks for DH Static Sites, as part of the Jekyll-Wax project."
+  s.summary     = "Rake tasks for minimal exhibitions."
+  s.description = "Rake tasks for minimal exhibition sites with Jekyll. See: minicomp/wax."
 
   s.files = Dir['README*', 'Gemfile', 'lib/**/*']
 
