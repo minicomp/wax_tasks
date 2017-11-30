@@ -21,12 +21,10 @@ namespace :wax do
         counter = 1
         imagefiles.each do |imagefile|
           basename = File.basename(imagefile, ".*")
-          puts ">> wax:iiif :: converting " + basename
           opts = {}
 
           opts[:id] = basename
-          opts[:verbose] = true
-          opts[:is_document] = true
+          opts[:is_document] = false
           opts[:path] = imagefile
           opts[:label] = @config["title"] + " - " + a + " - " + basename
 
@@ -38,7 +36,9 @@ namespace :wax do
     end
     builder = IiifS3::Builder.new({
       :base_url => @config["baseurl"] + "/tiles",
-      :output_dir => "./tiles"
+      :output_dir => "./tiles",
+      :tile_scale_factors => [1,2],
+      :verbose => true
     })
     builder.load(imagedata)
     builder.process_data()
