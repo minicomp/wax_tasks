@@ -15,5 +15,4 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "rake","~> 12"
   s.add_runtime_dependency "iiif_s3", "~> 0.1"
-  s.add_runtime_dependency "bundler", "~> 1"
 end
