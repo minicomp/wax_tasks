@@ -19,7 +19,7 @@ namespace :wax do
     jq_string = "\n$(document).ready(function() {\n$('input#search').on('keyup', function () {\nvar resultdiv = $('#results');\nvar query = $(this).val();\nvar result = index.search(query, {expand: true});\nresultdiv.empty();\nfor (var item in result) {\nvar ref = result[item].ref;\nvar searchitem = '<div class=\"result\"><b><a href=\"' + store[ref].link + '\" class=\"post-title\">' + store[ref].title + '</a></b><br><p>' "
 
 
-    if @meta.to_s.empty? || @name.empty?
+    if @meta.to_s.empty?
       raise "wax:lunr :: lunr index parameters are not properly cofigured. aborting."
     else
       @meta.each { |group| total_fields += group['fields'] }
@@ -58,11 +58,10 @@ namespace :wax do
           end
         end
 
-        pagepath = "js/" + @name + ".js"
         store_string = store_string.chomp(", ") + "];"
         jq_string = jq_string.chomp(" / '") + "</p></div>';\nresultdiv.append(searchitem);}\n});\n});"
 
-        File.open(pagepath, 'w') { |file| file.write( front_matter + index_string + store_string + jq_string ) }
+        File.open("js/lunr-index.js", 'w') { |file| file.write( front_matter + index_string + store_string + jq_string ) }
         puts "wax:lunr :: writing lunr index to " + pagepath
       end
     end
