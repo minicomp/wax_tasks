@@ -51,11 +51,13 @@ lunr:
   name: lunr-index
   meta:
     - dir: "_projects"
+      permalink: "/projects"
       fields:
         - title
         - era
         - tags
     - dir: "_posts"
+      permalink: "posts"
       fields:
         - title
         - category
