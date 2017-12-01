@@ -48,6 +48,7 @@ collections:
 # Lunr Search Params (for wax:lunr)
 lunr:
   content: true
+  name: lunr-index
   meta:
     - dir: "_projects"
       fields:
