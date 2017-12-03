@@ -6,7 +6,6 @@ namespace :wax do
       "source"      => ".",
       "destination" => _site,
       "config" => "_config.yml",
-      "baseurl" => @config["gh-baseurl"],
       "verbose" => true
     })).process
 
