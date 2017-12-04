@@ -2,10 +2,12 @@ require 'jekyll'
 
 namespace :wax do
   task :gitpub => :config do
+    @baseurl = @config['gh-baseurl']
     Jekyll::Site.new(Jekyll.configuration({
       "source"      => ".",
-      "destination" => _site,
+      "destination" => "_site",
       "config" => "_config.yml",
+      "baseurl" => @baseurl,
       "verbose" => true
     })).process
 
