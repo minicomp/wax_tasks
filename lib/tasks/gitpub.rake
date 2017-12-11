@@ -1,4 +1,5 @@
 require 'jekyll'
+require 'tmpdir'
 
 namespace :wax do
   task :gitpub => :config do
