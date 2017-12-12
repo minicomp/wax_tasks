@@ -38,10 +38,10 @@ namespace :wax do
       			def uniqify(hashes, key) # takes opened src file as hash array
       				occurences = {} # hash list of slug names and # of occurences
       				hashes.each do |item|
-      					if item[key].nil?
-      						raise "wax:pagemaster :: source file has at least one missing value for key='" + key + "'. cannot generate."
+      					if item['item_id'].nil?
+      						raise "wax:pagemaster :: source file has at least one missing value for item_id. cannot generate."
       					end
-      					new_name = item[key].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '').gsub(/-+/, '-') # gsub for slug
+      					new_name = item['item_id'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '').gsub(/-+/, '-') # gsub for slug
       					if occurences.has_key? new_name
       						occurences[new_name]+=1
       						safe_slug = new_name + "-" + occurences[new_name].to_s
