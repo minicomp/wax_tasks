@@ -9,6 +9,7 @@ namespace :wax do
       "destination" => "_site",
       "config" => "_config.yml",
       "baseurl" => @baseurl,
+      "incremental" => true,
       "verbose" => true
     })).process
 
