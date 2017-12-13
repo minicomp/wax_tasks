@@ -39,15 +39,15 @@ namespace :wax do
           @perma = collection['permalink']
           @fields = collection['fields']
 
-          Dir.glob(@dir+"/*.md").each do |md|
+          Dir.glob(@dir+"/*").each do |md|
             begin
               @yaml = YAML.load_file(md)
               @hash = Hash.new
               @hash['lunr_id'] = count
-              @hash['link'] = "{{ site.baseurl }}" + @perma + "/" + @yaml['id']
+              @hash['link'] = "{{ site.baseurl }}" + @yaml['permalink']
               @fields.each { |f| @hash[f] = @yaml[f].to_s }
               if @config['lunr']['content']
-                @hash['content'] = File.read(md).gsub(/\A---(.|\n)*?---/, "").to_s
+                @hash['content'] = File.read(md).gsub(/\A---(.|\n)*?---/, "").gsub(/<\/?[^>]*>/, "").gsub("\\n", "").gsub('"',"'").to_s
               end
               index_string += "\nindex.addDoc(" + @hash.to_json + "); "
               store_string += "\n" + @hash.to_json + ", "
@@ -61,8 +61,9 @@ namespace :wax do
         store_string = store_string.chomp(", ") + "];"
         jq_string = jq_string.chomp(" / '") + "</p></div>';\nresultdiv.append(searchitem);}\n});\n});"
 
-        File.open("js/lunr-index.js", 'w') { |file| file.write( front_matter + index_string + store_string + jq_string ) }
-        puts "wax:lunr :: writing lunr index to " + pagepath
+        Dir.mkdir('js') unless File.exists?('js')
+        File.open("js/lunr-index.js", 'w') { |file| file.write( front_matter + index_string + store_string ) }
+        puts "wax:lunr :: writing lunr index to " + "js/lunr-index.js"
       end
     end
   end
