@@ -7,6 +7,7 @@ namespace :wax do
       "source"      => ".",
       "destination" => "_site",
       "config" => "_config.yml",
+      "incremental" => true,
       "verbose" => true
     })).process
 
