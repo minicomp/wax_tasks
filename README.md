@@ -33,13 +33,11 @@ collections:
   paintings:
     output: true
     source: paintings-metadata.csv
-    key: id
     directory: paintings
     layout: painting-page
   artists:
     output: true
     source: artist-data.yaml
-    key: id
     directory: artists
     layout: author-info-page
 ```
