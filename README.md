@@ -8,13 +8,14 @@
 
 `wax:iiif`: generates iiif image tiles and associated json for jekyll collections from local jpgs. (uses [`iiif_s3`](https://github.com/cmoa/iiif_s3) gem).
 
-`wax:gitpub`: builds your jekyll site and overwrites the `gh-pages` branch to publish your compiled `_site` directory.
+`wax:gitbranch`: builds your jekyll site and overwrites the `gh-pages` branch to publish your compiled `_site` directory with `gh-baseurl`.
 
-### tasks in progress:
+`wax:s3branch`: builds your jekyll site and overwrites the `s3` branch to publish your compiled `_site` directory with `baseurl`.
 
-`wax:lunr`: genrates a lunr search index for jekyll collections.
+`wax:lunr` builds a Lunrjs search index for your site.
 
-`wax:ci`: runs acceptance tests on your site (using [`htmlproofer`](https://github.com/gjtorikian/html-proofer), lunr index tests, etc.)
+`wax:test` runs htmlproofer and, if there is an .rspec file, runs your rspec tests.
+
 
 ### set-up:
 1. add the `wax_tasks` gem to your jekyll site's `Gemfile` and install with `bundle install`:
@@ -41,7 +42,7 @@ collections:
     directory: artists
     layout: author-info-page
 ```
-4. If generating a Lunrjs search index, add Lunr Params to `_config.yaml`. (NOTE: your data MUST have a unique `id` field and a `title` field to display in the search results. Permalinks to items MUST follow the pattern `permalink`/`id`).
+4. If generating a Lunrjs search index, add Lunr Params to `_config.yaml`. (NOTE: your data MUST have a unique `pid` field and a `title` field to display in the search results.
 ```bash
 # Lunr Search Params (for wax:lunr)
 lunr:
@@ -64,7 +65,7 @@ lunr:
 ```bash
 $ bundle exec rake wax:<task_name> <options>
 ```
-#### ex 1: generate md pages for `paintings` and `artists` from data files 
+#### ex 1: generate md pages for `paintings` and `artists` from data files
 ```bash
 $ bundle exec rake wax:pagemaster paintings artists
 ```
@@ -74,5 +75,17 @@ $ bundle exec rake wax:iiif paintings
 ```
 #### ex 3: publish `_site` to `gh-pages` branch
 ```bash
-$ bundle exec rake wax:gitpub
+$ bundle exec rake wax:gitbranch
+```
+#### ex 4: publish `_site` to `s3` branch
+```bash
+$ bundle exec rake wax:s3branch
+```
+#### ex 5: (re)generate lunrjs search index
+```bash
+$ bundle exec rake wax:lunr
+```
+#### ex 6: run CI test(s)
+```bash
+$ bundle exec rake wax:test
 ```

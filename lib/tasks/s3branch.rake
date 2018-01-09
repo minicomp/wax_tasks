@@ -1,8 +1,15 @@
+abort('Please run this using `bundle exec rake`') unless ENV["BUNDLE_BIN_PATH"]
+
 require 'jekyll'
 require 'tmpdir'
+require 'fileutils'
 
 namespace :wax do
+  desc 'build site with baseurl and publish to s3 branch'
   task :s3branch do
+
+    FileUtils.rm_rf('_site')
+
     Jekyll::Site.new(Jekyll.configuration({
       "source"      => ".",
       "destination" => "_site",
@@ -24,4 +31,3 @@ namespace :wax do
     end
   end
 end
-

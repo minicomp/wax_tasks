@@ -1,9 +1,16 @@
+abort('Please run this using `bundle exec rake`') unless ENV["BUNDLE_BIN_PATH"]
+
 require 'jekyll'
 require 'tmpdir'
+require 'fileutils'
 
 namespace :wax do
-  task :gitpub => :config do
+  desc 'build site with gh-baseurl and publish to gh-pages branch'
+  task :ghbranch => :config do
+    FileUtils.rm_rf('_site')
+
     @baseurl = @config['gh-baseurl']
+
     Jekyll::Site.new(Jekyll.configuration({
       "source"      => ".",
       "destination" => "_site",

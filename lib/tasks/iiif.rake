@@ -1,3 +1,5 @@
+abort('Please run this using `bundle exec rake`') unless ENV["BUNDLE_BIN_PATH"]
+
 namespace :wax do
   task :iiif => :config do
     begin

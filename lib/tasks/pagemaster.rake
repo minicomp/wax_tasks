@@ -1,7 +1,10 @@
+# NOTE: DATA REQUIRES A UNIQUE FIELD 'pid'
+
 require 'yaml'
 require 'csv'
 
 namespace :wax do
+  desc 'generate collection md pages from yaml or csv data source'
   task :pagemaster => :config do
     def slug(s)
       return s.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '').to_s

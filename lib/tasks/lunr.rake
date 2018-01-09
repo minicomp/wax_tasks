@@ -1,10 +1,10 @@
-# NOTE: DATA REQUIRES A UNIQUE FIELD 'id' and a 'title' field
+# NOTE: DATA REQUIRES A UNIQUE FIELD 'pid' and a 'title' field
 
 require 'json'
 require 'yaml'
 
 namespace :wax do
-
+  desc 'build lunr search index'
   task :lunr => :config do
 
     @meta = @config['lunr']['meta']
