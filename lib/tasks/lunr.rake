@@ -20,11 +20,13 @@ namespace :wax do
 
 
     if meta.to_s.empty?
-      raise "Lunr index parameters are not properly cofigured.".magenta
+      puts "Lunr index parameters are not properly cofigured.".magenta
+      exit 1
     else
       meta.each { |group| total_fields += group['fields'] }
       if total_fields.uniq.empty?
-        raise "Fields are not properly configured.".magenta
+        puts "Fields are not properly configured.".magenta
+        exit 1
       else
         total_fields.uniq.each do |f|
           index_string += "\nthis.addField(" + "'" + f + "'" + "); "
@@ -48,15 +50,16 @@ namespace :wax do
               hash = Hash.new
               hash['lunr_id'] = count
               hash['link'] = "{{ site.baseurl }}" + yaml['permalink']
-              fields.each { |f| hash[f] = yaml[f].to_s }
+              fields.each { |f| hash[f] = clean(yaml[f].to_s) }
               if $config['lunr']['content']
-                hash['content'] = File.read(md).gsub(/\A---(.|\n)*?---/, "").gsub(/<\/?[^>]*>/, "").gsub("\\n", "").gsub('"',"'").to_s
+                hash['content'] = clean(File.read(md))
               end
               index_string += "\nindex.addDoc(" + hash.to_json + "); "
               store_string += "\n" + hash.to_json + ", "
               count += 1
             rescue
-              raise ("Cannot load data from markdown pages in " + dir + ".").magenta
+              puts ("Cannot load data from markdown pages in " + dir + ".").magenta
+              exit 1
             end
           end
         end
@@ -70,4 +73,13 @@ namespace :wax do
       end
     end
   end
+end
+
+def clean(str)
+  str = str.gsub(/\A---(.|\n)*?---/, "") # remove yaml front matter
+  str = str.gsub(/{%(.*)%}/, "") # remove functional liquid
+  str = str.gsub(/<\/?[^>]*>/, "") # remove html
+  str = str.gsub("\\n", "").gsub(/\s+/, ' ') # remove newlines and extra space
+  str = str.gsub('"',"'").to_s # replace double quotes with single
+  return str
 end

@@ -9,12 +9,14 @@ namespace :wax do
     id_counter = 0
 
     if $argv.empty?
-      raise "You must specify one or more collections after 'bundle exec rake wax:iiif' to generate.".magenta
+      puts "You must specify one or more collections after 'bundle exec rake wax:iiif' to generate.".magenta
+      exit 1
     else
       $argv.each do |a|
         dirpath = './_iiif/' + a
         unless Dir.exist?(dirpath)
-          raise ("Source path '" + dirpath + "' does not exist. Exiting.").magenta
+          puts ("Source path '" + dirpath + "' does not exist. Exiting.").magenta
+          exit 1
         else
           id_counter+=1
           imagefiles = Dir[dirpath + "/*"].sort!
@@ -31,7 +33,8 @@ namespace :wax do
               counter = counter + 1
               imagedata.push(i)
             rescue
-              raise ("Failed to convert image " + imagefile + ".").magenta
+              puts ("Failed to convert image " + imagefile + ".").magenta
+              exit 1
             end
           end
         end
