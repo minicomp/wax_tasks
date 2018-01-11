@@ -1,21 +1,21 @@
-abort('Please run this using `bundle exec rake`') unless ENV["BUNDLE_BIN_PATH"]
-
 require 'jekyll'
 require 'tmpdir'
 require 'fileutils'
+require 'iiif_s3'
 
 namespace :wax do
   desc 'build site with baseurl and publish to s3 branch'
-  task :s3branch do
-
+  task :s3branch => :config do
     FileUtils.rm_rf('_site')
+    baseurl = $config['baseurl']
 
     Jekyll::Site.new(Jekyll.configuration({
       "source"      => ".",
       "destination" => "_site",
       "config" => "_config.yml",
       "incremental" => true,
-      "verbose" => true
+      "verbose" => true,
+      "baseurl" => baseurl
     })).process
 
     origin = `git config --get remote.origin.url`
