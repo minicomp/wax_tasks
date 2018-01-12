@@ -8,7 +8,6 @@ namespace :wax do
       :check_external_hash => true,
       :allow_hash_href => true,
       :check_html => true,
-      :check_img_http => true,
       :disable_external => true,
       :empty_alt_ignore => true,
       :only_4xx => true,

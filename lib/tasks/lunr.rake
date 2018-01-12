@@ -1,6 +1,5 @@
 require 'json'
 require 'yaml'
-require 'iiif_s3'
 require 'colorized_string'
 
 namespace :wax do

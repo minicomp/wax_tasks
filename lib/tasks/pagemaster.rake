@@ -1,5 +1,3 @@
-# NOTE: DATA REQUIRES A UNIQUE FIELD 'pid'
-
 require 'yaml'
 require 'csv'
 
@@ -21,7 +19,7 @@ namespace :wax do
 
           meta = Hash.new
           meta['src']     = '_data/' + File.basename( collection['source'], ".*" ) + ".csv"
-          meta['layout']  = File.basename( collection['layout'], ".*" ) + ".html"
+          meta['layout']  = File.basename( collection['layout'], ".*" )
           meta['dir']     = collection['directory']
 
           $skipped, $completed = 0,0
@@ -59,15 +57,20 @@ def ingest(src)
 end
 
 def generate_pages(meta, data)
+  if $config['permalink'] == 'pretty'
+    perma_ext = "/"
+  else
+    perma_ext = ".html"
+  end
   data.each do |item|
     begin
       pagename = item['pid']
       pagepath = meta['dir'] + "/" + pagename + ".md"
       if !File.exist?(pagepath)
-        File.open(pagepath, 'w') { |file| file.write( item.to_yaml.to_s + "permalink: /" + meta['dir'] + "/" + pagename + "\n" + "layout: " + meta['layout'] + "\n---" ) }
+        File.open(pagepath, 'w') { |file| file.write( item.to_yaml.to_s + "permalink: /" + meta['dir'] + "/" + pagename + perma_ext + "\n" + "layout: " + meta['layout'] + "\n---" ) }
         $completed+=1
       else
-        # puts pagename + ".md already exits. Skipping."
+        puts pagename + ".md already exits. Skipping."
         $skipped+=1
       end
     rescue
