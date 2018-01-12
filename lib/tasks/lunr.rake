@@ -8,15 +8,15 @@ namespace :wax do
 
     meta = $config['lunr']['meta']
     name = $config['lunr']['name'].to_s
-
     total_fields = []
     count = 0
 
     front_matter = "---\nlayout: null\n---"
-    index_string = "\nvar index = elasticlunr(function () {\nthis.setRef('lunr_id');"
     store_string = "\nvar store = ["
-    jq_string = "\n$(document).ready(function() {\n$('input#search').on('keyup', function () {\nvar resultdiv = $('#results');\nvar query = $(this).val();\nvar result = index.search(query, {expand: true});\nresultdiv.empty();\nfor (var item in result) {\nvar ref = result[item].ref;\nvar searchitem = '<div class=\"result\"><b><a href=\"' + store[ref].link + '\" class=\"post-title\">' + store[ref].title + '</a></b><br><p>' "
-
+    index_string = "\nvar index = new elasticlunr.Index;\nindex.setRef('lunr_id');\nindex.saveDocument(false);"
+    if $config['lunr']['multi-language'].to_s == 'true'
+      index_string += "\nindex.pipeline.remove(elasticlunr.trimmer);" # remove elasticlunr.trimmer if multilanguage is true
+    end
 
     if meta.to_s.empty?
       puts "Lunr index parameters are not properly cofigured.".magenta
@@ -28,12 +28,8 @@ namespace :wax do
         exit 1
       else
         total_fields.uniq.each do |f|
-          index_string += "\nthis.addField(" + "'" + f + "'" + "); "
-          unless f == "title"
-            jq_string += " + store[ref]." + f + " + ' / '"
-          end
+          index_string += "\nindex.addField(" + "'" + f + "'" + "); "
         end
-        index_string += "\nthis.saveDocument(false); });"
 
         meta.each do |collection|
 
@@ -64,7 +60,6 @@ namespace :wax do
         end
 
         store_string = store_string.chomp(", ") + "];"
-        jq_string = jq_string.chomp(" / '") + "</p></div>';\nresultdiv.append(searchitem);}\n});\n});"
 
         Dir.mkdir('js') unless File.exists?('js')
         File.open("js/lunr-index.js", 'w') { |file| file.write( front_matter + index_string + store_string ) }
