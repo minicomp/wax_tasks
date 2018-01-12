@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "wax_tasks"
-  s.version     = "0.0.1.pre"
+  s.version     = "0.0.5"
   s.authors     = ["Marii Nyröp"]
   s.email       = ["m.nyrop@columbia.edu"]
   s.license     = "MIT"
