@@ -1,7 +1,6 @@
 require 'jekyll'
 require 'tmpdir'
 require 'fileutils'
-require 'iiif_s3'
 
 namespace :wax do
   desc 'build site with baseurl and publish to s3 branch'
