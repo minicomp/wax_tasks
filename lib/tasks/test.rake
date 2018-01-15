@@ -1,5 +1,4 @@
 require 'html-proofer'
-require 'iiif_s3'
 
 namespace :wax do
   desc 'run htmlproofer, rspec if exists'
