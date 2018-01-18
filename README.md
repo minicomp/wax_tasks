@@ -2,7 +2,7 @@
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
 
-##### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
+#### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
 
 Looking for a Jekyll theme with `wax_tasks` functionality basked in? Check out [Minicomp/Wax](https://minicomp.github.io/wax/). Want *truly* minimal exhibitions, without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
@@ -59,7 +59,7 @@ Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each {|r| load r}
 After following the installation instructions above, you will have access to the rake tasks in your shell by running `$ bundle exec rake wax:<taskname>` in the root directory of your Jekyll site.
 
 
-### `wax:pagemaster`
+### wax:pagemaster
 
 #### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -87,7 +87,7 @@ collections:
 #### To use
 `$ bundle exec rake wax:pagemaster <collection>`
 
-### `wax:lunr`
+### wax:lunr
 
 #### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -118,7 +118,7 @@ lunr:
 #### To use
 `$ bundle exec rake wax:lunr`
 
-### `wax:iiif`
+### wax:iiif
 
 #### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -133,7 +133,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 #### To use
 `$ bundle exec rake wax:iiif`
 
-### `wax:test`
+### wax:test
 
 #### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
