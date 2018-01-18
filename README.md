@@ -1,35 +1,76 @@
-# wax_tasks [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
-
-## [minicomp](https://github.com/minicomp) rake tasks for jekyll [wax](https://minicomp.github.io/wax)
-
-### current tasks:
-
-`wax:pagemaster`: generates markdown pages for jekyll collections from csv or yaml files. (same as [`pagemaster`](https://github.com/mnyrop/pagemaster) gem).
-
-`wax:iiif`: generates iiif image tiles and associated json for jekyll collections from local jpgs. (uses [`iiif_s3`](https://github.com/cmoa/iiif_s3) gem).
-
-`wax:ghbranch`: builds your jekyll site and overwrites the `gh-pages` branch to publish your compiled `_site` directory with `gh-baseurl`.
-
-`wax:s3branch`: builds your jekyll site and overwrites the `s3` branch to publish your compiled `_site` directory with `baseurl`.
-
-`wax:lunr` builds a Lunrjs search index for your site.
-
-`wax:test` runs htmlproofer and, if there is an .rspec file, runs your rspec tests.
+# wax_tasks
+[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
 
-### set-up:
-1. add the `wax_tasks` gem to your jekyll site's `Gemfile` and install with `bundle install`:
+##### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
+
+
+Looking for a Jekyll theme with `wax_tasks` functionality basked in? Check out [Minicomp/Wax](https://minicomp.github.io/wax/). Want *truly* minimal exhibitions, without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
+
+## Getting Started
+
+### Prerequisites
+
+You'll need `Ruby >= 2.2` with `bundler` and `jekyll` installed. Check your versions with:
+```bash
+$ ruby -v
+  ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-darwin15]
+
+$ jekyll -v
+  jekyll 3.7.0
+
+$ bundler -v
+  Bundler version 1.16.1
 ```
- gem 'wax_tasks'
+
+To use the IIIF task, you will also need to have ImageMagick installed and functional. You can check to see if you have ImageMagick by running:
+```bash
+$ convert -version
+  Version: ImageMagick 6.9.9-20 Q16 x86_64 2017-10-15 http://www.imagemagick.org
+  Copyright: © 1999-2017 ImageMagick Studio LLC
+  License: http://www.imagemagick.org/script/license.php
+  Features: Cipher DPC Modules
+  Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
-2. Create a `Rakefile` in the root of your jekyll site and add the following to load the wax_tasks:
+
+### Installing
+
+Add `wax_tasks` to your Jekyll site's Gemfile:
+
+```ruby
+source 'https://rubygems.org'
+gem 'wax_tasks'
 ```
+
+... and install with bundler:
+
+```bash
+$ bundle install
+```
+
+Create a `Rakefile` with the following:
+```ruby
 spec = Gem::Specification.find_by_name 'wax_tasks'
 Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each {|r| load r}
 ```
-3. Configure the collection information in your site's `_config.yaml`.
+
+## The tasks
+
+After following the installation instructions above, you will have access to the rake tasks in your shell by running `$ bundle exec rake wax:<taskname>` in the root directory of your Jekyll site.
+
+
+### `wax:pagemaster`
+
+#### What it does
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+#### Requirements
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+#### Configuration
+
+Add to `_config.yml`:
 ```yaml
-# Collection params for wax:pagemaster
 collections:
   paintings:
     output: true
@@ -42,9 +83,22 @@ collections:
     directory: artists
     layout: author-info-page
 ```
-4. If generating a Lunrjs search index, add Lunr Params to `_config.yaml`.
-```bash
-# Lunr Search Params (for wax:lunr)
+
+#### To use
+`$ bundle exec rake wax:pagemaster <collection>`
+
+### `wax:lunr`
+
+#### What it does
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+#### Requirements
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+#### Configuration
+
+Add to `_config.yml`:
+```yaml
 lunr:
   content: true
   multi-language: true
@@ -60,31 +114,32 @@ lunr:
         - category
         - tags
 ```
-### to use:
-```bash
-$ bundle exec rake wax:<task_name> <option>
-```
-#### ex 1: generate md pages for `paintings` and `artists` from data files
-```bash
-$ bundle exec rake wax:pagemaster paintings artists
-```
-#### ex 2: generate iiif image tiles and associated json for `paintings` from local jpgs:
-```bash
-$ bundle exec rake wax:iiif paintings
-```
-#### ex 3: publish `_site` to `gh-pages` branch
-```bash
-$ bundle exec rake wax:ghbranch
-```
-#### ex 4: publish `_site` to `s3` branch
-```bash
-$ bundle exec rake wax:s3branch
-```
-#### ex 5: (re)generate lunrjs search index
-```bash
-$ bundle exec rake wax:lunr
-```
-#### ex 6: run CI test(s)
-```bash
-$ bundle exec rake wax:test
-```
+
+#### To use
+`$ bundle exec rake wax:lunr`
+
+### `wax:iiif`
+
+#### What it does
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+#### Requirements
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+
+#### Configuration
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+#### To use
+`$ bundle exec rake wax:iiif`
+
+### `wax:test`
+
+#### What it does
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+#### Requirements
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+#### To use
+`$ bundle exec rake wax:test`
