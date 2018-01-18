@@ -1,11 +1,19 @@
 # wax_tasks
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
-
 #### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
+> Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out [minicomp/wax](https://minicomp.github.io/wax/). Or, do you want *truly* minimal exhibitions without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
 
-Looking for a Jekyll theme with `wax_tasks` functionality basked in? Check out [Minicomp/Wax](https://minicomp.github.io/wax/). Want *truly* minimal exhibitions, without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
+#### Getting Started
+- [prerequisites](#prerequisites)
+- [installing](#installing)
+#### The tasks
+- [wax:pagemaster](#waxpagemaster)
+- [wax:lunr](#waxlunr)
+- [wax:iiif](#waxiiif)
+- [wax:test](#waxtest)
+
 
 ## Getting Started
 
