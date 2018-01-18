@@ -1,5 +1,6 @@
 require 'yaml'
 require 'csv'
+require 'colorized_string'
 
 namespace :wax do
   desc 'generate collection md pages from yaml or csv data source'
@@ -12,7 +13,7 @@ namespace :wax do
       $argv.each do |a|
         collection = collections[a]
         if collection.nil?
-          puts("The collection '" + a + "' does not exist. Check for typos in terminal and _config.yml.").magenta
+          puts "The collection '#{a}' does not exist. Check for typos in terminal and _config.yml.".magenta
           exit 1
         else
           meta = {}
@@ -23,10 +24,10 @@ namespace :wax do
             FileUtils.mkdir_p meta['dir']
             data = ingest(meta['src'])
             info = generate_pages(meta, data)
-            puts('\n' + info[:completed].to_s + ' pages were generated to ' + meta['dir'] + ' directory.').green
-            puts(info[:skipped].to_s + ' pre-existing items were skipped.').green
+            puts "\n#{info[:completed]} pages were generated to #{meta['dir']} directory.".cyan
+            puts "\n#{info[:skipped]} pre-existing items were skipped.".cyan
           else
-            puts('Your collection ' + a + ' is missing one or more of the required parameters (source, directory, layout) in config. please fix and rerun.').magenta
+            puts "\nYour collection '#{a}' is missing one or more of the required parameters (source, directory, layout) in config. please fix and rerun.".magenta
             exit 1
           end
         end
@@ -39,32 +40,33 @@ def ingest(src)
   data = CSV.read(src, :headers => true, :encoding => 'utf-8')
   duplicates = data['pid'].detect { |i| data.count(i) > 1 }.to_s
   unless duplicates.empty?
-    puts('Your collection has the following duplicate ids. please fix and rerun.\n' + duplicates + '\n').magenta
+    puts "\nYour collection has the following duplicate ids. please fix and rerun.\n#{duplicates} \n".magenta
     exit 1
   end
-  puts('\nProcessing ' + src + '....\n').cyan
+  puts "Processing #{src}...."
   return data.map(&:to_hash)
 rescue StandardError
-  puts('Cannot load ' + src + '. check for typos and rebuild.').magenta
+  puts "Cannot load #{src}. check for typos and rebuild.".magenta
   exit 1
 end
 
 def generate_pages(meta, data)
-  $config['permalink'] == 'pretty' ? '/' : '.html'
+  perma_ext = '.html'
+  perma_ext = '/' if $config['permalink'] == 'pretty'
+  info = { :completed => 0, :skipped => 0 }
   data.each do |item|
     pagename = item['pid']
     pagepath = meta['dir'] + '/' + pagename + '.md'
-    info = { :completed => 0, :skipped => 0 }
     if !File.exist?(pagepath)
-      File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + 'permalink: /' + meta['dir'] + '/' + pagename + perma_ext + '\n' + 'layout: ' + meta['layout'] + '\n---') }
+      File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + 'permalink: /' + meta['dir'] + '/' + pagename + perma_ext + "\n" + 'layout: ' + meta['layout'] + "\n---") }
       info[:completed] += 1
     else
-      puts(pagename + '.md already exits. Skipping.')
+      puts "#{pagename}.md already exits. Skipping."
       info[:skipped] += 1
     end
   end
   return info
-rescue StandardError
-  puts(info[:completed].to_s + " pages were generated before failure, most likely a record is missing a valid 'pid' value.").magenta
+rescue standardError
+  puts "#{info[:completed]} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
   exit 1
 end

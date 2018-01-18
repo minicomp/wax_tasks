@@ -8,26 +8,26 @@ namespace :wax do
     meta = $config['lunr']['meta']
     total_fields = []
     count = 0
-    front_matter = '---\nlayout: null\n---'
-    store_string = '\nvar store = ['
-    index_string = '\nvar index = new elasticlunr.Index;\nindex.setRef(\'lunr_id\');\nindex.saveDocument(false);'
+    front_matter = "---\nlayout: null\n---"
+    store_string = "\nvar store = ["
+    index_string = "\nvar index = new elasticlunr.Index;\nindex.setRef('lunr_id');\nindex.saveDocument(false);"
     if $config['lunr']['multi-language'].to_s == 'true'
-      index_string += '\nindex.pipeline.remove(elasticlunr.trimmer);' # remove elasticlunr.trimmer if multilanguage is true
+      index_string += "\nindex.pipeline.remove(elasticlunr.trimmer);" # remove elasticlunr.trimmer if multilanguage is true
     end
     if meta.to_s.empty?
-      puts('Lunr index parameters are not properly cofigured.').magenta
+      puts "Lunr index parameters are not properly cofigured.".magenta
       exit 1
     else
       meta.each { |group| total_fields += group['fields'] }
       if total_fields.uniq.empty?
-        puts('Fields are not properly configured.').magenta
+        puts "Fields are not properly configured.".magenta
         exit 1
       else
-        total_fields.uniq.each { |f| index_string += '\nindex.addField(' + '\'' + f + '\'' + '); ' }
+        total_fields.uniq.each { |f| index_string += "\nindex.addField(" + "'" + f + "'" + "); " }
         meta.each do |collection|
           dir = collection['dir']
           fields = collection['fields']
-          puts('Loading pages from ' + dir).cyan
+          puts "Loading pages from #{dir}".cyan
           Dir.glob(dir + '/*').each do |md|
             begin
               yaml = YAML.load_file(md)
@@ -38,11 +38,11 @@ namespace :wax do
               if $config['lunr']['content']
                 hash['content'] = clean(File.read(md))
               end
-              index_string += '\nindex.addDoc(' + hash.to_json + '); '
-              store_string += '\n' + hash.to_json + ', '
+              index_string += "\nindex.addDoc(" + hash.to_json + "); "
+              store_string += "\n" + hash.to_json + ", "
               count += 1
             rescue StandardError
-              puts('Cannot load data from markdown pages in ' + dir + '.').magenta
+              puts "Cannot load data from markdown pages in #{dir}.".magenta
               exit 1
             end
           end
@@ -50,7 +50,7 @@ namespace :wax do
         store_string = store_string.chomp(', ') + '];'
         Dir.mkdir('js') unless File.exist?('js')
         File.open('js/lunr-index.js', 'w') { |file| file.write(front_matter + index_string + store_string) }
-        puts('Writing lunr index to ' + 'js/lunr-index.js').green
+        puts "Writing lunr index to js/lunr-index.js".cyan
       end
     end
   end
