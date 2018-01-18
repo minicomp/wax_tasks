@@ -49,12 +49,12 @@ lunr:
   content: true
   multi-language: true
   meta:
-    - dir: "_projects"
+    - dir: projects
       fields:
         - title
         - era
         - tags
-    - dir: "_posts"
+    - dir: _posts
       fields:
         - title
         - category
