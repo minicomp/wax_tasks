@@ -5,6 +5,9 @@
 
 > Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out [minicomp/wax](https://minicomp.github.io/wax/). Or, do you want *truly* minimal exhibitions without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
 
+<br>
+<img src="https://github.com/mnyrop/wax_tasks/blob/master/wax_screen.gif"/>
+
 #### Getting Started
 - [prerequisites](#prerequisites)
 - [installing](#installing)
