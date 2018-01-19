@@ -19,7 +19,7 @@ Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out 
 - [wax:test](#waxtest)
 
 #### To Do
-- [v1.0](#to-do)
+- [v1.0](#1-0-release)
 
 
 # Getting Started
