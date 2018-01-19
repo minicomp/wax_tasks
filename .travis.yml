@@ -3,6 +3,8 @@ rvm:
   - 2.2
   - 2.3
   - 2.4
+before_install:
+  - apt-get install imagemagick
 script:
   - bundle exec rubocop
   - bundle exec rspec
