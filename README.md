@@ -9,8 +9,8 @@ Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out 
 <img src="https://github.com/mnyrop/wax_tasks/blob/master/wax_screen.gif"/>
 
 #### Getting Started
-- [prerequisites](#prerequisites)
-- [installing](#installing)
+- [Prerequisites](#prerequisites)
+- [Installing](#installing)
 #### The tasks
 - [wax:pagemaster](#waxpagemaster)
 - [wax:lunr](#waxlunr)
@@ -154,3 +154,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 #### To use
 `$ bundle exec rake wax:test`
+
+## To do (for v1.0)
+
+- [ ] `content: true/false` on collection level (instead of index level) for `wax:lunr` task. 
+- [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task. 
+- [ ] write spec for `wax:iiif` on sample HQ .jpgs.
