@@ -18,9 +18,9 @@ Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out 
 - [wax:test](#waxtest)
 
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 
 You'll need `Ruby >= 2.2` with `bundler` and `jekyll` installed. Check your versions with:
 ```bash
@@ -44,7 +44,7 @@ $ convert -version
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
 
-### Installing
+## Installing
 
 Add `wax_tasks` to your Jekyll site's Gemfile:
 
@@ -65,17 +65,17 @@ spec = Gem::Specification.find_by_name 'wax_tasks'
 Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each {|r| load r}
 ```
 
-## The tasks
+# The tasks
 
 After following the installation instructions above, you will have access to the rake tasks in your shell by running `$ bundle exec rake wax:<taskname>` in the root directory of your Jekyll site.
 
 
-### wax:pagemaster
+## wax:pagemaster
 
-#### What it does
+### What it does
 Takes a CSV file of metadata and generates a Markdown page for each record to a specified directory and using a specified layout. If a Markdown page already exists, pagemaster will skip over it and not overwrite the data. (e.g. to regenrate pages, delete them first.)
 
-#### Requirements
+### Requirements
 One CSV file of metadata per collection. Each file MUST have a column called `pid` of persistent, unique identifiers for the records, which CANNOT have spaces or special characters since they will be used to name the pages. Each file MUST have a column called `title`, which will be used for the Lunr search results display. Column names CANNOT have spaces or special characters. Please use camel_case format, e.g. `current_primary_location` instead of `current / primary location`.
 
 **Note:** Some fields are used by Jekyll for specific tasks, and should not be used as metadata headers (e.g. `name`,`id`, and `date`). If you need to use these terms to name your columns, prepend them with an underscore: `_date`.
@@ -91,7 +91,7 @@ One CSV file of metadata per collection. Each file MUST have a column called `pi
 
 
 
-#### Configuration
+### Configuration
 
 Put your metadata file(s) in the `_data` directory, and add the info to `collections` in `_config.yml`:
 ```yaml
@@ -102,20 +102,20 @@ collections:
     layout: iiif-image-page
 ```
 
-#### To use
+### To use
 `$ bundle exec rake wax:pagemaster <collection>`
 
 (For the above example, `$ bundle exec rake wax:pagemaster objects` would generate pages with the `iiif-image-page.html` layout to the directory `objects` from `_data/objects.csv`.
 
-### wax:lunr
+## wax:lunr
 
-#### What it does
+### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-#### Requirements
+### Requirements
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-#### Configuration
+### Configuration
 
 Add to `_config.yml`:
 ```yaml
@@ -135,37 +135,40 @@ lunr:
         - tags
 ```
 
-#### To use
+### To use
 `$ bundle exec rake wax:lunr`
 
-### wax:iiif
+## wax:iiif
 
-#### What it does
+### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-#### Requirements
+### Requirements
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 
-#### Configuration
+### Configuration
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-#### To use
+### To use
 `$ bundle exec rake wax:iiif`
 
-### wax:test
+## wax:test
 
-#### What it does
+### What it does
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-#### Requirements
+### Requirements
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-#### To use
+### To use
 `$ bundle exec rake wax:test`
+
 
 ## To do (for v1.0)
 
 - [ ] `content: true/false` on collection level (instead of index level) for `wax:lunr` task. 
 - [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task. 
 - [ ] write spec for `wax:iiif` on sample HQ .jpgs.
+- [ ] create umbrella `wax:process` task, that would run `wax:pagemaster <collection` and regenerate the lunr index with `wax:lunr`.
+- [ ] rewrite `wax:iiif` to tie with collections config and use rake argvs.
