@@ -1,5 +1,6 @@
 require 'csv'
 
+# helper methods
 def slug(str)
   return str.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
 end
@@ -15,3 +16,6 @@ def write_csv(path, data)
 rescue StandardError
   raise "Cannot write csv data to #{path} for some reason."
 end
+
+# global
+$collection_data = {}

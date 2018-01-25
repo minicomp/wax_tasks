@@ -1,12 +1,15 @@
 # wax_tasks
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
+
+
 #### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
 Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out [minicomp/wax](https://minicomp.github.io/wax/). Or, do you want *truly* minimal exhibitions without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
 
 <br>
 <img src="https://github.com/mnyrop/wax_tasks/blob/master/docs/wax_screen.gif?raw=true"/>
+
 
 #### Getting Started
 - [Prerequisites](#prerequisites)
@@ -100,6 +103,6 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 
 - [ ] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
 - [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.
-- [ ] write spec for `wax:iiif` on sample HQ .jpgs.
+- [x] write spec for `wax:iiif` on sample HQ .jpgs.
 - [ ] create umbrella `wax:process` task, that would run `wax:pagemaster <collection` and regenerate the lunr index with `wax:lunr`.
 - [ ] rewrite `wax:iiif` to tie with collections config and use rake argvs.
