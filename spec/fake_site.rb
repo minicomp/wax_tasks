@@ -4,8 +4,11 @@ require 'yaml'
 
 include FileUtils
 
-mkdir_p('faker_site')
-cd('faker_site')
+site_dir = 'faker_site'
+mkdir_p(site_dir)
+test_images = Dir.glob('spec/_iiif')
+cp_r(test_images, site_dir)
+cd(site_dir)
 
 config = {
   'title'       => 'faker',
@@ -20,5 +23,4 @@ conf = {
 }
 
 File.open('_config.yml', 'w') { |f| f.puts(config.to_yaml) }
-File.open('Rakefile', 'w') { |f| f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }') }
 Jekyll::Site.new(Jekyll.configuration(conf)).process

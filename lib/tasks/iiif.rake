@@ -10,6 +10,12 @@ namespace :wax do
       puts("You must specify one or more collections after 'bundle exec rake wax:iiif' to generate.").magenta
       exit 1
     else
+      build_opts = {
+        :base_url => $config['baseurl'] + '/tiles',
+        :output_dir => './tiles',
+        :tile_scale_factors => [1, 2],
+        :verbose => true
+      }
       $argv.each do |a|
         dirpath = './_iiif/' + a
         if Dir.exist?(dirpath)
@@ -18,9 +24,9 @@ namespace :wax do
           counter = 1
           imagefiles.each do |imagefile|
             begin
-              basename = File.basename(imagefile, '.*')
+              basename = File.basename(imagefile, '.*').to_s
               record_opts = {
-                :id => basename,
+                :id => a + '-' + basename,
                 :is_document => false,
                 :path => imagefile,
                 :label => $config['title'] + ' - ' + a + ' - ' + basename
@@ -38,13 +44,7 @@ namespace :wax do
           exit 1
         end
       end
-      build_opts = {
-        :base_url => $config['baseurl'] + '/tiles',
-        :output_dir => './tiles',
-        :tile_scale_factors => [1, 2],
-        :verbose => true
-      }
-      builder = IiifS3.Builder.new(build_opts)
+      builder = IiifS3::Builder.new(build_opts)
       builder.load(imagedata)
       builder.process_data()
     end

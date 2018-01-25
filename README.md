@@ -1,5 +1,5 @@
 # wax_tasks
-[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![codecov](https://codecov.io/gh/mnyrop/wax_tasks/branch/master/graph/badge.svg)](https://codecov.io/gh/mnyrop/wax_tasks)
+[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
 
 
@@ -102,6 +102,6 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 
 - [ ] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
 - [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.
-- [ ] write spec for `wax:iiif` on sample HQ .jpgs.
+- [x] write spec for `wax:iiif` on sample HQ .jpgs.
 - [ ] create umbrella `wax:process` task, that would run `wax:pagemaster <collection` and regenerate the lunr index with `wax:lunr`.
 - [ ] rewrite `wax:iiif` to tie with collections config and use rake argvs.

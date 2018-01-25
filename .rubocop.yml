@@ -17,7 +17,7 @@ Metrics/MethodLength:
 
 ## Style
 Style/GlobalVars:
-  AllowedVariables: ['$config', '$argv']
+  AllowedVariables: ['$config', '$argv', '$collection_data']
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/MixinUsage:
