@@ -6,21 +6,20 @@ include FileUtils
 
 site_dir = 'faker_site'
 mkdir_p(site_dir)
-test_images = Dir.glob('spec/_iiif')
-cp_r(test_images, site_dir)
+image_dir = Dir.glob('spec/data/_iiif')
+cp_r(image_dir, site_dir)
 cd(site_dir)
 
-config = {
+config_file = {
   'title'       => 'faker',
   'url'         => '',
-  'baseurl'     => '',
-  'exclude'     => ['Rakefile']
+  'baseurl'     => ''
 }
-conf = {
+config_opts = {
   'source'      => '.',
   'destination' => '_site',
   'config'      => '_config.yml'
 }
 
-File.open('_config.yml', 'w') { |f| f.puts(config.to_yaml) }
-Jekyll::Site.new(Jekyll.configuration(conf)).process
+File.open('_config.yml', 'w') { |f| f.puts(config_file.to_yaml) }
+Jekyll::Site.new(Jekyll.configuration(config_opts)).process
