@@ -22,4 +22,5 @@ config_opts = {
 }
 
 File.open('_config.yml', 'w') { |f| f.puts(config_file.to_yaml) }
+File.open('Rakefile', 'w') { |f| f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }') }
 Jekyll::Site.new(Jekyll.configuration(config_opts)).process

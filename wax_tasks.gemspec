@@ -2,7 +2,7 @@ $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = 'wax_tasks'
-  s.version       = '0.0.15'
+  s.version       = '0.0.2'
   s.authors       = ['Marii Nyrop']
   s.email         = ['m.nyrop@columbia.edu']
   s.license       = 'MIT'
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary       = 'Rake tasks for minimal exhibitions.'
   s.description   = 'Rake tasks for minimal iiif exhibition sites with Jekyll.'
 
-  s.files = Dir['README*', 'Gemfile', 'lib/**/*']
+  s.files = Dir['Gemfile', 'lib/**/*']
   s.test_files    = ['spec/*']
   s.require_paths = ['lib']
 

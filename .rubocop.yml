@@ -24,6 +24,8 @@ Style/MixinUsage:
   Enabled: false
 Style/MethodCallWithoutArgsParentheses:
   Enabled: false
+Style/Next:
+  Enabled: false
 Style/RedundantReturn:
   Enabled: false
 Style/RegexpLiteral:

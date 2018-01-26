@@ -22,7 +22,7 @@ Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out 
 - [wax:test](#waxtest)
 
 #### To Do
-- [v1.0](#10-release)
+- [v0.5.0](#050-release)
 
 
 # Getting Started
@@ -99,10 +99,11 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 
 
 # To Do
-## 1.0 release
+## 0.5.0 alpha release
 
-- [ ] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
+- [x] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
 - [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.
 - [x] write spec for `wax:iiif` on sample HQ .jpgs.
 - [ ] create umbrella `wax:process` task, that would run `wax:pagemaster <collection` and regenerate the lunr index with `wax:lunr`.
-- [ ] rewrite `wax:iiif` to tie with collections config and use rake argvs.
+- [ ] make `wax:pagemaster` accept json.
+- [ ] change `_iiif` file structure to `_iiif/collection_name/source_images/*` and generate to `_iiif/collection_name/tiles/*`.
