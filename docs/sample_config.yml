@@ -1,0 +1,23 @@
+title: faker
+url: ''
+baseurl: ''
+
+collections:
+  abaya:
+    source: abaya
+    directory: abaya
+    layout: default
+    iiif: true
+    lunr_index:
+      content: false
+      fields: [grottore, shaelmaar, royal_wyvern, ignis_fatuus, harpy]
+  fire_elemental:
+    source: fire_elemental
+    directory: fire_elemental
+    layout: default
+    iiif: false
+    lunr_index:
+      content: false
+      fields: [ekhidnae, giant_centipede, crone, cyclopse, hym]
+
+lunr_language: true
