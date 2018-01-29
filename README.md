@@ -107,3 +107,4 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 - [ ] create umbrella `wax:process` task, that would run `wax:pagemaster <collection` and regenerate the lunr index with `wax:lunr`.
 - [ ] make `wax:pagemaster` accept json.
 - [ ] change `_iiif` file structure to `_iiif/collection_name/source_images/*` and generate to `_iiif/collection_name/tiles/*`.
+- [ ] better process content in lunr index
