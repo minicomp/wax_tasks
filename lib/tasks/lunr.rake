@@ -23,12 +23,13 @@ namespace :wax do
     else
       total_fields.uniq.each { |f| index_string += "\nindex.addField(" + "'" + f + "'" + "); " }
       collections.each do |collection|
+        name = collection[0]
         collection = collection[1]
         if collection.key?('lunr_index') && collection['lunr_index'].key?('fields')
-          dir = collection['directory']
+          dir = collection['directory'] || '_' + name
           fields = collection['lunr_index']['fields']
           puts "Loading pages from #{dir}".cyan
-          Dir.glob(dir + '/*').each do |md|
+          Dir.glob(dir + '/*.md').each do |md|
             begin
               yaml = YAML.load_file(md)
               hash = {}
