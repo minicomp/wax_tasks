@@ -3,7 +3,7 @@ require 'iiif_s3'
 
 namespace :wax do
   task :iiif => :config do
-    FileUtils.mkdir_p 'tiles'
+    FileUtils.mkdir_p './_iiif/tiles'
     imagedata = []
     id_counter = 0
     if $argv.empty?
@@ -12,12 +12,12 @@ namespace :wax do
     else
       build_opts = {
         :base_url => $config['baseurl'] + '/tiles',
-        :output_dir => './tiles',
+        :output_dir => './_iiif/tiles',
         :tile_scale_factors => [1, 2],
         :verbose => true
       }
       $argv.each do |a|
-        dirpath = './_iiif/' + a
+        dirpath = './_iiif/source_images/' + a
         if Dir.exist?(dirpath)
           id_counter += 1
           imagefiles = Dir[dirpath + '/*'].sort!

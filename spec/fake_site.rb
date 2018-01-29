@@ -13,7 +13,8 @@ cd(site_dir)
 config_file = {
   'title'       => 'faker',
   'url'         => '',
-  'baseurl'     => ''
+  'baseurl'     => '',
+  'exclude'     => ['Rakefile']
 }
 config_opts = {
   'source'      => '.',
