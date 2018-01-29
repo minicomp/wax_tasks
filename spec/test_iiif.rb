@@ -6,9 +6,9 @@ include FileUtils
 
 describe 'wax:iiif' do
   it 'generates iiif tiles and data' do
-    images = Dir.glob('_iiif/*.jpg')
+    images = Dir.glob('./_iiif/source_images/*.jpg')
     $collection_data.each do |coll|
-      new_dir = '_iiif/' + coll[0]
+      new_dir = './_iiif/source_images/' + coll[0]
       mkdir_p(new_dir)
       images.each { |f| cp(File.expand_path(f), new_dir) }
     end

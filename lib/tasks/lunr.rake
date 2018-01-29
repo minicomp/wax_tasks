@@ -12,11 +12,14 @@ namespace :wax do
     index_string = "\nvar index = new elasticlunr.Index;\nindex.setRef('lunr_id');\nindex.saveDocument(false);"
     index_string += "\nindex.pipeline.remove(elasticlunr.trimmer);" if $config['lunr_language']
     collections = $config['collections']
+    has_content = false
     collections.each do |c|
       if c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields')
         total_fields.concat c[1]['lunr_index']['fields']
       end
+      has_content = true if c[1]['lunr_index']['content']
     end
+    total_fields << 'content' if has_content
     if total_fields.uniq.empty?
       puts "Fields are not properly configured.".magenta
       exit 1

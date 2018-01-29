@@ -1,5 +1,6 @@
 require 'yaml'
 require 'csv'
+require 'json'
 require 'colorized_string'
 
 namespace :wax do
@@ -17,7 +18,7 @@ namespace :wax do
           exit 1
         else
           meta = {}
-          meta['src'] = '_data/' + File.basename(collection['source'], '.*') + '.csv'
+          meta['src'] = '_data/' + collection['source']
           meta['layout'] = File.basename(collection['layout'], '.*')
           meta['dir'] = collection['directory']
           if [meta['src'], meta['dir'], meta['layout']].all?
@@ -37,15 +38,25 @@ namespace :wax do
 end
 
 def ingest(src)
-  data = CSV.read(src, :headers => true, :encoding => 'utf-8')
-  duplicates = data['pid'].detect { |i| data.count(i) > 1 }.to_s
+  src_type = File.extname(src)
+  if src_type == '.csv'
+    data = CSV.read(src, :headers => true, :encoding => 'utf-8').map(&:to_hash)
+  elsif src_type == '.json'
+    data = JSON.parse(File.read(src).encode("UTF-8"))
+  else
+    puts "File type for #{src} must be .csv or .json. Please fix and rerun."
+    exit 1
+  end
+  pids = []
+  data.each { |d| pids << d['pid'] }
+  duplicates = pids.detect { |p| pids.count(p) > 1 } || []
   unless duplicates.empty?
     puts "\nYour collection has the following duplicate ids. please fix and rerun.\n#{duplicates} \n".magenta
     exit 1
   end
   puts "Processing #{src}...."
-  return data.map(&:to_hash)
-rescue StandardError
+  return data
+rescue standardError
   puts "Cannot load #{src}. check for typos and rebuild.".magenta
   exit 1
 end

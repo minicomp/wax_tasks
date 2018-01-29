@@ -13,8 +13,9 @@ describe 'wax:config' do
     # add collection data to config file
     collection_hash = {}
     $argv.each do |coll_name|
+      ext = $collection_data[coll_name]['type']
       collection_hash[coll_name] = {
-        'source'    => coll_name,
+        'source'    => coll_name + ext,
         'directory' => coll_name,
         'layout'    => 'default'
       }
