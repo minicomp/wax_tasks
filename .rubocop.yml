@@ -1,0 +1,37 @@
+# Specific to task(s)
+Style/BlockDelimiters:
+  Exclude:
+    - 'lib/tasks/config.rake'
+
+# Global
+
+## Metrics
+Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/LineLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+
+## Style
+Style/GlobalVars:
+  AllowedVariables: ['$config', '$argv', '$collection_data']
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+Style/MixinUsage:
+  Enabled: false
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+Style/Next:
+  Enabled: false
+Style/RedundantReturn:
+  Enabled: false
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
+  AllowInnerSlashes: true
+Style/StringLiterals:
+  Enabled: false
+Style/WordArray:
+  EnforcedStyle: brackets

@@ -1,87 +1,83 @@
 require 'yaml'
 require 'csv'
+require 'json'
+require 'colorized_string'
 
 namespace :wax do
+  desc 'generate collection md pages from yaml or csv data source'
   task :pagemaster => :config do
-    @collections = @config['collections']
-    @argv.each do |a|
-      collection = @collections[a]
-      unless collection.nil?
-        @src = collection['source'].to_s
-        @key = collection['key'].to_s
-        @dir = collection['directory'].to_s
-        @layout = collection['layout'].to_s
-
-        if @src.empty? || @key.empty? || @dir.empty? || @layout.empty?
-          raise "wax:pagemaster :: your collection is missing one or more of the required parameters (source, key, directory, layout) in config. please fix and rerun."
-    		else
-          @ext = File.extname(@src).strip.downcase[1..-1]
-          unless @ext == 'yaml' || @ext == 'csv'
-            raise "wax:pagemaster :: source file must be .csv or .yaml. please fix and rerun."
+    collections = $config['collections']
+    if $argv.empty?
+      puts "You must specify one or more collections after 'bundle exec rake wax:pagemaster' to generate.".magenta
+      exit 1
+    else
+      $argv.each do |a|
+        collection = collections[a]
+        if collection.nil?
+          puts "The collection '#{a}' does not exist. Check for typos in terminal and _config.yml.".magenta
+          exit 1
+        else
+          meta = {}
+          meta['src'] = '_data/' + collection['source']
+          meta['layout'] = File.basename(collection['layout'], '.*')
+          meta['dir'] = collection['directory']
+          if [meta['src'], meta['dir'], meta['layout']].all?
+            FileUtils.mkdir_p meta['dir']
+            data = ingest(meta['src'])
+            info = generate_pages(meta, data)
+            puts "\n#{info[:completed]} pages were generated to #{meta['dir']} directory.".cyan
+            puts "\n#{info[:skipped]} pre-existing items were skipped.".cyan
           else
-
-    				@targetdir = "_" + @dir.downcase.gsub(/[^\0-9a-z]/, '').to_s
-    				FileUtils::mkdir_p @targetdir
-
-      			def ingest(src) # takes + opens src file
-      				begin
-                if @ext == 'yaml'
-                  return YAML.load_file('_data/' + src)
-                else
-                  return CSV.read('_data/' + src, :headers => true).map(&:to_hash)
-                end
-      				rescue
-      					raise "wax:pagemaster :: cannot load " + src + ". check for typos and rebuild."
-      				end
-      			end
-
-      			def uniqify(hashes, key) # takes opened src file as hash array
-      				occurences = {} # hash list of slug names and # of occurences
-      				hashes.each do |item|
-      					if item[key].nil?
-      						raise "wax:pagemaster :: source file has at least one missing value for key='" + key + "'. cannot generate."
-      					end
-      					new_name = item[key].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '').gsub(/-+/, '-') # gsub for slug
-      					if occurences.has_key? new_name
-      						occurences[new_name]+=1
-      						safe_slug = new_name + "-" + occurences[new_name].to_s
-      					else
-      						occurences.store(new_name, 1)
-      						safe_slug = new_name
-      					end
-      					item.store("slug", safe_slug)
-      				end
-      				return hashes # return changed yml array with unique, slugified names added
-      			end
-
-      			# ingest data source, sort it and generate unique titles
-      			data = uniqify(ingest(@src), @key)
-      			untitled, nonunique, valid = 0, 0, 0
-
-      			# make pages
-      			data.each do |item|
-      				pagename = item["slug"]
-      				pagepath = @targetdir + "/" + pagename + ".md"
-      				layout_str = "layout: " + @layout
-      				if pagename.empty?
-      					puts ">> wax:pagemaster :: title for item is unspecified. cannot generate page."
-      					untitled+=1
-      				elsif !File.exist?(pagepath)
-      					File.open(pagepath, 'w') { |file| file.write( item.to_yaml.to_s + layout_str + "\n---" ) }
-      					valid+=1
-      				else
-      					puts ">> wax:pagemaster :: " + pagename + ".md already exits."
-      					nonunique+=1
-      				end
-      			end
-
-      			# log outcomes
-      			puts valid.to_s + " pages were generated from " + @src + " to " + @targetdir + " directory."
-      			puts nonunique.to_s + " items were skipped because of non-unique names."
-      			puts untitled.to_s + " items were skipped because of missing titles."
+            puts "\nYour collection '#{a}' is missing one or more of the required parameters (source, directory, layout) in config. please fix and rerun.".magenta
+            exit 1
           end
         end
       end
     end
   end
+end
+
+def ingest(src)
+  src_type = File.extname(src)
+  if src_type == '.csv'
+    data = CSV.read(src, :headers => true, :encoding => 'utf-8').map(&:to_hash)
+  elsif src_type == '.json'
+    data = JSON.parse(File.read(src).encode("UTF-8"))
+  else
+    puts "File type for #{src} must be .csv or .json. Please fix and rerun."
+    exit 1
+  end
+  pids = []
+  data.each { |d| pids << d['pid'] }
+  duplicates = pids.detect { |p| pids.count(p) > 1 } || []
+  unless duplicates.empty?
+    puts "\nYour collection has the following duplicate ids. please fix and rerun.\n#{duplicates} \n".magenta
+    exit 1
+  end
+  puts "Processing #{src}...."
+  return data
+rescue standardError
+  puts "Cannot load #{src}. check for typos and rebuild.".magenta
+  exit 1
+end
+
+def generate_pages(meta, data)
+  perma_ext = '.html'
+  perma_ext = '/' if $config['permalink'] == 'pretty'
+  info = { :completed => 0, :skipped => 0 }
+  data.each do |item|
+    pagename = item['pid']
+    pagepath = meta['dir'] + '/' + pagename + '.md'
+    if !File.exist?(pagepath)
+      File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + 'permalink: /' + meta['dir'] + '/' + pagename + perma_ext + "\n" + 'layout: ' + meta['layout'] + "\n---") }
+      info[:completed] += 1
+    else
+      puts "#{pagename}.md already exits. Skipping."
+      info[:skipped] += 1
+    end
+  end
+  return info
+rescue standardError
+  puts "#{info[:completed]} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
+  exit 1
 end
