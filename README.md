@@ -5,7 +5,7 @@
 
 #### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
-Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out [minicomp/wax](https://minicomp.github.io/wax/). Or, do you want *truly* minimal exhibitions without IIIF? Check out [miniwax_tasks](https://github.com/mnyrop/miniwax_tasks).
+Looking for a Jekyll theme with [wax_tasks]() functionality baked in? Check out [minicomp/wax](https://minicomp.github.io/wax/).
 
 <br>
 <img src="https://github.com/mnyrop/wax_tasks/blob/master/docs/wax_screen.gif?raw=true"/>
