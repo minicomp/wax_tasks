@@ -1,6 +1,7 @@
 require 'jekyll'
 require 'tmpdir'
 require 'fileutils'
+require 'time'
 
 namespace :wax do
   desc 'build site with gh-baseurl and publish to gh-pages branch'
