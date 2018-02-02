@@ -7,7 +7,7 @@ namespace :wax do
     imagedata = []
     id_counter = 0
     if $argv.empty?
-      puts("You must specify one or more collections after 'bundle exec rake wax:iiif' to generate.").magenta
+      puts "You must specify one or more collections after 'bundle exec rake wax:iiif' to generate.".magenta
       exit 1
     else
       build_opts = {
@@ -35,12 +35,12 @@ namespace :wax do
               counter += 1
               imagedata.push(i)
             rescue StandardError
-              puts('Failed to convert image ' + imagefile + '.').magenta
+              puts "Failed to convert image '#{imagefile}'.".magenta
               exit 1
             end
           end
         else
-          puts("Source path '" + dirpath + "' does not exist. Exiting.").magenta
+          puts "Source path '#{dirpath}' does not exist. Exiting.".magenta
           exit 1
         end
       end

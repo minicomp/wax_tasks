@@ -26,6 +26,8 @@ Style/MethodCallWithoutArgsParentheses:
   Enabled: false
 Style/Next:
   Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
 Style/RedundantReturn:
   Enabled: false
 Style/RegexpLiteral:
@@ -35,3 +37,9 @@ Style/StringLiterals:
   Enabled: false
 Style/WordArray:
   EnforcedStyle: brackets
+
+# Temporary
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
