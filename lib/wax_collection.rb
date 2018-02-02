@@ -8,15 +8,16 @@ include FileUtils
 
 # WaxCollection class
 class WaxCollection
-  attr_reader :name, :meta, :src, :layout, :dir, :data
+  attr_reader :name, :config, :src, :layout, :dir, :data
 
-  def initialize(name)
-    @name   = name
-    @meta   = $config['collections'][@name]
-    @src    = '_data/' + @meta['source']
-    @layout = File.basename(@meta['layout'], '.*')
-    @dir    = '_' + @meta['directory'].gsub(/^_?/, '') || '_' + @name
+  def initialize(collection_name, collection_config)
+    @name   = collection_name
+    @config = collection_config
+    @src    = '_data/' + @config['source']
+    @layout = File.basename(@config['layout'], '.*')
+    @dir    = '_' + @config['directory'].gsub(/^_?/, '') || '_' + @name
     @data   = []
+    @lunr   = {}
   end
 
   def pagemaster

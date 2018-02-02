@@ -9,7 +9,7 @@ def clean(str)
   return str
 end
 
-def validate_config(collection_name)
+def valid_pagemaster(collection_name)
   if $config['collections'][collection_name].nil?
     puts "Cannot fin the collection '#{collection_name}' in _config.yml. Exiting.".magenta
     exit 1
@@ -22,5 +22,7 @@ def validate_config(collection_name)
   elsif !File.file?('_data/' + $config['collections'][collection_name]['source'])
     puts "Cannot find the file '#{'_data/' + $config['collections'][collection_name]['source']}'. Exiting.".magenta
     exit 1
+  else
+    return $config['collections'][collection_name]
   end
 end

@@ -10,8 +10,8 @@ namespace :wax do
       exit 1
     else
       $argv.each do |collection_name|
-        validate_config(collection_name)
-        collection = WaxCollection.new(collection_name)
+        collection_config = valid_pagemaster(collection_name)
+        collection = WaxCollection.new(collection_name, collection_config)
         collection.pagemaster
       end
     end
