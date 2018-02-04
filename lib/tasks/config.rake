@@ -7,10 +7,9 @@ namespace :wax do
     begin
       $config = YAML.load_file('_config.yml')
       $argv = ARGV.drop(1)
-      $argv.each { |a| task a.to_sym do; end }
+      $argv.each { |a| task a.to_sym }
     rescue StandardError
-      puts('Cannot load _config.yml').magenta
-      exit 1
+      abort 'Cannot load _config.yml'.magenta
     end
   end
 end

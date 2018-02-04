@@ -5,7 +5,10 @@ describe 'wax:lunr' do
     $config['collections'].each do |collection|
       name = collection[0]
       # get info on what to index
-      lunr_hash = { 'content' => false, 'fields' => $collection_data[name]['keys'] }
+      lunr_hash = {
+        'content' => false,
+        'fields' => $collection_data[name]['keys']
+      }
       # add it to config
       $config['collections'][name]['lunr_index'] = lunr_hash
       output = YAML.dump $config

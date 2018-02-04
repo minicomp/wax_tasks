@@ -9,6 +9,7 @@ class LunrIndex
   def initialize(collections, lunr_language)
     @collections      = collections
     @lunr_language    = lunr_language
+    @cdir             = $config['collections_dir'].nil? ? '' : $config['collections_dir'] + '/'
     @lunr_collections = []
     @total_fields     = []
     @output           = ''
@@ -28,7 +29,7 @@ class LunrIndex
       end
     end
     @total_fields.uniq!
-    raise "Fields are not properly configured.".magenta if @total_fields.empty?
+    abort("Fields are not properly configured.".magenta) if @total_fields.empty?
     @total_fields.each { |f| @output += "\nindex.addField(" + "'" + f + "'" + "); " }
   end
 
@@ -37,33 +38,31 @@ class LunrIndex
     index_string = @output
     store_string = "\nvar store = ["
 
-    @collections.each do |c|
+    abort("There are no valid collections to index.".magenta) if @collections.nil?
+    @lunr_collections.each do |c|
       collection = c[1]
-      dir = '_' + collection['directory'].gsub(/^_?/, '') || '_' + c[0]
+      dir = @cdir + '_' + c[0]
       fields = collection['lunr_index']['fields']
       pages = Dir.glob(dir + '/*.md')
 
-      raise "There are no markdown pages in directory '#{dir}'".magenta if pages.nil?
-      raise "There are no fields specified for #{c[0]}. Continuing.".magenta if fields.nil?
+      abort "There are no markdown pages in directory '#{dir}'".magenta if pages.empty?
+      abort "There are no fields specified for #{c[0]}.".magenta if fields.empty?
 
       puts "Loading #{pages.length} pages from #{dir}"
       pages.each do |page|
         begin
           yaml = YAML.load_file(page)
           hash = { 'lunr_id' => count, 'link' => '{{ site.baseurl }}' + yaml['permalink'] }
-          fields.uniq.each { |f| hash[f] = yaml[f].to_s }
-          hash['content'] = clean(File.read(page)) if collection['lunr_index']['content']
+          fields.uniq.each { |f| hash[f] = rm_diacritics(yaml[f].to_s) }
+          hash['content'] = rm_diacritics(clean(File.read(page))) if collection['lunr_index']['content']
           index_string += "\nindex.addDoc(" + hash.to_json + "); "
           store_string += "\n" + hash.to_json + ", "
           count += 1
         rescue StandardError
-          puts "Cannot load data from markdown pages in #{dir}.".magenta
-          exit 1
+          abort "Cannot load data from markdown pages in #{dir}.".magenta
         end
       end
     end
-
-    store_string += store_string.chomp(', ') + '];'
-    @output = index_string + store_string
+    @output = index_string + store_string.chomp(', ') + '];'
   end
 end

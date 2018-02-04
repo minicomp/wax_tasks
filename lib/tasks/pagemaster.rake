@@ -11,7 +11,8 @@ namespace :wax do
     else
       $argv.each do |collection_name|
         collection_config = valid_pagemaster(collection_name)
-        collection = WaxCollection.new(collection_name, collection_config)
+        collections_dir   = $config['collections_dir'].nil? ? '' : $config['collections_dir'].to_s + '/'
+        collection = WaxCollection.new(collection_name, collection_config, collections_dir)
         collection.pagemaster
       end
     end

@@ -3,6 +3,7 @@ require 'csv'
 require 'json'
 require 'fileutils'
 require 'colorized_string'
+require 'helpers'
 
 include FileUtils
 
@@ -10,12 +11,13 @@ include FileUtils
 class WaxCollection
   attr_reader :name, :config, :src, :layout, :dir, :data
 
-  def initialize(collection_name, collection_config)
+  def initialize(collection_name, collection_config, collections_dir)
     @name   = collection_name
     @config = collection_config
+    @cdir   = collections_dir
     @src    = '_data/' + @config['source']
     @layout = File.basename(@config['layout'], '.*')
-    @dir    = '_' + @config['directory'].gsub(/^_?/, '') || '_' + @name
+    @dir    = @cdir + '_' + @name
     @data   = []
     @lunr   = {}
   end
@@ -44,24 +46,24 @@ class WaxCollection
 
   def generate_pages
     perma_ext = $config['permalink'] == 'pretty' ? '/' : '.html'
-    completed, skipped = 0, 0
+    completed = 0
+    skipped = 0
     data.each do |item|
-      pagename = item['pid']
+      pagename = slug(item['pid'])
       pagepath = @dir + '/' + pagename + '.md'
-      permalink = '/' + @dir.gsub(/^_?/, '') + '/' + pagename + perma_ext
-      if !File.exist?(pagepath)
-        File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + "permalink: #{permalink}\nlayout: #{@layout}\n---") }
-        completed += 1
-      else
+      permalink = '/' + @name + '/' + pagename + perma_ext
+      if File.exist?(pagepath)
         puts "#{pagename}.md already exits. Skipping."
         skipped += 1
+      else
+        File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + "permalink: #{permalink}\nlayout: #{@layout}\n---") }
+        completed += 1
       end
     end
     puts "\n#{completed} pages were generated to #{@dir} directory.".cyan
     puts "\n#{skipped} pre-existing items were skipped.".cyan
   rescue StandardError
-    puts "#{completed} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
-    exit 1
+    abort "#{completed} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
   end
 
   def detect_duplicates
