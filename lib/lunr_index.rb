@@ -19,7 +19,7 @@ class LunrIndex
   end
 
   def pre_process
-    @output += "\nvar index = new elasticlunr.Index;\nindex.setRef('lunr_id');\nindex.saveDocument(false);"
+    @output += "---\nlayout: none\n---\nvar index = new elasticlunr.Index;\nindex.setRef('lunr_id');\nindex.saveDocument(false);"
     @output += "\nindex.pipeline.remove(elasticlunr.trimmer);" if @lunr_language
     @collections.each do |c|
       if c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields')
@@ -35,14 +35,12 @@ class LunrIndex
 
   def add_docs
     count = 0
-    index_string = @output
     store_string = "\nvar store = ["
 
     abort("There are no valid collections to index.".magenta) if @collections.nil?
     @lunr_collections.each do |c|
-      collection = c[1]
       dir = @cdir + '_' + c[0]
-      fields = collection['lunr_index']['fields']
+      fields = c[1]['lunr_index']['fields'].uniq
       pages = Dir.glob(dir + '/*.md')
 
       abort "There are no markdown pages in directory '#{dir}'".magenta if pages.empty?
@@ -52,10 +50,13 @@ class LunrIndex
       pages.each do |page|
         begin
           yaml = YAML.load_file(page)
-          hash = { 'lunr_id' => count, 'link' => '{{ site.baseurl }}' + yaml['permalink'] }
-          fields.uniq.each { |f| hash[f] = rm_diacritics(yaml[f].to_s) }
-          hash['content'] = rm_diacritics(clean(File.read(page))) if collection['lunr_index']['content']
-          index_string += "\nindex.addDoc(" + hash.to_json + "); "
+          hash = {
+            'lunr_id' => count,
+            'link' => "{{'" + yaml['permalink'] + "' | relative_url }}"
+          }
+          fields.each { |f| hash[f] = rm_diacritics(yaml[f]) }
+          hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
+          @output += "\nindex.addDoc(" + hash.to_json + "); "
           store_string += "\n" + hash.to_json + ", "
           count += 1
         rescue StandardError
@@ -63,6 +64,6 @@ class LunrIndex
         end
       end
     end
-    @output = index_string + store_string.chomp(', ') + '];'
+    @output += store_string.chomp(', ') + '];'
   end
 end
