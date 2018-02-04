@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description   = 'Rake tasks for minimal iiif exhibition sites with Jekyll.'
 
   s.files = Dir['Gemfile', 'lib/**/*']
-  s.test_files    = ['spec/*']
+  s.test_files    = Dir['spec/*']
   s.require_paths = ['lib']
 
   s.add_development_dependency 'bundler', '~> 1.16'

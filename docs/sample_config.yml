@@ -2,19 +2,20 @@ title: faker
 url: ''
 baseurl: ''
 
-lunr_language: true
+permalink: pretty # optional, creates `/page/` link instead of `page.html` link
+lunr_language: true # optional, removes trimmer to support multiple languages in search
+collections_dir: true # optional, allows you to tidy up and keep collections (below) inside a directory
+
 collections:
-  abaya:
-    source: abaya.csv
+  abaya: # << the collection name, which will be the directory pagemaster makes
+    source: abaya.csv # ^^ it will also be used in creating permalinks for the pages
     layout: default
     lunr_index:
       content: false
-      display_field: title
       fields: [grottore, shaelmaar, royal_wyvern, ignis_fatuus, harpy]
   fire_elemental:
     source: fire_elemental.json
     layout: default
     lunr_index:
       content: false
-      display_field: title
       fields: [ekhidnae, giant_centipede, crone, cyclopse, hym]
