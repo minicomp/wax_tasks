@@ -5,36 +5,39 @@ require 'rake'
 
 # make csvs
 I18n.enforce_available_locales = false
+Faker::Config.locale = 'zh-CN'
 Dir.mkdir('_data') unless File.exist?('_data')
 
-2.times do # 2 csv files + 2 json files
+def fake_data(name, type)
   data = []
-  csv_name = slug(Faker::Witcher.unique.monster)
-  json_name = slug(Faker::RuPaul.unique.queen)
-  pids = []
-  keys = ['pid', 'title']
-  5.times { keys << slug(Faker::Space.unique.star) } # with 6 custom keys
+  keys = ['pid']
+  5.times { keys << slug(Faker::Lovecraft.unique.word) } # keys = pid + 5
   5.times do # with 5 records
-    record = {}
-    pid = slug(Faker::Lovecraft.unique.word)
-    pids << pid
-    record[keys[0]] = pid
-    record[keys[1]] = Faker::Lorem.sentence
-    record[keys[2]] = Faker::TwinPeaks.quote
-    Faker::Config.locale = 'ru'
-    record[keys[3]] = Faker::Name.name
-    Faker::Config.locale = 'fa'
-    record[keys[4]] = Faker::Name.name
-    record[keys[5]] = Faker::File.file_name
-    record[keys[6]] = Faker::Lovecraft.sentence
+    record = {
+      keys[0] => slug(Faker::Dune.unique.character),
+      keys[1] => Faker::Lorem.sentence,
+      keys[2] => Faker::TwinPeaks.quote,
+      keys[3] => Faker::Name.name,
+      keys[4] => Faker::Space.star,
+      keys[5] => Faker::Lovecraft.sentence
+    }
     data << record
+    $collection_data[name] = { 'keys' => keys, 'type' => type }
   end
-  csv_path = '_data/' + csv_name + '.csv'
-  json_path = '_data/' + json_name + '.json'
-  write_csv(csv_path, data)
-  File.open(json_path, 'w') { |f| f.write(data.to_json) }
-  $collection_data[csv_name] = { 'keys' => keys, 'pids' => pids, 'type' => '.csv' }
-  $collection_data[json_name] = { 'keys' => keys, 'pids' => pids, 'type' => '.json' }
+  data
+end
+
+5.times do |i|
+  name = slug(Faker::RuPaul.unique.queen)
+  if i.even?
+    data = fake_data(name, '.csv')
+    path = '_data/' + name + '.csv'
+    write_csv(path, data)
+  else
+    data = fake_data(name, '.json')
+    path = '_data/' + name + '.json'
+    File.open(path, 'w') { |f| f.write(data.to_json) }
+  end
   Faker::Dune.unique.clear
   Faker::Lovecraft.unique.clear
 end

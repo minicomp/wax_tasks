@@ -7,7 +7,7 @@ describe 'wax:lunr' do
       # get info on what to index
       lunr_hash = {
         'content' => false,
-        'fields'  => $collection_data[name]['keys']
+        'fields' => $collection_data[name]['keys']
       }
       # add it to config
       $config['collections'][name]['lunr_index'] = lunr_hash
