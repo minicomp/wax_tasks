@@ -1,6 +1,6 @@
 ## Metrics
 Metrics/AbcSize:
-  Max: 50
+  Max: 55
 Metrics/MethodLength:
   Max: 30
 Metrics/LineLength:
