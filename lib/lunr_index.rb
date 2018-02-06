@@ -54,7 +54,7 @@ class LunrIndex
             'lunr_id' => count,
             'link' => "{{'" + yaml['permalink'] + "' | relative_url }}"
           }
-          fields.each { |f| hash[f] = rm_diacritics(yaml[f]) }
+          fields.each { |f| hash[f] = rm_diacritics(yaml[f].to_s) }
           hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
           @output += "\nindex.addDoc(" + hash.to_json + "); "
           store_string += "\n" + hash.to_json + ", "
