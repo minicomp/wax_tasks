@@ -1,6 +1,7 @@
 require 'jekyll'
 require 'tmpdir'
 require 'fileutils'
+require 'time'
 
 namespace :wax do
   desc 'build site with gh-baseurl and publish to gh-pages branch'
@@ -25,7 +26,7 @@ namespace :wax do
       Dir.chdir tmp
 
       system 'git init' # Init the repo.
-      system "git add . && git commit -m 'Site updated at " + Time.now.utc + "'"
+      system "git add . && git commit -m 'Site updated at #{Time.now.utc}'"
       system 'git remote add origin ' + origin
       system 'git push origin master:refs/heads/gh-pages --force'
     end
