@@ -1,5 +1,7 @@
-require 'tasks'
-
-# module WaxTasks
-  
-# end
+require 'tasks/config.rake'
+require 'tasks/ghbranch.rake'
+require 'tasks/iiif.rake'
+require 'tasks/lunr.rake'
+require 'tasks/pagemaster.rake'
+require 'tasks/s3branch.rake'
+require 'tasks/test.rake'
