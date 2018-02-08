@@ -1,4 +1,5 @@
 require 'wax_tasks'
+require 'html-proofer'
 
 namespace :wax do
   desc 'run htmlproofer, rspec if exists'
