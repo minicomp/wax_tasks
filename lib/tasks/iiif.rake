@@ -1,4 +1,4 @@
-require 'colorized_string'
+require 'wax_tasks'
 require 'iiif_s3'
 
 namespace :wax do

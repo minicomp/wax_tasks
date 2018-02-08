@@ -1,14 +1,7 @@
-require 'yaml'
-require 'csv'
-require 'json'
-require 'fileutils'
-require 'colorized_string'
-require 'wax_tasks/helpers'
-
 include FileUtils
 
-# WaxCollection class
-class WaxCollection
+# initializes a wax collection for use with pagemaster,lunr,and iiif tasks
+class Collection
   attr_reader :name, :config, :src, :layout, :dir, :data
 
   def initialize(collection_name, collection_config, collections_dir)

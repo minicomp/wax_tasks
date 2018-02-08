@@ -1,5 +1,4 @@
-require 'colorized_string'
-require 'wax_tasks/wax_collection'
+require 'wax_tasks'
 
 namespace :wax do
   desc 'generate collection md pages from yaml or csv data source'
@@ -11,7 +10,7 @@ namespace :wax do
       $argv.each do |collection_name|
         collection_config = valid_pagemaster(collection_name)
         collections_dir   = $config['collections_dir'].nil? ? '' : $config['collections_dir'].to_s + '/'
-        collection = WaxCollection.new(collection_name, collection_config, collections_dir)
+        collection = Collection.new(collection_name, collection_config, collections_dir)
         collection.pagemaster
       end
     end

@@ -1,5 +1,4 @@
-require 'yaml'
-require 'colorized_string'
+require 'wax_tasks'
 
 namespace :wax do
   desc 'get _config.yaml and parse cmd line args'

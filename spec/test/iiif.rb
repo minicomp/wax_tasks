@@ -14,7 +14,7 @@ describe 'wax:iiif' do
     end
     rm_r(images)
     $argv = [$argv.first] # make tests faster by only running on 1/3 collections
-    load File.expand_path("../../lib/tasks/iiif.rake", __FILE__)
+    load File.expand_path("../../../lib/tasks/iiif.rake", __FILE__)
     Rake::Task['wax:iiif'].invoke
   end
 end

@@ -15,7 +15,7 @@ describe 'wax:lunr' do
       File.write('_config.yml', output)
     end
     # invoke lunr task
-    load File.expand_path("../../lib/tasks/lunr.rake", __FILE__)
+    load File.expand_path("../../../lib/tasks/lunr.rake", __FILE__)
     Rake::Task['wax:lunr'].invoke
     # expect a populated index
     index = File.open('js/lunr-index.js', 'r').read

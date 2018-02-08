@@ -1,5 +1,3 @@
-require 'colorized_string'
-
 def clean(str)
   str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
   str.gsub!(/{%(.*)%}/, '') # remove functional liquid

@@ -4,7 +4,7 @@ require 'yaml'
 # run + test wax:config
 describe 'wax:config' do
   it 'accesses _config.yml and argvs' do
-    load File.expand_path("../../lib/tasks/config.rake", __FILE__)
+    load File.expand_path("../../../lib/tasks/config.rake", __FILE__)
     Rake::Task['wax:config'].invoke
 
     $collection_data.each { |col| $argv << col[0] }

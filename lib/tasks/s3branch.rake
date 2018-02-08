@@ -1,6 +1,4 @@
-require 'tmpdir'
-require 'fileutils'
-require 'time'
+require 'wax_tasks'
 
 namespace :wax do
   desc 'build site with baseurl and publish to s3 branch'

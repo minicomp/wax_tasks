@@ -1,9 +1,7 @@
-require 'yaml'
-require 'colorized_string'
-require 'wax_tasks/helpers'
+include FileUtils
 
-# LunrIndex class
-class LunrIndex
+# initializes a lunr index to be output to js/lunr-index.js
+class Index
   attr_reader :output
 
   def initialize(collections, lunr_language)
