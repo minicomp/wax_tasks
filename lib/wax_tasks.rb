@@ -1,5 +1,5 @@
 require 'tasks'
 
-module WaxTasks
+# module WaxTasks
   
-end
+# end
