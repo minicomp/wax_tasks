@@ -1,6 +1,5 @@
 require 'colorized_string'
-require 'wax_collection'
-require 'helpers'
+require 'wax_tasks/wax_collection'
 
 namespace :wax do
   desc 'generate collection md pages from yaml or csv data source'

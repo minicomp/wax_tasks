@@ -1,11 +1,10 @@
-require 'jekyll'
 require 'tmpdir'
 require 'fileutils'
 require 'time'
 
 namespace :wax do
   desc 'build site with baseurl and publish to s3 branch'
-  task :s3branch => :config do
+  task :s3branch do
     origin = `git config --get remote.origin.url`
     Dir.mktmpdir do |tmp|
       cp_r '_site/.', tmp

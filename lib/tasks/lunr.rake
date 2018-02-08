@@ -1,4 +1,4 @@
-require 'lunr_index'
+require 'wax_tasks/lunr_index'
 
 namespace :wax do
   desc 'build lunr search index'

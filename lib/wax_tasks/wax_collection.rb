@@ -3,7 +3,7 @@ require 'csv'
 require 'json'
 require 'fileutils'
 require 'colorized_string'
-require 'helpers'
+require 'wax_tasks/helpers'
 
 include FileUtils
 

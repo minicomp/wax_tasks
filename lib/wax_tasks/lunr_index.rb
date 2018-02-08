@@ -1,6 +1,6 @@
 require 'yaml'
 require 'colorized_string'
-require 'helpers'
+require 'wax_tasks/helpers'
 
 # LunrIndex class
 class LunrIndex
