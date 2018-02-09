@@ -6,7 +6,7 @@ include FileUtils
 
 site_dir = 'faker_site'
 mkdir_p(site_dir)
-image_dir = Dir.glob('spec/data/_iiif')
+image_dir = Dir.glob('spec/data/iiif')
 cp_r(image_dir, site_dir)
 cd(site_dir)
 

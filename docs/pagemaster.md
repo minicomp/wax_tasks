@@ -1,10 +1,10 @@
 # wax:pagemaster
 
 ## What it does
-Takes a CSV file of metadata and generates a Markdown page for each record to a specified directory and using a specified layout. If a Markdown page already exists, pagemaster will skip over it and not overwrite the data. (e.g. to regenerate pages, delete them first.)
+Takes a CSV or JSON file of metadata and generates a Markdown page for each record to a directory using a specified layout. If a Markdown page already exists, `wax:pagemaster` will skip over it and not overwrite the data. (e.g. to regenerate pages, delete them first.)
 
 ## Requirements
-One CSV file of metadata per collection. Each file MUST have a column called `pid` of persistent, unique identifiers for the records, which CANNOT have spaces or special characters since they will be used to name the pages. Column names CANNOT have spaces or special characters. Please use camel_case format, e.g. `current_primary_location` instead of `current / primary location`.
+One file of metadata per collection. Each file MUST have a column called `pid` of persistent, unique identifiers for the records, which CANNOT have spaces or special characters since they will be used to name the pages. Column names CANNOT have spaces or special characters. Please use snake_case format, e.g. `current_primary_location` instead of `current / primary location`.
 
 **Note:** Some fields are used by Jekyll for specific tasks, and should not be used as metadata headers (e.g. `name`,`id`, and `date`). If you need to use these terms to name your columns, prepend them with an underscore: `_date`.
 
