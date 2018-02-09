@@ -9,11 +9,10 @@ def clean(str)
 end
 
 def valid_pagemaster(collection_name)
-  c = $config['collections'][collection_name]
-  abort "Cannot find the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.nil?
-  abort "Cannot find 'source' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c['source'].nil?
-  abort "Cannot find 'layout' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c['layout'].nil?
-  abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c['source'])
+  c = $config.fetch('collections').fetch(collection_name)
+  abort "Cannot find 'source' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.fetch('source').nil?
+  abort "Cannot find 'layout' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.fetch('layout').nil?
+  abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c.fetch('source'))
   c
 end
 
