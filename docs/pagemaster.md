@@ -27,6 +27,7 @@ collections:
   objects:
     source: objects.csv
     layout: iiif-image-page
+    output: true
 ```
 
 ## To use

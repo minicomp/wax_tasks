@@ -8,8 +8,8 @@ class Collection
     @name   = collection_name
     @config = collection_config
     @cdir   = collections_dir
-    @src    = '_data/' + @config['source']
-    @layout = File.basename(@config['layout'], '.*')
+    @src    = '_data/' + @config.fetch('source')
+    @layout = File.basename(@config.fetch('layout'), '.*')
     @dir    = @cdir + '_' + @name
     @data   = []
     @lunr   = {}
@@ -42,7 +42,7 @@ class Collection
     completed = 0
     skipped = 0
     data.each do |item|
-      pagename = slug(item['pid'])
+      pagename = slug(item.fetch('pid'))
       pagepath = @dir + '/' + pagename + '.md'
       permalink = '/' + @name + '/' + pagename + perma_ext
       if File.exist?(pagepath)

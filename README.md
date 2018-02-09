@@ -117,6 +117,7 @@ collections:
   objects: # << the collection name, which will be the directory pagemaster makes
     source: objects.csv # ^^ it will also be used in creating permalinks for the pages
     layout: iiif-image-page
+    output: true # this must be true for your .md pages to be built to html!
     lunr_index:
       content: false
       fields: [title, artist, location, _date, object_type, current_location]

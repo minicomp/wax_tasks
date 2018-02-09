@@ -7,7 +7,7 @@ class Index
   def initialize(collections, lunr_language)
     @collections      = collections
     @lunr_language    = lunr_language
-    @cdir             = $config['collections_dir'].nil? ? '' : $config['collections_dir'] + '/'
+    @cdir             = $config['collections_dir'].nil? ? '' : $config.fetch('collections_dir') + '/'
     @lunr_collections = []
     @total_fields     = []
     @output           = ''
@@ -50,7 +50,7 @@ class Index
           yaml = YAML.load_file(page)
           hash = {
             'lunr_id' => count,
-            'link' => "{{'" + yaml['permalink'] + "' | relative_url }}"
+            'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
           }
           fields.each { |f| hash[f] = rm_diacritics(yaml[f].to_s) }
           hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
