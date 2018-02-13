@@ -23,5 +23,5 @@ def rm_diacritics(str)
 end
 
 def slug(str)
-  str.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
+  str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
 end
