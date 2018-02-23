@@ -1,5 +1,6 @@
 include FileUtils
 
+# for generating Lunr Index and Lunr UI files
 class Lunr
   def initialize(config)
     @lunr_collections = collections_to_index(config['collections'])
@@ -55,7 +56,7 @@ class Lunr
     # set up index
     ui_string = "$.getJSON(\"{{ site.baseurl }}/js/lunr-index.json\", function(index_json) {\nwindow.index = new elasticlunr.Index;\nwindow.store = index_json;\nindex.saveDocument(false);\nindex.setRef('lunr_id');"
     # add fields to index
-    @total_fields.each{ |field| ui_string += "\nindex.addField('#{field}');"}
+    @total_fields.each { |field| ui_string += "\nindex.addField('#{field}');" }
     # add docs
     ui_string += "\n// add docs\nfor (i in store){index.addDoc(store[i]);}"
     # gui

@@ -21,6 +21,6 @@ describe 'wax:lunr' do
     index = File.open('js/lunr-index.json', 'r').read
     expect(index.length > 1000)
     ui = File.open('js/lunr-ui.js', 'r').read
-    expect(index.length > 100)
+    expect(ui.length > 100)
   end
 end
