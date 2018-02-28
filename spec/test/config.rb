@@ -8,6 +8,7 @@ describe 'wax:config' do
     Rake::Task['wax:config'].invoke
 
     $collection_data.each { |col| $argv << col[0] }
+
     expect($config.length)
     expect($argv.length)
 

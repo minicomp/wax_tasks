@@ -8,14 +8,6 @@ def clean(str)
   str
 end
 
-def valid_pagemaster(collection_name)
-  c = $config.fetch('collections').fetch(collection_name)
-  abort "Cannot find 'source' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.fetch('source').nil?
-  abort "Cannot find 'layout' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.fetch('layout').nil?
-  abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c.fetch('source'))
-  c
-end
-
 def rm_diacritics(str)
   to_replace  = "ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž"
   replaced_by = "AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz"
@@ -29,4 +21,16 @@ end
 def thing2string(thing)
   thing = thing.join(" || ") if thing.is_a?(Array)
   thing.to_s
+end
+
+def get_config
+  YAML.load_file('_config.yml')
+rescue StandardError
+  abort 'Cannot load _config.yml'.magenta
+end
+
+def get_argv
+  argv = ARGV.drop(1)
+  argv.each { |a| task a.to_sym }
+  argv
 end

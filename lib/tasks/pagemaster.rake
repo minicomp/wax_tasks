@@ -7,10 +7,8 @@ namespace :wax do
       puts "You must specify one or more collections after 'bundle exec rake wax:pagemaster' to generate.".magenta
       exit 1
     else
-      $argv.each do |collection_name|
-        collection_config = valid_pagemaster(collection_name)
-        collections_dir   = $config['collections_dir'].nil? ? '' : $config.fetch('collections_dir').to_s + '/'
-        collection = Collection.new(collection_name, collection_config, collections_dir)
+      $argv.each do |name|
+        collection = Collection.new($config, name)
         collection.pagemaster
       end
     end

@@ -1,4 +1,5 @@
 require 'wax_tasks'
+require 'json'
 
 namespace :wax do
   desc 'build lunr search index'

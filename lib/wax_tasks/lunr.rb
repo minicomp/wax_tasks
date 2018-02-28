@@ -1,4 +1,5 @@
 include FileUtils
+require 'json'
 
 # for generating Lunr Index and Lunr UI files
 class Lunr

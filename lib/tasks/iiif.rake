@@ -4,10 +4,13 @@ require 'iiif_s3'
 namespace :wax do
   task :iiif => :config do
     abort "You must specify a collections after 'bundle exec rake wax:iiif'.".magenta if $argv.empty?
+
     outputdir = './iiif'
     FileUtils.mkdir outputdir
+
     all_records = []
     id_counter = 0
+
     build_opts = {
       :base_url => $config['baseurl'] + '/iiif',
       :output_dir => outputdir,

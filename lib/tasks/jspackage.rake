@@ -11,7 +11,7 @@ namespace :wax do
       'dependencies'  => {}
     }
     names = []
-    $config['js'].each do |dependency|
+    config['js'].each do |dependency|
       name = dependency[0]
       names << name
       version = dependency[1]['version']
