@@ -21,19 +21,20 @@ $ convert -version
 
 ## Configuration
 
-You will need to make a directory `_iiif_source` in the root of your Jekyll site.  Next, you will need to make a folder for each iiif collection inside that, and put your collection's full size source images inside.
+You will need to make a directory `iiif` in the the `_data` folder of your Jekyll site.  Next, you will need to make a folder for each iiif collection inside that, and put your collection's full size source images inside.
 
 For example:
 
 ```
 .
-└── _iiif_source
-    ├── collection_1
-    |   ├── c1-item1.jpg
-    |   └── c1-item2.jpg
-    └── collection_2
-        ├── c2-item1.jpg
-        └── c2-item2.jpg
+└── _data
+    └── iiif
+        ├── collection_1
+        |   ├── c1-item1.jpg
+        |   └── c1-item2.jpg
+        └── collection_2
+            ├── c2-item1.jpg
+            └── c2-item2.jpg
 ```
 
 This will generate a directory `iiif` in the root of your site that includes all the tiles and iiif json:
