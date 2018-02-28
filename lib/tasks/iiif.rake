@@ -16,7 +16,7 @@ namespace :wax do
     }
     $argv.each do |a|
       id_counter += 1
-      inpath = './_iiif_source/' + a
+      inpath = './_data/iiif/' + a
       abort "Source path '#{inpath}' does not exist. Exiting.".magenta unless Dir.exist?(inpath)
       paged = $config['collections'][a]['iiif_paged'] == true
       collection_records = make_records(a, inpath, paged)

@@ -6,7 +6,6 @@ require 'rake'
 # make csvs
 I18n.enforce_available_locales = false
 Faker::Config.locale = 'zh-CN'
-Dir.mkdir('_data') unless File.exist?('_data')
 
 def fake_data(name, type)
   data = []
