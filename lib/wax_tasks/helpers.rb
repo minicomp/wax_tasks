@@ -27,6 +27,6 @@ def slug(str)
 end
 
 def thing2string(thing)
-  thing = thing.join(" ") if thing.is_a?(Array)
+  thing = thing.join(" || ") if thing.is_a?(Array)
   thing.to_s
 end
