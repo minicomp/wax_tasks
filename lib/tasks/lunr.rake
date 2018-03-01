@@ -3,10 +3,11 @@ require 'json'
 
 namespace :wax do
   desc 'build lunr search index'
-  task :lunr => :config do
+  task :lunr do
+    config = read_config
     Dir.mkdir('js') unless File.exist?('js')
     yaml = "---\nlayout: none\n---\n"
-    lunr = Lunr.new($config)
+    lunr = Lunr.new(config)
 
     # write index to json file
     idx = yaml + lunr.index

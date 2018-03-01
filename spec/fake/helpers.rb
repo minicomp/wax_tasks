@@ -1,9 +1,6 @@
 require 'csv'
 require 'colorized_string'
 
-# global
-$collection_data = {}
-
 # helper methods
 def slug(str)
   str.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
@@ -16,7 +13,34 @@ def write_csv(path, hashes)
       csv << hash.values
     end
   end
-  puts "Writing csv data to #{path}."
 rescue StandardError
   abort "Cannot write csv data to #{path} for some reason.".magenta
+end
+
+def add_collections_to_config(argv, collection_data, config)
+  collection_hash = {}
+  argv.each do |coll_name|
+    ext = collection_data[coll_name]['type']
+    collection_hash[coll_name] = {
+      'source' => coll_name + ext,
+      'layout' => 'default'
+    }
+  end
+  config['collections'] = collection_hash
+  output = YAML.dump config
+  File.write('_config.yml', output)
+end
+
+def add_lunr_data(config, collection_data)
+  config['collections'].each do |collection|
+    name = collection[0]
+    lunr_hash = {
+      'content' => false,
+      'fields' => collection_data[name]['keys']
+    }
+    # add it to config
+    config['collections'][name]['lunr_index'] = lunr_hash
+    output = YAML.dump config
+    File.write('_config.yml', output)
+  end
 end

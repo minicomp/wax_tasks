@@ -134,8 +134,4 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 - [x] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
 - [x] write spec for `wax:iiif` on sample HQ .jpgs.
 - [x] make `wax:pagemaster` accept json.
-- [x] change `_iiif` file structure to `_iiif/collection_name/source_images/*` and generate to `_iiif/collection_name/tiles/*`.
-- [x] better process content in lunr index
-- [ ] create a `wax:pagemaster all` argument for all collections with a `source` in config
-- [ ] create umbrella `wax:process` task, that would run `wax:pagemaster all` and regenerate the lunr index with `wax:lunr`.
-- [ ] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.
+- [x] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.

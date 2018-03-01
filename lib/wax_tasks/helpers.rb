@@ -23,13 +23,11 @@ def thing2string(thing)
   thing.to_s
 end
 
-def get_config
+def read_config
   YAML.load_file('_config.yml')
-rescue StandardError
-  abort 'Cannot load _config.yml'.magenta
 end
 
-def get_argv
+def read_argv
   argv = ARGV.drop(1)
   argv.each { |a| task a.to_sym }
   argv
