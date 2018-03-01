@@ -23,6 +23,17 @@ class Lunr
     total_fields.uniq
   end
 
+  def page_hash(page, c_fields, c, count)
+    yaml = YAML.load_file(page)
+    hash = {
+      'lunr_id' => count,
+      'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
+    }
+    c_fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
+    hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
+    hash
+  end
+
   def index
     full_index = []
     count = 0
@@ -39,15 +50,8 @@ class Lunr
       puts "Loading #{c_pages.length} pages from #{c_dir}"
       # index each page in collection
       c_pages.each do |page|
-        yaml = YAML.load_file(page)
-        hash = {
-          'lunr_id' => count,
-          'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
-        }
-        c_fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
-        hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
+        full_index << page_hash(page, c_fields, c, count)
         count += 1
-        full_index << hash
       end
     end
     JSON.pretty_generate(full_index)

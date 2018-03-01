@@ -1,16 +1,14 @@
 include FileUtils
-require 'colorized_string'
 require 'csv'
 require 'json'
 
 # initializes a wax collection for use with pagemaster,lunr,and iiif tasks
 class Collection
-
   def initialize(config, collection_name)
     @name   = collection_name
     @config = config
 
-    cdir   = @config['collections_dir'].nil? ? '' : @config.fetch('collections_dir').to_s + '/'
+    cdir = @config['collections_dir'].nil? ? '' : @config.fetch('collections_dir').to_s + '/'
     collection = valid_collection_config
 
     @src    = '_data/' + collection.fetch('source')
@@ -19,10 +17,11 @@ class Collection
   end
 
   def valid_collection_config
-    c = @config.fetch('collections').fetch(@name)
-    abort "Cannot find 'source' for the collection '#{@name}' in _config.yml. Exiting.".magenta if c.fetch('source').nil?
-    abort "Cannot find 'layout' for the collection '#{@name}' in _config.yml. Exiting.".magenta if c.fetch('layout').nil?
-    abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c.fetch('source'))
+    c = @config['collections'][@name]
+    abort "Cannot find the collection #{@name} in _config.yml. Exiting.".magenta if c.nil?
+    abort "Cannot find 'source' for the collection '#{@name}' in _config.yml. Exiting.".magenta if c['source'].nil?
+    abort "Cannot find 'layout' for the collection '#{@name}' in _config.yml. Exiting.".magenta if c['layout'].nil?
+    abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c['source'])
     c
   end
 

@@ -3,11 +3,12 @@ require 'json'
 
 namespace :wax do
   desc 'write a simple package.json'
-  task :jspackage => :config do
+  task :jspackage do
+    config = read_config
     package = {
-      'name'          => $config['title'],
+      'name'          => config['title'],
       'version'       => '1.0.0',
-      'description'   => $config['description'],
+      'description'   => config['description'],
       'dependencies'  => {}
     }
     names = []

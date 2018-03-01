@@ -1,7 +1,1 @@
-require 'fake/helpers'
-require 'fake/site'
-require 'fake/data'
-require 'test/config'
-require 'test/pagemaster'
-require 'test/lunr'
-require 'test/iiif'
+require 'test_tasks'

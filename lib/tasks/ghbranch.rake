@@ -2,14 +2,15 @@ require 'wax_tasks'
 
 namespace :wax do
   desc 'build site with gh-baseurl and publish to gh-pages branch'
-  task :ghbranch => :config do
+  task :ghbranch do
+    config = read_config
     FileUtils.rm_rf('_site')
 
     opts = {
       'source' => '.',
       'destination' => '_site',
       'config' => '_config.yml',
-      'baseurl' => $config['gh-baseurl'],
+      'baseurl' => config['gh-baseurl'],
       'incremental' => true,
       'verbose' => true
     }
