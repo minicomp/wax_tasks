@@ -1,4 +1,5 @@
 require 'wax_tasks'
+require 'jekyll'
 
 namespace :wax do
   desc 'build site with baseurl and publish to s3 branch'

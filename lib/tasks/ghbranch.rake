@@ -1,4 +1,5 @@
 require 'wax_tasks'
+require 'jekyll'
 
 namespace :wax do
   desc 'build site with gh-baseurl and publish to gh-pages branch'
