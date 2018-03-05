@@ -1,14 +1,14 @@
 ## Metrics
 Metrics/AbcSize:
-  Max: 55
+  Max: 40
 Metrics/MethodLength:
-  Max: 30
+  Max: 40
 Metrics/LineLength:
   Enabled: false
+Metrics/BlockLength:
+  Max: 40
 
 ## Style
-Style/GlobalVars:
-  AllowedVariables: ['$config', '$argv', '$collection_data']
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/MixinUsage:

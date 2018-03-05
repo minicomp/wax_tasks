@@ -1,5 +1,5 @@
+require 'wax_tasks'
 require 'html-proofer'
-require 'colorized_string'
 
 namespace :wax do
   desc 'run htmlproofer, rspec if exists'

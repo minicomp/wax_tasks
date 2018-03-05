@@ -1,5 +1,3 @@
-require 'colorized_string'
-
 def clean(str)
   str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
   str.gsub!(/{%(.*)%}/, '') # remove functional liquid
@@ -10,15 +8,6 @@ def clean(str)
   str
 end
 
-def valid_pagemaster(collection_name)
-  c = $config['collections'][collection_name]
-  abort "Cannot find the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c.nil?
-  abort "Cannot find 'source' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c['source'].nil?
-  abort "Cannot find 'layout' for the collection '#{collection_name}' in _config.yml. Exiting.".magenta if c['layout'].nil?
-  abort "Cannot find the file '#{'_data/' + c['source']}'. Exiting.".magenta unless File.file?('_data/' + c['source'])
-  c
-end
-
 def rm_diacritics(str)
   to_replace  = "ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž"
   replaced_by = "AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz"
@@ -26,5 +15,20 @@ def rm_diacritics(str)
 end
 
 def slug(str)
-  str.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
+  str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
+end
+
+def thing2string(thing)
+  thing = thing.join(" || ") if thing.is_a?(Array)
+  thing.to_s
+end
+
+def read_config
+  YAML.load_file('_config.yml')
+end
+
+def read_argv
+  argv = ARGV.drop(1)
+  argv.each { |a| task a.to_sym }
+  argv
 end
