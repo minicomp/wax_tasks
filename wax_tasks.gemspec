@@ -1,4 +1,4 @@
-$LOAD_PATH.push File.expand_path('../lib', __dir__)
+$LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |s|
   s.name          = 'wax_tasks'
