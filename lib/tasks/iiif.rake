@@ -1,3 +1,4 @@
+include FileUtils
 require 'wax_tasks'
 require 'iiif_s3'
 
@@ -8,17 +9,12 @@ namespace :wax do
 
     abort "You must specify a collections after 'bundle exec rake wax:iiif'.".magenta if argv.empty?
 
-    FileUtils.mkdir './iiif'
+    mkdir_p('./iiif')
 
     all_records = []
     id_counter = 0
+    build_opts = build_options(config)
 
-    build_opts = {
-      :base_url => config['baseurl'] + '/iiif',
-      :output_dir => './iiif',
-      :tile_scale_factors => [1, 2],
-      :verbose => true
-    }
     argv.each do |a|
       id_counter += 1
       inpath = './_data/iiif/' + a
@@ -31,6 +27,15 @@ namespace :wax do
     builder.load(all_records)
     builder.process_data
   end
+end
+
+def build_options(config)
+  {
+    :base_url => config['baseurl'] + '/iiif',
+    :output_dir => './iiif',
+    :tile_scale_factors => [1, 2],
+    :verbose => true
+  }
 end
 
 def make_records(collection_name, inpath, paged, config)
