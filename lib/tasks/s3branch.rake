@@ -1,3 +1,4 @@
+include FileUtils
 require 'wax_tasks'
 require 'jekyll'
 
