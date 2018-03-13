@@ -1,6 +1,6 @@
 include FileUtils
 require 'wax_tasks'
-require 'iiif_s3'
+require 'wax_iiif'
 
 namespace :wax do
   task :iiif do
