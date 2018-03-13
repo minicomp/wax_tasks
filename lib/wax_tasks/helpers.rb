@@ -32,3 +32,7 @@ def read_argv
   argv.each { |a| task a.to_sym }
   argv
 end
+
+def padded_int(index, max_idx)
+  index.to_s.rjust(Math.log10(max_idx).to_i + 1, "0")
+end

@@ -14,6 +14,7 @@ class Collection
     @src    = '_data/' + collection.fetch('source')
     @layout = File.basename(collection.fetch('layout'), '.*')
     @dir    = cdir + '_' + @name
+    @order  = collection.key?('keep_order') ? collection.fetch('keep_order') : false
   end
 
   def valid_collection_config
@@ -45,15 +46,17 @@ class Collection
     perma_ext = @config['permalink'] == 'pretty' ? '/' : '.html'
     completed = 0
     skipped = 0
-    data.each do |item|
+    data.each_with_index do |item, index|
       pagename = slug(item.fetch('pid'))
       pagepath = @dir + '/' + pagename + '.md'
-      permalink = '/' + @name + '/' + pagename + perma_ext
+      item['permalink'] = '/' + @name + '/' + pagename + perma_ext
+      item['layout'] = @layout
+      item['order'] = padded_int(index, data.length) if @order
       if File.exist?(pagepath)
         puts "#{pagename}.md already exits. Skipping."
         skipped += 1
       else
-        File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + "permalink: #{permalink}\nlayout: #{@layout}\n---") }
+        File.open(pagepath, 'w') { |file| file.write(item.to_yaml.to_s + '---') }
         completed += 1
       end
     end

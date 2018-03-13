@@ -23,14 +23,14 @@ class Lunr
     total_fields.uniq
   end
 
-  def page_hash(page, c_fields, c, count)
+  def page_hash(page, c_fields, collection, count)
     yaml = YAML.load_file(page)
     hash = {
       'lunr_id' => count,
       'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
     }
     c_fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
-    hash['content'] = rm_diacritics(clean(File.read(page))) if c[1]['lunr_index']['content']
+    hash['content'] = rm_diacritics(clean(File.read(page))) if collection[1]['lunr_index']['content']
     hash
   end
 

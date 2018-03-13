@@ -1,3 +1,4 @@
+include FileUtils
 require 'wax_tasks'
 require 'jekyll'
 
@@ -5,7 +6,7 @@ namespace :wax do
   desc 'build site with gh-baseurl and publish to gh-pages branch'
   task :ghbranch do
     config = read_config
-    FileUtils.rm_rf('_site')
+    rm_rf('_site')
 
     opts = {
       'source' => '.',
