@@ -23,7 +23,8 @@ def add_collections_to_config(argv, collection_data, config)
     ext = collection_data[coll_name]['type']
     collection_hash[coll_name] = {
       'source' => coll_name + ext,
-      'layout' => 'default'
+      'layout' => 'iiif-image-page',
+      'keep_order' => true
     }
   end
   config['collections'] = collection_hash

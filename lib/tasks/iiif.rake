@@ -33,7 +33,6 @@ def build_options(config)
   {
     :base_url => config['baseurl'] + '/iiif',
     :output_dir => './iiif',
-    :tile_scale_factors => [1, 2],
     :verbose => true
   }
 end
