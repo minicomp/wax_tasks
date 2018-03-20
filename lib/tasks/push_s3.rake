@@ -2,8 +2,8 @@ include FileUtils
 require 'wax_tasks'
 
 namespace :wax do
-  namespace :deploy do
-    desc 'build site with gh-baseurl and publish to gh-pages branch'
+  namespace :push do
+    desc 'push built site to s3 branch'
     task :s3 do
       if ENV['CI']
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
@@ -24,7 +24,7 @@ namespace :wax do
         system 'git init'
         system "git add . && git commit -m '#{COMMIT_MSG}'"
         system 'git remote add origin ' + ORIGIN
-        system 'git push origin master:refs/heads/gh-pages --force'
+        system 'git push origin master:refs/heads/s3 --force'
       end
     end
   end
