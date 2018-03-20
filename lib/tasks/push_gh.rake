@@ -3,8 +3,8 @@ require 'wax_tasks'
 require 'jekyll'
 
 namespace :wax do
-  namespace :deploy do
-    desc 'build site with gh-baseurl and publish to gh-pages branch'
+  namespace :push do
+    desc 'build site with gh-baseurl and push to gh-pages branch'
     task :gh do
       if ENV['CI']
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
