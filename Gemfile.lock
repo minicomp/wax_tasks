@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wax_tasks (0.0.45)
+    wax_tasks (0.0.46)
       colorize (~> 0.8)
       html-proofer (~> 3.0)
       jekyll (~> 3.7)
