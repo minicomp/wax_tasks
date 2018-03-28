@@ -21,7 +21,7 @@ module Fake
       'gh-baseurl'  => '/wax_tasks',
       'exclude'     => ['Rakefile'],
       'theme'       => 'minima',
-      'js'          => { 'jquery' => { 'cdn'=> 'test', 'version' => 'test' }}
+      'js'          => { 'jquery' => { 'cdn' => 'test', 'version' => 'test' } }
     }
 
     File.open('_config.yml', 'w') { |f| f.puts(config_file.to_yaml) }
@@ -32,6 +32,6 @@ module Fake
     end
     File.open('Rakefile', 'w') { |f| f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }') }
     File.open('index.html', 'w') { |f| f.puts('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>spec site</title></head><body>Home</body></html>') }
-    Bundler.with_clean_env do system('bundle > /dev/null') end
+    Bundler.with_clean_env { system('bundle > /dev/null') }
   end
 end

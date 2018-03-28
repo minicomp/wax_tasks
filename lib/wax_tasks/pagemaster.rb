@@ -2,6 +2,7 @@ require 'json'
 require 'yaml'
 require 'csv'
 
+# module for generating markdown collection pages from csv/json/yaml records
 module Pagemaster
   include FileUtils
 
@@ -50,8 +51,8 @@ module Pagemaster
     end
     puts "\n#{completed} pages were generated to #{dir} directory.".cyan
     puts "\n#{skipped} pre-existing items were skipped.".cyan
-  # rescue StandardError
-    # abort "#{completed} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
+  rescue StandardError
+    abort "#{completed} pages were generated before failure, most likely a record is missing a valid 'pid' value.".magenta
   end
 
   def self.detect_duplicates(data)

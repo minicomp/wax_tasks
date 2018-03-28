@@ -11,7 +11,7 @@ Fake.data
 
 describe 'wax:pagemaster' do
   config = WaxTasks.config
-  args = config['collections'].map{ |c| c[0]}
+  args = config['collections'].map { |c| c[0] }
   system("bundle exec rake wax:pagemaster #{args.join(' ')} > /dev/null")
   it 'generates directories' do
     args.each { |a| expect(Dir.exist?('_' + a)) }
@@ -22,7 +22,7 @@ describe 'wax:pagemaster' do
 end
 
 describe 'wax:lunr' do
-  system("bundle exec rake wax:lunr > /dev/null")
+  system('bundle exec rake wax:lunr > /dev/null')
   it 'generates a lunr index' do
     index = File.open('js/lunr-index.json', 'r').read
     expect(index.length > 1000)
@@ -36,7 +36,7 @@ end
 
 describe 'wax:iiif' do
   site_config = WaxTasks.config
-  args = site_config['collections'].map{ |c| c[0]}
+  args = site_config['collections'].map { |c| c[0] }
 
   it 'generates iiif tiles and data' do
     images = Dir.glob('./_data/iiif/*.jpg')
@@ -53,18 +53,18 @@ end
 
 describe 'jekyll' do
   it 'builds successfully' do
-    Bundler.with_clean_env do system("bundle exec jekyll build > /dev/null") end
+    Bundler.with_clean_env { system('bundle exec jekyll build > /dev/null') }
   end
 end
 
-describe "wax:jspackage" do
-  system("bundle exec rake wax:jspackage > /dev/null")
+describe 'wax:jspackage' do
+  system('bundle exec rake wax:jspackage > /dev/null')
   it 'writes a package.json file' do
     package = File.open('package.json', 'r').read
     expect(package.length > 90)
   end
 end
 
-describe "wax:test" do
-  it 'passes html-proofer' do system("bundle exec rake wax:test > /dev/null") end
+describe 'wax:test' do
+  it 'passes html-proofer' do system('bundle exec rake wax:test > /dev/null') end
 end

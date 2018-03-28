@@ -12,7 +12,7 @@ module Fake
     I18n.enforce_available_locales = false
     Faker::Config.locale = 'zh-CN'
     collections = {}
-    [".json", ".csv", ".yml"].each do |type|
+    ['.json', '.csv', '.yml'].each do |type|
       data = generate_data
       name = WaxTasks.slug(Faker::RuPaul.unique.queen)
       keys = data.first.keys

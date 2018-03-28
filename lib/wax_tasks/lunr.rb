@@ -1,7 +1,7 @@
 include FileUtils
 require 'json'
 
-
+# module for generating elasticlunr index and default jquery ui
 module Lunr
   def self.total_fields(collections)
     total_fields = ['pid']
@@ -16,7 +16,7 @@ module Lunr
     site_config['collections'].find_all { |c| c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields') }
   end
 
-  def self.index(lunr_language, cdir, collections)
+  def self.index(cdir, collections)
     index = []
     count = 0
     abort 'There are no valid collections to index.'.magenta if collections.nil?
@@ -38,7 +38,6 @@ module Lunr
     end
     JSON.pretty_generate(index)
   end
-
 
   def self.page_hash(page, fields, get_content, count)
     yaml = YAML.load_file(page)

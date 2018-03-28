@@ -5,9 +5,8 @@ require_relative 'wax_tasks/pagemaster'
 require 'yaml'
 require 'wax_iiif'
 
+# umbrella module for registering task modules
 module WaxTasks
-  def self.config; YAML.load_file('_config.yml'); end
-
   def self.pagemaster(name, site_config)
     collection_config = Pagemaster.valid_config(name, site_config)
 
@@ -22,12 +21,11 @@ module WaxTasks
   end
 
   def self.lunr(site_config)
-    lunr_language = site_config['lunr_language']
     cdir          = site_config['collections_dir'].to_s
     collections   = Lunr.collections(site_config)
     total_fields  = Lunr.total_fields(collections)
 
-    index         = Lunr.index(lunr_language, cdir, collections)
+    index         = Lunr.index(cdir, collections)
     ui            = Lunr.ui(total_fields)
 
     Lunr.write_index(index)
@@ -38,5 +36,11 @@ module WaxTasks
     Iiif.ingest_collections(args, site_config)
   end
 
-  def self.slug(str); str.downcase.tr(' ', '_').gsub(/[^:\w-]/, ''); end
+  def self.config
+    YAML.load_file('_config.yml')
+  end
+
+  def self.slug(str)
+    str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
+  end
 end

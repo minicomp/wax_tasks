@@ -1,10 +1,10 @@
 require 'json'
 require 'wax_iiif'
 
-
+# module for generating IIIF derivatives + json from local images
 module Iiif
   include FileUtils
-  
+
   def self.ingest_collections(args, site_config)
     mkdir_p('./iiif', :verbose => false)
     all_records = []
@@ -30,16 +30,16 @@ module Iiif
     }
   end
 
-  def self.make_records(a, inpath)
+  def self.make_records(arg, inpath)
     counter = 1
     records = []
     imagefiles = Dir[inpath + '/*'].sort!
     imagefiles.each do |imagefile|
       basename = File.basename(imagefile, '.*').to_s
       record_opts = {
-        :id => a + '-' + basename,
+        :id => arg + '-' + basename,
         :path => imagefile,
-        :label => a + ' - ' + basename
+        :label => arg + ' - ' + basename
       }
       counter += 1
       records << IiifS3::ImageRecord.new(record_opts)
