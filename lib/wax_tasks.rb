@@ -1,6 +1,6 @@
-require_relative 'wax_tasks/iiif'
-require_relative 'wax_tasks/lunr'
-require_relative 'wax_tasks/pagemaster'
+require_relative 'modules/iiif'
+require_relative 'modules/lunr'
+require_relative 'modules/pagemaster'
 
 require 'yaml'
 require 'wax_iiif'
