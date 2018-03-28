@@ -7,6 +7,8 @@ Metrics/LineLength:
   Enabled: false
 Metrics/BlockLength:
   Max: 40
+Metrics/ParameterLists:
+  Max: 7
 
 ## Style
 Style/HashSyntax:
@@ -16,7 +18,9 @@ Style/MixinUsage:
 Style/RegexpLiteral:
   EnforcedStyle: slashes
   AllowInnerSlashes: true
-Style/StringLiterals:
-  Enabled: false
 Style/Next:
+  Enabled: false
+
+## Naming
+Naming/UncommunicativeMethodParamName:
   Enabled: false

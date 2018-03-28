@@ -1,20 +1,9 @@
 include FileUtils
 require 'json'
 
-# for generating Lunr Index and Lunr UI files
-class Lunr
-  def initialize(config)
-    @lunr_collections = collections_to_index(config['collections'])
-    @total_fields     = total_fields(@lunr_collections)
-    @lunr_language    = config['lunr_language']
-    @collections_dir  = config['collections_dir'].nil? ? '' : config.fetch('collections_dir') + '/'
-  end
-
-  def collections_to_index(collections)
-    collections.find_all { |c| c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields') }
-  end
-
-  def total_fields(collections)
+# module for generating elasticlunr index and default jquery ui
+module Lunr
+  def self.total_fields(collections)
     total_fields = ['pid']
     collections.each do |c|
       total_fields = total_fields.concat(c[1]['lunr_index']['fields'])
@@ -23,52 +12,96 @@ class Lunr
     total_fields.uniq
   end
 
-  def page_hash(page, c_fields, collection, count)
+  def self.collections(site_config)
+    site_config['collections'].find_all { |c| c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields') }
+  end
+
+  def self.index(cdir, collections)
+    index = []
+    count = 0
+    abort 'There are no valid collections to index.'.magenta if collections.nil?
+
+    collections.each do |c|
+      dir = cdir + '_' + c[0]
+      fields = c[1]['lunr_index']['fields'].uniq
+      pages = Dir.glob(dir + '/*.md')
+      get_content = c[1]['lunr_index']['content']
+      # catch
+      abort "There are no markdown pages in directory '#{dir}'".magenta if pages.empty?
+      abort "There are no fields specified for #{c[0]}.".magenta if fields.empty?
+      puts "Loading #{pages.length} pages from #{dir}"
+      # index each page in collection
+      pages.each do |page|
+        index << page_hash(page, fields, get_content, count)
+        count += 1
+      end
+    end
+    JSON.pretty_generate(index)
+  end
+
+  def self.page_hash(page, fields, get_content, count)
     yaml = YAML.load_file(page)
     hash = {
       'lunr_id' => count,
       'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
     }
-    c_fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
-    hash['content'] = rm_diacritics(clean(File.read(page))) if collection[1]['lunr_index']['content']
+    fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
+    hash['content'] = rm_diacritics(clean(File.read(page))) if get_content
     hash
   end
 
-  def index
-    full_index = []
-    count = 0
-    # catch
-    abort("There are no valid collections to index.".magenta) if @lunr_collections.nil?
-    # index each lunr_collection
-    @lunr_collections.each do |c|
-      c_dir = @collections_dir + '_' + c[0]
-      c_fields = c[1]['lunr_index']['fields'].uniq
-      c_pages = Dir.glob(c_dir + '/*.md')
-      # catch
-      abort "There are no markdown pages in directory '#{c_dir}'".magenta if c_pages.empty?
-      abort "There are no fields specified for #{c[0]}.".magenta if c_fields.empty?
-      puts "Loading #{c_pages.length} pages from #{c_dir}"
-      # index each page in collection
-      c_pages.each do |page|
-        full_index << page_hash(page, c_fields, c, count)
-        count += 1
-      end
-    end
-    JSON.pretty_generate(full_index)
-  end
-
-  def ui
+  def self.ui(total_fields)
     # set up index
     ui_string = "$.getJSON(\"{{ site.baseurl }}/js/lunr-index.json\", function(index_json) {\nwindow.index = new elasticlunr.Index;\nwindow.store = index_json;\nindex.saveDocument(false);\nindex.setRef('lunr_id');"
     # add fields to index
-    @total_fields.each { |field| ui_string += "\nindex.addField('#{field}');" }
+    total_fields.each { |field| ui_string += "\nindex.addField('#{field}');" }
     # add docs
     ui_string += "\n// add docs\nfor (i in store){index.addDoc(store[i]);}"
     # gui
     ui_string += "\n$('input#search').on('keyup', function() {\nvar results_div = $('#results');\nvar query = $(this).val();\nvar results = index.search(query, { boolean: 'AND', expand: true });\nresults_div.empty();\nif (results.length > 10) {\nresults_div.prepend(\"<p><small>Displaying 10 of \" + results.length + \" results.</small></p>\");\n}\nfor (var r in results.slice(0, 9)) {\nvar ref = results[r].ref;\nvar item = store[ref];"
     # add fields as display vars
-    @total_fields.each { |field| ui_string += "var #{field} = item.#{field};\n" }
+    total_fields.each { |field| ui_string += "var #{field} = item.#{field};\n" }
     ui_string += "var result = '<div class=\"result\"><b><a href=\"' + item.link + '\">' + title + '</a></b></p></div>';\nresults_div.append(result);\n}\n});\n});"
     ui_string
+  end
+
+  def self.write_index(index)
+    mkdir_p('js')
+    index = "---\nlayout: none\n---\n" + index
+    path = 'js/lunr-index.json'
+    File.open(path, 'w') { |file| file.write(index) }
+    puts "Writing lunr index to #{path}".cyan
+  end
+
+  def self.write_ui(ui)
+    ui = "---\nlayout: none\n---\n" + ui
+    path = 'js/lunr-ui.js'
+    if File.exist?(path)
+      puts "Lunr UI already exists at #{path}. Skipping".cyan
+    else
+      File.open(path, 'w') { |file| file.write(ui) }
+      puts "Writing lunr ui to #{path}".cyan
+    end
+  end
+
+  def self.clean(str)
+    str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
+    str.gsub!(/{%(.*)%}/, '') # remove functional liquid
+    str.gsub!(/<\/?[^>]*>/, '') # remove html
+    str.gsub!('\\n', '') # remove newlines
+    str.gsub!(/\s+/, ' ') # remove extra space
+    str.tr!('"', "'") # replace double quotes with single
+    str
+  end
+
+  def self.rm_diacritics(str)
+    to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
+    replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
+    str.tr(to_replace, replaced_by)
+  end
+
+  def self.thing2string(thing)
+    thing = thing.join(' || ') if thing.is_a?(Array)
+    thing.to_s
   end
 end

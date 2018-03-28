@@ -1,12 +1,12 @@
 PATH
   remote: .
   specs:
-    wax_tasks (0.0.46)
+    wax_tasks (0.0.47)
       colorize (~> 0.8)
-      html-proofer (~> 3.0)
-      jekyll (~> 3.7)
-      rake (~> 12.0)
-      wax_iiif (~> 0.0.1)
+      html-proofer (~> 3)
+      jekyll (~> 3)
+      rake (~> 12)
+      wax_iiif
 
 GEM
   remote: https://rubygems.org/
@@ -75,14 +75,14 @@ GEM
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     parallel (1.12.1)
-    parser (2.5.0.3)
+    parser (2.5.0.5)
       ast (~> 2.4.0)
     pathutil (0.16.1)
       forwardable-extended (~> 2.6)
     powerpack (0.1.1)
     public_suffix (3.0.2)
     rainbow (3.0.0)
-    rake (12.3.0)
+    rake (12.3.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -100,7 +100,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    rubocop (0.53.0)
+    rubocop (0.54.0)
       parallel (~> 1.10)
       parser (>= 2.5)
       powerpack (~> 0.1)
@@ -110,7 +110,7 @@ GEM
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
     safe_yaml (1.0.4)
-    sass (3.5.5)
+    sass (3.5.6)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -129,10 +129,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.16)
-  faker (~> 1.8)
-  rspec (~> 3.5)
-  rubocop (~> 0.53)
+  bundler (~> 1)
+  faker (~> 1)
+  rspec (~> 3)
+  rubocop (>= 0.5)
   wax_tasks!
 
 BUNDLED WITH
