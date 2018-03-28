@@ -6,3 +6,9 @@ rvm:
 script:
   - bundle exec rubocop
   - bundle exec rspec
+branches:
+  only:
+    - master
+after_success:
+  - bundle exec rake wax:push:s3
+  - bundle exec rake wax:push:gh

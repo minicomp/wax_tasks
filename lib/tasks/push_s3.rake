@@ -7,7 +7,7 @@ namespace :wax do
     task :s3 do
       if ENV['CI']
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
-        USER = REPO_SLUG.split("/")[0]
+        USER = REPO_SLUG.split('/')[0]
         TOKEN = ENV['ACCESS_TOKEN']
         COMMIT_MSG = "Site updated via #{ENV['TRAVIS_COMMIT']}".freeze
         ORIGIN = "https://#{USER}:#{TOKEN}@github.com/#{REPO_SLUG}.git".freeze
@@ -15,7 +15,7 @@ namespace :wax do
       else
         ORIGIN = `git config --get remote.origin.url`.freeze
         COMMIT_MSG = "Site updated at #{Time.now.utc}".freeze
-        puts "Deploying to s3 branch from local task"
+        puts 'Deploying to s3 branch from local task'
       end
 
       Dir.mktmpdir do |tmp|
@@ -23,7 +23,7 @@ namespace :wax do
         Dir.chdir tmp
         system 'git init'
         system "git add . && git commit -m '#{COMMIT_MSG}'"
-        system 'git remote add origin ' + ORIGIN
+        system "git remote add origin #{ORIGIN}"
         system 'git push origin master:refs/heads/s3 --force'
       end
     end

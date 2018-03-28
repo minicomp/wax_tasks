@@ -15,19 +15,23 @@ module Fake
     cd(site_dir)
 
     config_file = {
-      'title'       => 'faker',
+      'title'       => 'spec site',
       'url'         => '',
       'baseurl'     => '',
-      'exclude'     => ['Rakefile']
-    }
-    config_opts = {
-      'source'      => '.',
-      'destination' => '_site',
-      'config'      => '_config.yml'
+      'gh-baseurl'  => '/wax_tasks',
+      'exclude'     => ['Rakefile'],
+      'theme'       => 'minima',
+      'js'          => { 'jquery' => { 'cdn'=> 'test', 'version' => 'test' }}
     }
 
     File.open('_config.yml', 'w') { |f| f.puts(config_file.to_yaml) }
+    File.open('Gemfile', 'w') do |f|
+      f.puts("source 'https://rubygems.org'")
+      f.puts("gem 'jekyll'")
+      f.puts("gem 'minima'")
+    end
     File.open('Rakefile', 'w') { |f| f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }') }
-    Jekyll::Site.new(Jekyll.configuration(config_opts)).process
+    File.open('index.html', 'w') { |f| f.puts('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>spec site</title></head><body>Home</body></html>') }
+    Bundler.with_clean_env do system('bundle > /dev/null') end
   end
 end

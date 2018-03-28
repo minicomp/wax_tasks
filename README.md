@@ -2,7 +2,6 @@
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
 
 
-
 #### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
 Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wax](https://minicomp.github.io/wax/).
@@ -20,6 +19,7 @@ Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wa
 - [wax:lunr](#waxlunr)
 - [wax:iiif](#waxiiif)
 - [wax:test](#waxtest)
+- [wax:push](#waxpush)
 
 #### To Do
 - [v0.0.5](#005-alpha-release)
@@ -48,12 +48,13 @@ $ convert -version
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
 
+You can learn more about using ImageMagick and `wax_tasks` [here](docs/imagemagick.md) or ignore this completely if you do not plan to generate IIIF derivatives.
+
 ## Installing
 
 Add `wax_tasks` to your Jekyll site's Gemfile:
 
 ```ruby
-source 'https://rubygems.org'
 gem 'wax_tasks'
 ```
 
@@ -88,7 +89,7 @@ Generates a client-side JSON search index of your site for use with [ElasticLunr
 
 ## wax:iiif
 
-Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/). [Read More](docs/iiif.md).
+Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](docs/iiif.md).
 
 `$ bundle exec rake wax:iiif collection-name`
 
@@ -97,6 +98,15 @@ Takes a local directory of images and generates tiles and data that work with a 
 Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compiled site to look for broken links, HTML errors, and accessibility concerns. Runs [Rspec](http://rspec.info/) tests if a `.rspec` file is present. [Read More](docs/test.md).
 
 `$ bundle exec rake wax:test`
+
+
+### wax:push
+
+There are two tasks within the namespace `wax:push`: `gh` and `s3`, which push the compiled exhibition site to the `gh-pages` and `s3` branches of your repository respectively for deployment. [Read More](docs/push.md)
+
+`$ bundle exec rake wax:push:gh`
+
+`$ bundle exec rake wax:push:s3`
 
 # Sample \_config.yml file:
 
@@ -131,7 +141,5 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 # To Do
 ## 0.0.5 alpha release
 
-- [x] `content: true/false` on collection level (instead of index level) for `wax:lunr` task.
-- [x] write spec for `wax:iiif` on sample HQ .jpgs.
-- [x] make `wax:pagemaster` accept json.
-- [x] generate default `js/lunr-ui.js` if `!exist?` on `wax:lunr` task.
+- [x] deploy `gh-pages` and `s3` branches from local **OR** Travis-CI
+- [ ] generate thumbnails with `wax:iiif`

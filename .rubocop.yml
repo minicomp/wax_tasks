@@ -16,7 +16,5 @@ Style/MixinUsage:
 Style/RegexpLiteral:
   EnforcedStyle: slashes
   AllowInnerSlashes: true
-Style/StringLiterals:
-  Enabled: false
 Style/Next:
   Enabled: false

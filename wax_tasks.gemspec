@@ -2,7 +2,7 @@ $LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |s|
   s.name          = 'wax_tasks'
-  s.version       = '0.0.46'
+  s.version       = '0.0.47'
   s.authors       = ['Marii Nyrop']
   s.email         = ['m.nyrop@columbia.edu']
   s.license       = 'MIT'
@@ -15,13 +15,13 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'colorize', '~> 0.8'
-  s.add_dependency 'html-proofer', '~> 3.0'
-  s.add_dependency 'jekyll', '~> 3.7'
-  s.add_dependency 'rake', '~> 12.0'
-  s.add_dependency 'wax_iiif', '~> 0.0.1'
+  s.add_dependency 'html-proofer', '~> 3'
+  s.add_dependency 'jekyll', '~> 3'
+  s.add_dependency 'rake', '~> 12'
+  s.add_dependency 'wax_iiif'
 
-  s.add_development_dependency 'bundler', '~> 1.16'
-  s.add_development_dependency 'faker', '~> 1.8'
-  s.add_development_dependency 'rspec', '~> 3.5'
-  s.add_development_dependency 'rubocop', '~> 0.53'
+  s.add_development_dependency 'bundler', '~> 1'
+  s.add_development_dependency 'faker', '~> 1'
+  s.add_development_dependency 'rspec', '~> 3'
+  s.add_development_dependency 'rubocop', '>= 0.5'
 end
