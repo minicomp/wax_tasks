@@ -31,7 +31,7 @@ module Pagemaster
   end
 
   def self.generate_pages(data, name, layout, cdir, order, perma)
-    dir = cdir + '_' + name
+    dir = cdir + '/_' + name
     mkdir_p(dir)
     completed = 0
     skipped = 0
