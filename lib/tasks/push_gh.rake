@@ -19,7 +19,7 @@ namespace :wax do
         COMMIT_MSG = "Site updated at #{Time.now.utc}".freeze
         puts 'Deploying to gh-pages branch from local task'
       end
-      config = read_config
+      config = WaxTasks.config
       rm_rf('_site')
 
       baseurl = config['gh-baseurl'] || REPO_NAME.to_s
