@@ -44,7 +44,7 @@ module Lunr
     hash = {
       'lunr_id' => count,
       'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}",
-      'collection' => yaml.fetch('permalink').to_s[/^\/(\w*)\//].tr('/','')
+      'collection' => yaml.fetch('permalink').to_s[/^\/(\w*)\//].tr('/', '')
     }
     fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
     hash['content'] = rm_diacritics(clean(File.read(page))) if get_content
