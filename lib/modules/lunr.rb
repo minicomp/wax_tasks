@@ -22,7 +22,7 @@ module Lunr
     abort 'There are no valid collections to index.'.magenta if collections.nil?
 
     collections.each do |c|
-      dir = cdir + '_' + c[0]
+      dir = cdir.empty? ? '_' + c[0] : cdir + '/_' + c[0]
       fields = c[1]['lunr_index']['fields'].uniq
       pages = Dir.glob(dir + '/*.md')
       get_content = c[1]['lunr_index']['content']
@@ -43,7 +43,8 @@ module Lunr
     yaml = YAML.load_file(page)
     hash = {
       'lunr_id' => count,
-      'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
+      'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}",
+      'collection' => yaml.fetch('permalink').to_s[/^\/(\w*)\//].tr('/','')
     }
     fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
     hash['content'] = rm_diacritics(clean(File.read(page))) if get_content
