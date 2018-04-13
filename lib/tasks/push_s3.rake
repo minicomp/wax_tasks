@@ -6,7 +6,11 @@ namespace :wax do
     desc 'push built site to s3 branch'
     task :s3 do
       if ENV['CI']
-        next if ENV['TRAVIS_PULL_REQUEST']
+        puts "Build type=#{ENV['TRAVIS_EVENT_TYPE']}"
+        unless ENV['TRAVIS_BRANCH'] == 'master'
+          puts "Skipping deploy from branch #{ENV['TRAVIS_BRANCH']}"
+          next
+        end
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
         USER = REPO_SLUG.split('/')[0]
         TOKEN = ENV['ACCESS_TOKEN']
