@@ -19,14 +19,15 @@ module Iiif
     end
     builder = IiifS3::Builder.new(build_opts)
     builder.load(all_records)
-    builder.process_data
+    builder.process_data(true)
   end
 
   def self.build_options(site_config)
     {
       :base_url => site_config['baseurl'] + '/iiif',
       :output_dir => './iiif',
-      :verbose => true
+      :verbose => true,
+      :variants => { 'med' => 650 }
     }
   end
 
