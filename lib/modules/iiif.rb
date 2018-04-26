@@ -27,7 +27,7 @@ module Iiif
       :base_url => site_config['baseurl'] + '/iiif',
       :output_dir => './iiif',
       :verbose => true,
-      :variants => { 'med' => 650 }
+      :variants => { 'med' => 600, 'lg' => 1140 }
     }
   end
 
