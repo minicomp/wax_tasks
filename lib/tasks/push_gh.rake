@@ -6,7 +6,7 @@ namespace :wax do
   namespace :push do
     desc 'build site with gh-baseurl and push to gh-pages branch'
     task :gh do
-      puts "ci: #{ENV['CI']"
+      puts "ci: #{ENV['CI']}"
       if ENV['CI']
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
         USER = REPO_SLUG.split('/')[0]
