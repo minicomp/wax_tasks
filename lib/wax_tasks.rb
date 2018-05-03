@@ -2,20 +2,18 @@ require_relative 'modules/iiif'
 require_relative 'modules/lunr'
 require_relative 'modules/pagemaster'
 
-require 'yaml'
 require 'wax_iiif'
+require 'yaml'
 
 # umbrella module for registering task modules
 module WaxTasks
   def self.pagemaster(name, site_config)
-    collection_config = Pagemaster.valid_config(name, site_config)
-
-    src     = collection_config['source']
-    data    = Pagemaster.ingest(src)
-    layout  = collection_config.fetch('layout').to_s
-    perma   = config['permalink'] == 'pretty' ? '/' : '.html'
+    conf    = Pagemaster.valid_config(name, site_config)
+    data    = Pagemaster.ingest(conf['source'])
+    layout  = conf.fetch('layout').to_s
+    perma   = site_config['permalink'] == 'pretty' ? '/' : '.html'
     cdir    = site_config['collections_dir'].to_s
-    order   = collection_config.key?('keep_order') ? collection_config.fetch('keep_order') : false
+    order   = conf.key?('keep_order') ? conf['keep_order'] : false
 
     Pagemaster.generate_pages(data, name, layout, cdir, order, perma)
   end

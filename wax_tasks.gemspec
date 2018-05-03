@@ -2,7 +2,7 @@ $LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |s|
   s.name          = 'wax_tasks'
-  s.version       = '0.0.47'
+  s.version       = '0.0.5'
   s.authors       = ['Marii Nyrop']
   s.email         = ['m.nyrop@columbia.edu']
   s.license       = 'MIT'
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'html-proofer', '~> 3'
   s.add_dependency 'jekyll', '~> 3'
   s.add_dependency 'rake', '~> 12'
-  s.add_dependency 'wax_iiif'
+  s.add_dependency 'wax_iiif', '~> 0.0.2'
 
   s.add_development_dependency 'bundler', '~> 1'
   s.add_development_dependency 'faker', '~> 1'

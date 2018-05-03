@@ -1,11 +1,15 @@
-include FileUtils
 require 'wax_tasks'
 
 namespace :wax do
   namespace :push do
     desc 'push built site to s3 branch'
-    task :s3 do
+    task :static do
       if ENV['CI']
+        puts "Build type=#{ENV['TRAVIS_EVENT_TYPE']}"
+        unless ENV['TRAVIS_BRANCH'] == 'master'
+          puts "Skipping deploy from branch #{ENV['TRAVIS_BRANCH']}"
+          next
+        end
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
         USER = REPO_SLUG.split('/')[0]
         TOKEN = ENV['ACCESS_TOKEN']
@@ -19,7 +23,7 @@ namespace :wax do
       end
 
       Dir.mktmpdir do |tmp|
-        cp_r '_site/.', tmp
+        FileUtils.cp_r '_site/.', tmp
         Dir.chdir tmp
         system 'git init'
         system "git add . && git commit -m '#{COMMIT_MSG}'"

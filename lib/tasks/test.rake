@@ -1,4 +1,4 @@
-require 'wax_tasks'
+require 'colorized_string'
 require 'html-proofer'
 
 namespace :wax do
@@ -13,11 +13,7 @@ namespace :wax do
       :only_4xx => true,
       :verbose => true
     }
-    begin
-      HTMLProofer.check_directory('./_site', opts).run
-    rescue StandardError
-      puts('Failed to run wax:texts. Make sure you are using `bundle exec`.').magenta
-    end
+    HTMLProofer.check_directory('./_site', opts).run
     sh 'bundle exec rspec' if File.exist?('.rspec')
   end
 end

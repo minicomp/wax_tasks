@@ -1,3 +1,4 @@
+require 'colorized_string'
 require 'wax_tasks'
 
 namespace :wax do

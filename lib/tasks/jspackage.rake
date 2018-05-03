@@ -1,5 +1,7 @@
-require 'wax_tasks'
+require 'colorized_string'
 require 'json'
+
+require 'wax_tasks'
 
 namespace :wax do
   desc 'write a simple package.json'

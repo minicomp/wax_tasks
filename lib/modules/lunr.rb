@@ -1,4 +1,4 @@
-include FileUtils
+require 'colorized_string'
 require 'json'
 
 # module for generating elasticlunr index and default jquery ui
@@ -13,7 +13,7 @@ module Lunr
   end
 
   def self.collections(site_config)
-    site_config['collections'].find_all { |c| c[1].key?('lunr_index') && c[1]['lunr_index'].key?('fields') }
+    site_config['collections'].find_all { |c| c[1].key?('lunr_index') }
   end
 
   def self.index(cdir, collections)
@@ -22,13 +22,13 @@ module Lunr
     abort 'There are no valid collections to index.'.magenta if collections.nil?
 
     collections.each do |c|
-      dir = cdir + '_' + c[0]
+      dir = cdir.empty? ? '_' + c[0] : cdir + '/_' + c[0]
       fields = c[1]['lunr_index']['fields'].uniq
       pages = Dir.glob(dir + '/*.md')
       get_content = c[1]['lunr_index']['content']
       # catch
-      abort "There are no markdown pages in directory '#{dir}'".magenta if pages.empty?
-      abort "There are no fields specified for #{c[0]}.".magenta if fields.empty?
+      abort "There are no pages in '#{dir}'".magenta if pages.empty?
+      abort "There are no fields for #{c[0]}.".magenta if fields.empty?
       puts "Loading #{pages.length} pages from #{dir}"
       # index each page in collection
       pages.each do |page|
@@ -43,7 +43,8 @@ module Lunr
     yaml = YAML.load_file(page)
     hash = {
       'lunr_id' => count,
-      'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}"
+      'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}",
+      'collection' => yaml.fetch('permalink').to_s[%r{^\/([^\/]*)\/}].tr('/', '')
     }
     fields.each { |f| hash[f] = rm_diacritics(thing2string(yaml[f])) }
     hash['content'] = rm_diacritics(clean(File.read(page))) if get_content
@@ -66,7 +67,7 @@ module Lunr
   end
 
   def self.write_index(index)
-    mkdir_p('js')
+    FileUtils.mkdir_p('js')
     index = "---\nlayout: none\n---\n" + index
     path = 'js/lunr-index.json'
     File.open(path, 'w') { |file| file.write(index) }
@@ -87,7 +88,7 @@ module Lunr
   def self.clean(str)
     str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
     str.gsub!(/{%(.*)%}/, '') # remove functional liquid
-    str.gsub!(/<\/?[^>]*>/, '') # remove html
+    str.gsub!(%r{<\/?[^>]*>}, '') # remove html
     str.gsub!('\\n', '') # remove newlines
     str.gsub!(/\s+/, ' ') # remove extra space
     str.tr!('"', "'") # replace double quotes with single

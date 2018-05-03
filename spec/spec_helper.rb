@@ -1,4 +1,8 @@
-require 'fileutils'
+require 'simplecov'
+require 'coveralls'
+
+SimpleCov.start
+Coveralls.wear!
 
 require_relative 'fake/data'
 require_relative 'fake/site'
@@ -10,9 +14,9 @@ Fake.site
 Fake.data
 
 describe 'wax:pagemaster' do
-  config = WaxTasks.config
-  args = config['collections'].map { |c| c[0] }
-  system("bundle exec rake wax:pagemaster #{args.join(' ')} > /dev/null")
+  site_config = WaxTasks.config
+  args = site_config['collections'].map { |c| c[0] }
+  args.each { |a| WaxTasks.pagemaster(a, site_config) }
   it 'generates directories' do
     args.each { |a| expect(Dir.exist?('_' + a)) }
   end
@@ -22,7 +26,8 @@ describe 'wax:pagemaster' do
 end
 
 describe 'wax:lunr' do
-  system('bundle exec rake wax:lunr > /dev/null')
+  site_config = WaxTasks.config
+  WaxTasks.lunr(site_config)
   it 'generates a lunr index' do
     index = File.open('js/lunr-index.json', 'r').read
     expect(index.length > 1000)
@@ -42,23 +47,23 @@ describe 'wax:iiif' do
     images = Dir.glob('./_data/iiif/*.jpg')
     site_config['collections'].each do |c|
       new_dir = './_data/iiif/' + c[0]
-      mkdir_p(new_dir)
-      images.each { |f| cp(File.expand_path(f), new_dir) }
+      FileUtils.mkdir_p(new_dir)
+      images.each { |f| FileUtils.cp(File.expand_path(f), new_dir) }
     end
-    rm_r(images)
-    system("bundle exec rake wax:iiif #{args.first} > /dev/null")
+    FileUtils.rm_r(images)
+    WaxTasks.iiif(args, site_config)
     args.each { |a| expect(Dir.exist?('iiif/images' + a)) }
   end
 end
 
 describe 'jekyll' do
   it 'builds successfully' do
-    Bundler.with_clean_env { system('bundle exec jekyll build > /dev/null') }
+    Bundler.with_clean_env { system('bundle exec jekyll build') }
   end
 end
 
 describe 'wax:jspackage' do
-  system('bundle exec rake wax:jspackage > /dev/null')
+  system('bundle exec rake wax:jspackage')
   it 'writes a package.json file' do
     package = File.open('package.json', 'r').read
     expect(package.length > 90)
@@ -66,5 +71,5 @@ describe 'wax:jspackage' do
 end
 
 describe 'wax:test' do
-  it 'passes html-proofer' do system('bundle exec rake wax:test > /dev/null') end
+  it 'passes html-proofer' do system('bundle exec rake wax:test') end
 end
