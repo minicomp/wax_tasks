@@ -1,8 +1,6 @@
 require 'simplecov'
-require 'coveralls'
 
 SimpleCov.start
-Coveralls.wear!
 
 require_relative 'fake/data'
 require_relative 'fake/site'
