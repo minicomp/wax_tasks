@@ -1,5 +1,5 @@
 # wax_tasks
-[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks)
+[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) [![Dependency Status](https://gemnasium.com/badges/github.com/mnyrop/wax_tasks.svg)](https://gemnasium.com/github.com/mnyrop/wax_tasks) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability)
 
 
 #### A gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibitions with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
@@ -19,10 +19,6 @@ Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wa
 - [wax:lunr](#waxlunr)
 - [wax:iiif](#waxiiif)
 - [wax:test](#waxtest)
-- [wax:push](#waxpush)
-
-#### To Do
-- [v0.0.5](#005-alpha-release)
 
 
 # Getting Started
@@ -77,36 +73,27 @@ After following the installation instructions above, you will have access to the
 
 ## wax:pagemaster
 
-Takes a CSV or JSON file of collection metadata and generates a Markdown page for each record to a directory using a specified layout. [Read More](docs/pagemaster.md).
+Takes a CSV or JSON file of collection metadata and generates a Markdown page for each record to a directory using a specified layout. [Read More]().
 
 `$ bundle exec rake wax:pagemaster collection-name`
 
 ## wax:lunr
 
-Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More](docs/lunr.md).
+Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More]().
 
 `$ bundle exec rake wax:lunr`
 
 ## wax:iiif
 
-Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](docs/iiif.md).
+Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More]().
 
 `$ bundle exec rake wax:iiif collection-name`
 
 ## wax:test
 
-Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compiled site to look for broken links, HTML errors, and accessibility concerns. Runs [Rspec](http://rspec.info/) tests if a `.rspec` file is present. [Read More](docs/test.md).
+Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compiled site to look for broken links, HTML errors, and accessibility concerns. Runs [Rspec](http://rspec.info/) tests if a `.rspec` file is present. [Read More]().
 
 `$ bundle exec rake wax:test`
-
-
-### wax:push
-
-There are two tasks within the namespace `wax:push`: `gh` and `s3`, which push the compiled exhibition site to the `gh-pages` and `s3` branches of your repository respectively for deployment. [Read More](docs/push.md)
-
-`$ bundle exec rake wax:push:gh`
-
-`$ bundle exec rake wax:push:s3`
 
 # Sample \_config.yml file:
 
@@ -136,10 +123,3 @@ collections:
 # Contributing
 
 Fork/clone the repository. After making code changes, run the tests (`$ bundle exec rubocop` and `$ bundle exec rspec`) before submitting a PR.
-
-
-# To Do
-## 0.0.5 alpha release
-
-- [x] deploy `gh-pages` and `s3` branches from local **OR** Travis-CI
-- [ ] generate thumbnails with `wax:iiif`

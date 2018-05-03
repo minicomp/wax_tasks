@@ -1,23 +1,22 @@
 ## Metrics
+Metrics/CyclomaticComplexity:
+  Max: 8
+Metrics/ParameterLists:
+  Max: 8
 Metrics/AbcSize:
   Max: 40
 Metrics/MethodLength:
   Max: 40
-Metrics/LineLength:
-  Enabled: false
 Metrics/BlockLength:
   Max: 40
-Metrics/ParameterLists:
-  Max: 7
+Metrics/LineLength:
+  Exclude:
+    - 'lib/modules/lunr.rb'
 
 ## Style
 Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-Style/MixinUsage:
-  Enabled: false
-Style/RegexpLiteral:
-  EnforcedStyle: slashes
-  AllowInnerSlashes: true
+  Exclude:
+    - 'lib/tasks/*'
 Style/Next:
   Enabled: false
 

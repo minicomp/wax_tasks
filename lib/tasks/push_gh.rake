@@ -1,6 +1,6 @@
-include FileUtils
-require 'wax_tasks'
+require 'colorized_string'
 require 'jekyll'
+require 'wax_tasks'
 
 namespace :wax do
   namespace :push do
@@ -21,7 +21,7 @@ namespace :wax do
         puts 'Deploying to gh-pages branch from local task'
       end
       config = WaxTasks.config
-      rm_rf('_site')
+      FileUtils.rm_rf('_site')
 
       baseurl = config['gh-baseurl'] || REPO_NAME.to_s
 
@@ -34,7 +34,7 @@ namespace :wax do
 
       Jekyll::Site.new(Jekyll.configuration(opts)).process
       Dir.mktmpdir do |tmp|
-        cp_r '_site/.', tmp
+        FileUtils.cp_r '_site/.', tmp
         Dir.chdir tmp
         system 'git init'
         system "git add . && git commit -m '#{COMMIT_MSG}'"

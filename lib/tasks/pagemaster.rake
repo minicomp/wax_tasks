@@ -1,3 +1,4 @@
+require 'colorized_string'
 require 'wax_tasks'
 
 namespace :wax do
@@ -6,7 +7,7 @@ namespace :wax do
     args = ARGV.drop(1).each { |a| task a.to_sym }
     site_config = WaxTasks.config
     if args.empty?
-      abort "You must specify one or more collections after 'rake wax:pagemaster' to generate.".magenta
+      abort "Please specify a collection after 'wax:pagemaster'".magenta
     else
       args.each { |a| WaxTasks.pagemaster(a, site_config) }
     end
