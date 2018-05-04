@@ -3,32 +3,45 @@ require 'json'
 
 # module for generating elasticlunr index and default jquery ui
 module Lunr
-  def self.total_fields(collections)
+  def self.collections_to_index(site_config)
+    to_index = site_config['collections'].find_all { |c| c[1].key?('lunr_index') }
+    to_index.map!{ |c| c[0] }
+    abort 'There are no valid collections to index.'.magenta if to_index.nil?
+    collections = []
+    to_index.each do |c|
+      opts = WaxTasks.collection_config(c)
+      collections << WaxTasks::Collection.new(opts)
+    end
+    collections
+  end
+
+  def self.total_fields(site_config)
     total_fields = ['pid']
-    collections.each do |c|
-      total_fields = total_fields.concat(c[1]['lunr_index']['fields'])
-      total_fields << 'content' if c[1]['lunr_index']['content']
+    site_config['collections'].each do |c|
+      if c[1].key?('lunr_index') and c[1]['lunr_index'].key?('fields')
+        total_fields = total_fields.concat(c[1]['lunr_index']['fields'])
+        total_fields << 'content' if c[1]['lunr_index']['content']
+      end
     end
     total_fields.uniq
   end
 
-  def self.collections(site_config)
-    site_config['collections'].find_all { |c| c[1].key?('lunr_index') }
-  end
+  def self.index(site_config)
+    collections = collections_to_index(site_config)
+    collections_dir = site_config['collections_dir'].to_s
 
-  def self.index(cdir, collections)
     index = []
     count = 0
-    abort 'There are no valid collections to index.'.magenta if collections.nil?
 
-    collections.each do |c|
-      dir = cdir.empty? ? '_' + c[0] : cdir + '/_' + c[0]
-      fields = c[1]['lunr_index']['fields'].uniq
+    collections.each do |collection|
+      dir = "_#{collection.name}"
+      dir.prepend("#{collections_dir}/") unless collections_dir.empty?
       pages = Dir.glob(dir + '/*.md')
-      get_content = c[1]['lunr_index']['content']
+      get_content = collection.lunr_index.key?('content') ? collection.lunr_index['content'] : false
+      fields = collection.lunr_index['fields']
       # catch
       abort "There are no pages in '#{dir}'".magenta if pages.empty?
-      abort "There are no fields for #{c[0]}.".magenta if fields.empty?
+      abort "There are no fields for #{collection.name}.".magenta if fields.empty?
       puts "Loading #{pages.length} pages from #{dir}"
       # index each page in collection
       pages.each do |page|
@@ -51,10 +64,11 @@ module Lunr
     hash
   end
 
-  def self.ui(total_fields)
+  def self.ui(site_config)
     # set up index
     ui_string = "$.getJSON(\"{{ site.baseurl }}/js/lunr-index.json\", function(index_json) {\nwindow.index = new elasticlunr.Index;\nwindow.store = index_json;\nindex.saveDocument(false);\nindex.setRef('lunr_id');"
     # add fields to index
+    total_fields = total_fields(site_config)
     total_fields.each { |field| ui_string += "\nindex.addField('#{field}');" }
     # add docs
     ui_string += "\n// add docs\nfor (i in store){index.addDoc(store[i]);}"

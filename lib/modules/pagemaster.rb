@@ -3,33 +3,20 @@ require 'csv'
 require 'json'
 require 'yaml'
 
+require 'wax_tasks'
+
 # module for generating markdown collection pages from csv/json/yaml records
 module Pagemaster
-  def self.valid_config(name, site_config)
-    unless site_config['collections'].key?(name)
-      abort "Cannot find #{name} in _config.yml. Exiting.".magenta
-    end
-    collection_config = site_config['collections'][name]
-    unless collection_config['source']
-      abort "Cannot find source for '#{name}'. Exiting.".magenta
-    end
-    unless collection_config['layout']
-      abort "Cannot find layout for '#{name}'. Exiting.".magenta
-    end
-    unless File.file?('_data/' + collection_config['source'])
-      abort "Cannot find the file _data/#{collection_config['source']}.".magenta
-    end
-    collection_config
-  end
-
-  def self.ingest(src)
-    src = "_data/#{src}"
+  def self.ingest(source)
+    src = "_data/#{source}"
+    abort "Cannot find #{src}" if !File.exist?(src)
+    src_ext = File.extname(source)
     opts = { headers: true, encoding: 'utf-8' }
     case File.extname(src)
     when '.csv' then data = CSV.read(src, opts).map(&:to_hash)
     when '.json' then data = JSON.parse(File.read(src))
     when '.yml' then data = YAML.load_file(src)
-    else abort "Source '#{src}' must be .csv, .json, or .yml."
+    else abort "Source #{src} must be .csv, .json, or .yml."
     end
     puts "Processing #{src}...."
     pids = data.map { |d| d['pid'] }
@@ -37,29 +24,32 @@ module Pagemaster
     abort "Fix duplicate pids: \n#{duplicates}".magenta unless duplicates.empty?
     data
   rescue StandardError
-    puts "Cannot load #{src}. check for typos and rebuild.".magenta
+    abort "Cannot load #{src}. check for typos and rebuild.".magenta
   end
 
-  def self.generate_pages(data, name, layout, cdir, order, perma)
-    if cdir.empty?
-      dir = '_' + name
+  def self.generate(collection, records)
+    site_config = WaxTasks.site_config
+    collections_dir = site_config['collections_dir'].to_s
+    permalink_style = WaxTasks.permalink_style(site_config)
+    if collections_dir.empty?
+      dir = '_' + collection.name
     else
-      FileUtils.mkdir_p(cdir)
-      dir = cdir + '/_' + name
+      FileUtils.mkdir_p(collections_dir)
+      dir = collections_dir + '/_' + collection.name
     end
     FileUtils.mkdir_p(dir)
     completed = 0
     skipped = 0
-    data.each_with_index do |item, index|
+    records.each_with_index do |item, index|
       pagename = WaxTasks.slug(item.fetch('pid'))
       pagepath = dir + '/' + pagename + '.md'
       if File.exist?(pagepath)
         puts "#{pagename}.md already exits. Skipping."
         skipped += 1
       else
-        item['permalink'] = '/' + name + '/' + pagename + perma
-        item['layout'] = layout
-        item['order'] = padded_int(index, data.length) if order
+        item['permalink'] = '/' + collection.name + '/' + pagename + permalink_style
+        item['layout'] = collection.layout
+        item['order'] = padded_int(index, records.length) if collection.keep_order
         File.open(pagepath, 'w') { |f| f.write(item.to_yaml.to_s + '---') }
         completed += 1
       end

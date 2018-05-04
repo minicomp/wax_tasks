@@ -35,7 +35,7 @@ module Fake
   end
 
   def self.add_to_config(collections)
-    config = WaxTasks.config
+    config = WaxTasks.site_config
     config['collections'] = collections
     File.write('_config.yml', YAML.dump(config))
   end

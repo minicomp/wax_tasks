@@ -11,10 +11,16 @@ require 'wax_tasks'
 Fake.site
 Fake.data
 
+site_config = WaxTasks.site_config
+
 describe 'wax:pagemaster' do
-  site_config = WaxTasks.config
   args = site_config['collections'].map { |c| c[0] }
-  args.each { |a| WaxTasks.pagemaster(a, site_config) }
+  args.each do |a|
+    opts = WaxTasks.collection_config(a)
+    collection = WaxTasks::Collection.new(opts)
+    records = Pagemaster.ingest(collection.source)
+    Pagemaster.generate(collection, records)
+  end
   it 'generates directories' do
     args.each { |a| expect(Dir.exist?('_' + a)) }
   end
@@ -24,8 +30,10 @@ describe 'wax:pagemaster' do
 end
 
 describe 'wax:lunr' do
-  site_config = WaxTasks.config
-  WaxTasks.lunr(site_config)
+  idx = Lunr.index(site_config)
+  ui = Lunr.ui(site_config)
+  Lunr.write_index(idx)
+  Lunr.write_ui(ui)
   it 'generates a lunr index' do
     index = File.open('js/lunr-index.json', 'r').read
     expect(index.length > 1000)
@@ -38,10 +46,8 @@ describe 'wax:lunr' do
 end
 
 describe 'wax:iiif' do
-  site_config = WaxTasks.config
-  args = site_config['collections'].map { |c| c[0] }
-
   it 'generates iiif tiles and data' do
+    names = site_config['collections'].map { |c| c[0] }
     images = Dir.glob('./_data/iiif/*.jpg')
     site_config['collections'].each do |c|
       new_dir = './_data/iiif/' + c[0]
@@ -49,8 +55,8 @@ describe 'wax:iiif' do
       images.each { |f| FileUtils.cp(File.expand_path(f), new_dir) }
     end
     FileUtils.rm_r(images)
-    WaxTasks.iiif(args, site_config)
-    args.each { |a| expect(Dir.exist?('iiif/images' + a)) }
+    Iiif.process([names.first])
+    expect(Dir.exist?('iiif/images'))
   end
 end
 

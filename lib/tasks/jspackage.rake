@@ -6,7 +6,7 @@ require 'wax_tasks'
 namespace :wax do
   desc 'write a simple package.json'
   task :jspackage do
-    site_config = WaxTasks.config
+    site_config = WaxTasks.site_config
     package = {
       'name'          => site_config['title'],
       'version'       => '1.0.0',
