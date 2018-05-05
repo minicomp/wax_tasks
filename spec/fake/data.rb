@@ -27,10 +27,10 @@ module Fake
   def self.collection_conf(name, type, data)
     {
       'source'     => "#{name}#{type}",
-      'keep_order' => [true, false].sample,
+      'keep_order' => true,
       'output'     => true,
       'layout'     => 'page',
-      'lunr_index' => { 'content' => false, 'fields' => data.first.keys }
+      'lunr_index' => { 'content' => true, 'fields' => data.first.keys }
     }
   end
 

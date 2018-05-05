@@ -9,7 +9,6 @@ namespace :wax do
       abort "Please specify a collection after 'wax:pagemaster'".magenta
     else
       args.each do |a|
-        site_config = WaxTasks.site_config
         opts = WaxTasks.collection_config(a)
         collection = WaxTasks::Collection.new(opts)
         records = Pagemaster.ingest(collection.source)

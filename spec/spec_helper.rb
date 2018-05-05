@@ -1,4 +1,5 @@
 require 'simplecov'
+require 'faker'
 
 SimpleCov.start
 
@@ -12,11 +13,19 @@ Fake.site
 Fake.data
 
 site_config = WaxTasks.site_config
+bad_config = {
+  'collections_dir' => '',
+  'collections' => {
+    'test' => {
+      'source' => 'test.jpg'
+    }
+  }
+}
 
 describe 'wax:pagemaster' do
   args = site_config['collections'].map { |c| c[0] }
   args.each do |a|
-    opts = WaxTasks.collection_config(a)
+    opts = WaxTasks.collection_config(a, site_config)
     collection = WaxTasks::Collection.new(opts)
     records = Pagemaster.ingest(collection.source)
     Pagemaster.generate(collection, records)
@@ -25,7 +34,21 @@ describe 'wax:pagemaster' do
     args.each { |a| expect(Dir.exist?('_' + a)) }
   end
   it 'generates pages' do
-    args.each { |a| expect(Dir.glob("_#{a}/*.md")) }
+    args.each do |a|
+      pages = Dir.glob("_#{a}/*.md")
+      expect(pages.length)
+      pages.each do |page|
+        File.open(page, 'a') { |f| f.puts "\n#{Faker::Markdown.random}\n" }
+      end
+    end
+  end
+  context 'when given a bad config' do
+    arg = bad_config['collections'].map { |c| c[0] }.first
+    opts = WaxTasks.collection_config(arg, bad_config)
+    collection = WaxTasks::Collection.new(opts)
+    it 'throws ingest error' do
+      expect { Pagemaster.ingest(collection.source) }.to raise_error(SystemExit)
+    end
   end
 end
 

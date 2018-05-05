@@ -28,8 +28,8 @@ module WaxTasks
     site_config['permalink'] == 'pretty' ? '/' : '.html'
   end
 
-  def self.collection_config(name)
-    collection = site_config.fetch('collections').fetch(name)
+  def self.collection_config(name, config)
+    collection = config.fetch('collections').fetch(name)
     opts = {
       name: name,
       source: collection['source'],
@@ -39,7 +39,7 @@ module WaxTasks
     }
     opts
   rescue => e
-    abort "Collection #{name} is not properly configured.".magenta + "\n#{e}"
+    abort "Collection '#{name}' is not properly configured.".magenta + "\n#{e}"
   end
 
   def self.slug(str)

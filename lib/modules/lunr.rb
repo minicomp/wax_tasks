@@ -5,11 +5,11 @@ require 'json'
 module Lunr
   def self.collections_to_index(site_config)
     to_index = site_config['collections'].find_all { |c| c[1].key?('lunr_index') }
-    to_index.map!{ |c| c[0] }
+    to_index.map! { |c| c[0] }
     abort 'There are no valid collections to index.'.magenta if to_index.nil?
     collections = []
     to_index.each do |c|
-      opts = WaxTasks.collection_config(c)
+      opts = WaxTasks.collection_config(c, site_config)
       collections << WaxTasks::Collection.new(opts)
     end
     collections

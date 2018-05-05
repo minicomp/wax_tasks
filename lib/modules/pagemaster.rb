@@ -9,7 +9,6 @@ require 'wax_tasks'
 module Pagemaster
   def self.ingest(source)
     src = "_data/#{source}"
-    abort "Cannot find #{src}" if !File.exist?(src)
     src_ext = File.extname(source)
     opts = { headers: true, encoding: 'utf-8' }
     case File.extname(src)
@@ -23,8 +22,8 @@ module Pagemaster
     duplicates = pids.detect { |p| pids.count(p) > 1 } || []
     abort "Fix duplicate pids: \n#{duplicates}".magenta unless duplicates.empty?
     data
-  rescue StandardError
-    abort "Cannot load #{src}. check for typos and rebuild.".magenta
+  rescue => e
+    abort "Cannot load #{src}. check for typos and rebuild.".magenta + "\n#{e}"
   end
 
   def self.generate(collection, records)

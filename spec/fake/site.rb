@@ -16,7 +16,7 @@ module Fake
     config_file = {
       'url' => '',
       'decription' => '',
-      'collections_dir' => ['collections', ''].sample,
+      'collections_dir' => 'collections',
       'theme' => 'minima',
       'js' => {
         'jquery' => {
