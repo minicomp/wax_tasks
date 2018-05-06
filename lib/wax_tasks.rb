@@ -1,41 +1,44 @@
+require 'yaml'
+
 require_relative 'modules/iiif'
 require_relative 'modules/lunr'
 require_relative 'modules/pagemaster'
 
-require 'wax_iiif'
-require 'yaml'
-
 # umbrella module for registering task modules
 module WaxTasks
-  def self.pagemaster(name, site_config)
-    conf    = Pagemaster.valid_config(name, site_config)
-    data    = Pagemaster.ingest(conf['source'])
-    layout  = conf.fetch('layout').to_s
-    perma   = site_config['permalink'] == 'pretty' ? '/' : '.html'
-    cdir    = site_config['collections_dir'].to_s
-    order   = conf.key?('keep_order') ? conf['keep_order'] : false
-
-    Pagemaster.generate_pages(data, name, layout, cdir, order, perma)
+  def self.pagemaster(collection_name, site_config)
+    collection = collection(collection_name, site_config)
+    Pagemaster.generate(collection, site_config)
   end
 
   def self.lunr(site_config)
-    cdir          = site_config['collections_dir'].to_s
-    collections   = Lunr.collections(site_config)
-    total_fields  = Lunr.total_fields(collections)
-
-    index         = Lunr.index(cdir, collections)
-    ui            = Lunr.ui(total_fields)
-
-    Lunr.write_index(index)
-    Lunr.write_ui(ui)
+    Lunr.write_index(site_config)
+    Lunr.write_ui(site_config)
   end
 
-  def self.iiif(args, site_config)
-    Iiif.ingest_collections(args, site_config)
+  def self.iiif(collection_name, site_config)
+    Iiif.process(collection_name, site_config)
   end
 
-  def self.config
+  def self.site_config
     YAML.load_file('_config.yml')
+  end
+
+  def self.permalink_style(site_config)
+    site_config['permalink'] == 'pretty' ? '/' : '.html'
+  end
+
+  def self.collection(collection_name, site_config)
+    conf = site_config.fetch('collections').fetch(collection_name)
+    {
+      name: collection_name,
+      source: conf['source'],
+      layout: conf['layout'],
+      keep_order: conf.key?('keep_order') ? conf['keep_order'] : false,
+      lunr_index: conf['lunr_index']
+    }
+  rescue StandardError => e
+    abort "Collection '#{collection_name}' is not properly configured.".magenta + "\n#{e}"
   end
 
   def self.slug(str)

@@ -6,7 +6,6 @@ namespace :wax do
   namespace :push do
     desc 'build site with gh-baseurl and push to gh-pages branch'
     task :gh do
-      puts "ci: #{ENV['CI']}"
       if ENV['CI']
         REPO_SLUG = ENV['TRAVIS_REPO_SLUG']
         USER = REPO_SLUG.split('/')[0]
@@ -20,16 +19,14 @@ namespace :wax do
         COMMIT_MSG = "Site updated at #{Time.now.utc}".freeze
         puts 'Deploying to gh-pages branch from local task'
       end
-      config = WaxTasks.config
+      config = WaxTasks.site_config
       FileUtils.rm_rf('_site')
-
-      baseurl = config['gh-baseurl'] || REPO_NAME.to_s
 
       opts = {
         'source' => '.',
         'destination' => '_site',
         'config' => '_config.yml',
-        'baseurl' => baseurl
+        'baseurl' => config['gh-baseurl'] || REPO_NAME.to_s
       }
 
       Jekyll::Site.new(Jekyll.configuration(opts)).process
