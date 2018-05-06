@@ -7,7 +7,7 @@
 Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wax](https://minicomp.github.io/wax/).
 
 <br>
-![wax_screen](https://minicomp.github.io/wiki/assets/wax_screen.gif)
+<img src="https://raw.githubusercontent.com/minicomp/wiki/master/docs/assets/wax_screen.gif">
 
 
 #### Getting Started
