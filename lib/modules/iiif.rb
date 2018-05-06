@@ -11,7 +11,7 @@ module Iiif
     end
     FileUtils.mkdir_p("./iiif/#{name}", verbose: false)
     build_opts = {
-      base_url: "#{site_config['baseurl']}/iiif",
+      base_url: "#{site_config['baseurl']}/iiif/#{name}",
       output_dir: "./iiif/#{name}",
       verbose: true,
       variants: { med: 600, lg: 1140 }
