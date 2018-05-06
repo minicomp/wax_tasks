@@ -6,18 +6,18 @@ require_relative 'modules/pagemaster'
 
 # umbrella module for registering task modules
 module WaxTasks
-  # include ActiveModel::Validations
+  def self.pagemaster(collection_name, site_config)
+    collection = collection(collection_name, site_config)
+    Pagemaster.generate(collection, site_config)
+  end
 
-  class Collection
-    attr_reader :name, :source, :layout, :keep_order, :lunr_index
+  def self.lunr(site_config)
+    Lunr.write_index(site_config)
+    Lunr.write_ui(site_config)
+  end
 
-    def initialize(opts)
-      @name             = opts.fetch(:name)
-      @source           = opts.fetch(:source)
-      @layout           = opts.fetch(:layout)
-      @keep_order       = opts.fetch(:keep_order)
-      @lunr_index       = opts.fetch(:lunr_index)
-    end
+  def self.iiif(collection_name, site_config)
+    Iiif.process(collection_name, site_config)
   end
 
   def self.site_config
@@ -28,18 +28,17 @@ module WaxTasks
     site_config['permalink'] == 'pretty' ? '/' : '.html'
   end
 
-  def self.collection_config(name, config)
-    collection = config.fetch('collections').fetch(name)
-    opts = {
-      name: name,
-      source: collection['source'],
-      layout: collection['layout'],
-      keep_order: collection.key?('keep_order') ? false : collection['keep_order'],
-      lunr_index: collection['lunr_index']
+  def self.collection(collection_name, site_config)
+    conf = site_config.fetch('collections').fetch(collection_name)
+    {
+      name: collection_name,
+      source: conf['source'],
+      layout: conf['layout'],
+      keep_order: conf.key?('keep_order') ? conf['keep_order'] : false,
+      lunr_index: conf['lunr_index']
     }
-    opts
-  rescue => e
-    abort "Collection '#{name}' is not properly configured.".magenta + "\n#{e}"
+  rescue StandardError => e
+    abort "Collection '#{collection_name}' is not properly configured.".magenta + "\n#{e}"
   end
 
   def self.slug(str)

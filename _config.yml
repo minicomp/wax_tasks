@@ -1,5 +1,0 @@
-
-collections:
-  test:
-    source: 'src'
-    layout: 'layout'

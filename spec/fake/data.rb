@@ -13,24 +13,24 @@ module Fake
     ['.json', '.csv', '.yml'].each do |type|
       name = WaxTasks.slug(Faker::Dune.unique.character)
       data = generate_data
-      collections[name] = collection_conf(name, type, data)
+      collections[name] = collection(name, type, data)
       path = "_data/#{name}#{type}"
       case type
       when '.csv' then write_csv(path, data)
-      when '.json' then File.open(path, 'w') { |f| f.write(data.to_json) }
-      when '.yml' then File.open(path, 'w') { |f| f.write(YAML.dump(data)) }
+      when '.json' then write_json(path, data)
+      when '.yml' then write_yaml(path, data)
       end
     end
     add_to_config(collections)
   end
 
-  def self.collection_conf(name, type, data)
+  def self.collection(name, type, data)
     {
       'source'     => "#{name}#{type}",
-      'keep_order' => true,
+      'keep_order' => [true, false].sample,
       'output'     => true,
       'layout'     => 'page',
-      'lunr_index' => { 'content' => true, 'fields' => data.first.keys }
+      'lunr_index' => { 'content' => [true, false].sample, 'fields' => data.first.keys }
     }
   end
 
@@ -63,7 +63,19 @@ module Fake
         csv << hash.values
       end
     end
-  rescue StandardError
-    abort "Cannot write csv data to #{path} for some reason.".magenta
+  end
+
+  def self.write_json(path, data)
+    File.open(path, 'w') { |f| f.write(data.to_json) }
+  end
+
+  def self.write_yaml(path, data)
+    File.open(path, 'w') { |f| f.write(YAML.dump(data)) }
+  end
+
+  def self.content(pages)
+    pages.each do |page|
+      File.open(page, 'a') { |f| f.puts "\n#{Faker::Markdown.random}\n" }
+    end
   end
 end
