@@ -73,25 +73,25 @@ After following the installation instructions above, you will have access to the
 
 ## wax:pagemaster
 
-Takes a CSV or JSON file of collection metadata and generates a Markdown page for each record to a directory using a specified layout. [Read More]().
+Takes a CSV or JSON file of collection metadata and generates a Markdown page for each record to a directory using a specified layout. [Read More](https://minicomp.github.io/wiki/#/wax/tasks/pagemaster?id=top).
 
 `$ bundle exec rake wax:pagemaster collection-name`
 
 ## wax:lunr
 
-Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More]().
+Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/lunr?id=top).
 
 `$ bundle exec rake wax:lunr`
 
 ## wax:iiif
 
-Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More]().
+Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/iiif?id=top).
 
 `$ bundle exec rake wax:iiif collection-name`
 
 ## wax:test
 
-Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compiled site to look for broken links, HTML errors, and accessibility concerns. Runs [Rspec](http://rspec.info/) tests if a `.rspec` file is present. [Read More]().
+Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compiled site to look for broken links, HTML errors, and accessibility concerns. Runs [Rspec](http://rspec.info/) tests if a `.rspec` file is present. [Read More](https://minicomp.github.io/wiki/#/wax/tasks/test?id=top).
 
 `$ bundle exec rake wax:test`
 
