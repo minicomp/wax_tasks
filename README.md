@@ -7,7 +7,7 @@
 Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wax](https://minicomp.github.io/wax/).
 
 <br>
-<img src="https://github.com/mnyrop/wax_tasks/blob/master/docs/wax_screen.gif?raw=true"/>
+![wax_screen](https://minicomp.github.io/wiki/assets/wax_screen.gif)
 
 
 #### Getting Started
@@ -106,7 +106,6 @@ baseurl: '/wax'
 
 # build settings
 permalink: pretty # optional, creates `/page/` link instead of `page.html` link
-lunr_language: true # optional, removes trimmer to support multiple languages in search
 collections_dir: false # optional, allows you to tidy up and keep collections (below) inside a directory (as of jekyll 3.7)
 
 # wax collection settings
@@ -123,3 +122,5 @@ collections:
 # Contributing
 
 Fork/clone the repository. After making code changes, run the tests (`$ bundle exec rubocop` and `$ bundle exec rspec`) before submitting a PR.
+
+> __Note:__ The cannonical repository is [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/). Please submit all issues and pull requests to the Minicomp repo.
