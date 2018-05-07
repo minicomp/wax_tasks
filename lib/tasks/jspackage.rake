@@ -1,18 +1,20 @@
-require 'wax_tasks'
+require 'colorized_string'
 require 'json'
+
+require 'wax_tasks'
 
 namespace :wax do
   desc 'write a simple package.json'
   task :jspackage do
-    config = read_config
+    site_config = WaxTasks.site_config
     package = {
-      'name'          => config['title'],
+      'name'          => site_config['title'],
       'version'       => '1.0.0',
-      'description'   => config['description'],
+      'description'   => site_config['description'],
       'dependencies'  => {}
     }
     names = []
-    config['js'].each do |dependency|
+    site_config['js'].each do |dependency|
       name = dependency[0]
       names << name
       version = dependency[1]['version']

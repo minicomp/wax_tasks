@@ -1,2 +1,4 @@
 .DS_Store
-faker_site
+Gemfile.lock
+build
+coverage

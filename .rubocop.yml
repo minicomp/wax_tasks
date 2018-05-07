@@ -1,22 +1,10 @@
-## Metrics
-Metrics/AbcSize:
-  Max: 40
 Metrics/MethodLength:
-  Max: 40
+  Max: 15
 Metrics/LineLength:
   Enabled: false
 Metrics/BlockLength:
+  Max: 35
+Metrics/AbcSize:
   Max: 40
-
-## Style
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-Style/MixinUsage:
-  Enabled: false
-Style/RegexpLiteral:
-  EnforcedStyle: slashes
-  AllowInnerSlashes: true
-Style/StringLiterals:
-  Enabled: false
-Style/Next:
-  Enabled: false
+Metrics/MethodLength:
+  Max: 25
