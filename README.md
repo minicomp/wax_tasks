@@ -44,8 +44,6 @@ $ convert -version
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
 
-You can learn more about using ImageMagick and `wax_tasks` [here](docs/imagemagick.md) or ignore this completely if you do not plan to generate IIIF derivatives.
-
 ## Installing
 
 Add `wax_tasks` to your Jekyll site's Gemfile:
