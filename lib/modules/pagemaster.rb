@@ -7,7 +7,7 @@ require 'yaml'
 # module for generating markdown collection pages from csv/json/yaml records
 module Pagemaster
   def self.generate(collection, site_config)
-    records = ingest(collection[:source])
+    records = WaxTasks.ingest(collection[:source])
     dir = target_dir(collection[:name], site_config)
     permalink_style = WaxTasks.permalink_style(site_config)
 
@@ -35,32 +35,8 @@ module Pagemaster
     abort "Failure after #{completed} pages, likely from missing pid.".magenta + "\n#{e}"
   end
 
-  def self.ingest(source)
-    src = "_data/#{source}"
-    opts = { headers: true, encoding: 'utf-8' }
-
-    case File.extname(src)
-    when '.csv' then data = CSV.read(src, opts).map(&:to_hash)
-    when '.json' then data = JSON.parse(File.read(src))
-    when '.yml' then data = YAML.load_file(src)
-    else abort "Source #{src} must be .csv, .json, or .yml.".magenta
-    end
-
-    puts "Processing #{src}...."
-    validate(data)
-  rescue StandardError => e
-    abort "Cannot load #{src}. check for typos and rebuild.".magenta + "\n#{e}"
-  end
-
   def self.padded_int(index, max_idx)
     index.to_s.rjust(Math.log10(max_idx).to_i + 1, '0')
-  end
-
-  def self.validate(data)
-    pids = data.map { |d| d['pid'] }
-    duplicates = pids.detect { |p| pids.count(p) > 1 } || []
-    abort "Fix duplicate pids: \n#{duplicates}".magenta unless duplicates.empty?
-    data
   end
 
   def self.target_dir(collection_name, site_config)

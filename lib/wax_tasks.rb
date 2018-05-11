@@ -44,4 +44,28 @@ module WaxTasks
   def self.slug(str)
     str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
   end
+
+  def self.ingest(source)
+    src = "_data/#{source}"
+    opts = { headers: true, encoding: 'utf-8' }
+
+    case File.extname(src)
+    when '.csv' then metadata = CSV.read(src, opts).map(&:to_hash)
+    when '.json' then metadata = JSON.parse(File.read(src))
+    when '.yml' then metadata = YAML.load_file(src)
+    else abort "Source #{src} must be .csv, .json, or .yml.".magenta
+    end
+
+    puts "Processing #{src}...."
+    validate(metadata)
+  rescue StandardError => e
+    abort "Cannot load #{src}. check for typos and rebuild.".magenta + "\n#{e}"
+  end
+
+  def self.validate(data)
+    pids = data.map { |d| d['pid'] }
+    duplicates = pids.detect { |p| pids.count(p) > 1 } || []
+    abort "Fix duplicate pids: \n#{duplicates}".magenta unless duplicates.empty?
+    data
+  end
 end
