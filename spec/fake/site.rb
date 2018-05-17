@@ -12,12 +12,12 @@ module Fake
     fake_rakefile
     fake_index
 
-    silence_output { Bundler.with_clean_env { system('bundle') } }
+    quiet_output { Bundler.with_clean_env { system('bundle') } }
   end
 
   def self.setup(site_dir)
     data_dir = site_dir + '/_data'
-    image_dir = Dir.glob('spec/data/iiif')
+    image_dir = Dir.glob('spec/sample/iiif')
 
     FileUtils.mkdir_p(site_dir)
     FileUtils.mkdir_p(data_dir)
@@ -62,16 +62,20 @@ module Fake
   end
 end
 
-def silence_output
-  begin
-    orig_stderr = $stderr.clone
-    orig_stdout = $stdout.clone
-    $stderr.reopen File.new('/dev/null', 'w')
-    $stdout.reopen File.new('/dev/null', 'w')
-    retval = yield
-  ensure
-    $stdout.reopen orig_stdout
-    $stderr.reopen orig_stderr
+def quiet_output
+  if $quiet
+    begin
+      orig_stderr = $stderr.clone
+      orig_stdout = $stdout.clone
+      $stderr.reopen File.new('/dev/null', 'w')
+      $stdout.reopen File.new('/dev/null', 'w')
+      retval = yield
+    ensure
+      $stdout.reopen orig_stdout
+      $stderr.reopen orig_stderr
+    end
+    retval
+  else
+    yield
   end
-  retval
 end

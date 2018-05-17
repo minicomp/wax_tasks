@@ -10,7 +10,8 @@ require 'wax_tasks'
 module Fake
   def self.data
     collections = {}
-    ['.json', '.csv', '.yml'].each do |type|
+    # 3 'good' samples, one bad
+    ['.json', '.csv', '.yml', '.csv'].each do |type|
       name = WaxTasks.slug(Faker::Dune.unique.character)
       data = generate_data
       collections[name] = collection(name, type, data)
@@ -21,7 +22,8 @@ module Fake
       when '.yml' then write_yaml(path, data)
       end
     end
-    add_to_config(collections)
+    sample_collections = mess_one_up(collections)
+    add_to_config(sample_collections)
   end
 
   def self.collection(name, type, data)
@@ -30,7 +32,8 @@ module Fake
       'keep_order' => [true, false].sample,
       'output'     => true,
       'layout'     => 'page',
-      'lunr_index' => { 'content' => [true, false].sample, 'fields' => data.first.keys }
+      'lunr_index' => { 'content' => [true, false].sample, 'fields' => data.first.keys },
+      'iiif'       => { 'label' => data.first.keys[1], 'description' => data.first.keys[2] }
     }
   end
 
@@ -43,14 +46,15 @@ module Fake
   def self.generate_data
     data = []
     keys = ['pid']
-    4.times { keys << WaxTasks.slug(Faker::Lovecraft.unique.word) }
-    3.times do
+    5.times { keys << WaxTasks.slug(Faker::Lovecraft.unique.word) }
+    3.times do |i|
       data << {
-        keys[0] => WaxTasks.slug(Faker::Dune.unique.character),
-        keys[1] => Faker::Lorem.sentence,
-        keys[2] => Faker::TwinPeaks.quote,
-        keys[3] => Faker::Name.name,
-        keys[4] => Faker::Lovecraft.sentence
+        keys[0] => i,
+        keys[1] => WaxTasks.slug(Faker::Dune.character),
+        keys[2] => Faker::Lorem.sentence,
+        keys[3] => Faker::TwinPeaks.quote,
+        keys[4] => Faker::Name.name,
+        keys[5] => Faker::Lovecraft.sentence
       }
     end
     data
@@ -77,5 +81,21 @@ module Fake
     pages.each do |page|
       File.open(page, 'a') { |f| f.puts "\n#{Faker::Markdown.random}\n" }
     end
+  end
+
+  def self.mess_one_up(collections)
+    k = collections.keys.last
+    collections['bad'] = collections[k]
+    collections.delete(k)
+    source = "./_data/#{collections['bad']['source']}"
+    puts source
+    CSV.open(source, 'a+') { |csv| csv << [0, 'a', 'b', 'c', 'd', 'e'] }
+    collections
+  end
+
+  def self.remove_bad_collection
+    config = WaxTasks.site_config
+    config['collections'].delete('bad')
+    File.write('_config.yml', YAML.dump(config))
   end
 end

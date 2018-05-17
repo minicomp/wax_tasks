@@ -3,8 +3,10 @@ Metrics/MethodLength:
 Metrics/LineLength:
   Enabled: false
 Metrics/BlockLength:
-  Max: 35
+  Max: 45
 Metrics/AbcSize:
   Max: 40
 Metrics/MethodLength:
   Max: 25
+Style/GlobalVars:
+  Enabled: false

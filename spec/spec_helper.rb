@@ -1,5 +1,7 @@
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start do
+  add_filter './spec'
+end
 
 require_relative 'fake/data'
 require_relative 'fake/site'
@@ -7,7 +9,11 @@ require_relative 'fake/site'
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'wax_tasks'
 
-silence_output do
+# toggle to silence output outside rspec
+$quiet = true
+
+# setup
+quiet_output do
   Fake.site
   Fake.data
 end
@@ -28,10 +34,11 @@ missing_src_config = {
   }
 }
 
+# test wax:pagemaster task
 describe 'wax:pagemaster' do
-  args = site_config['collections'].map { |c| c[0] }
+  args = site_config['collections'].map { |c| c[0] } - ['bad']
   args.each do |collection_name|
-    silence_output { WaxTasks.pagemaster(collection_name, site_config) }
+    quiet_output { WaxTasks.pagemaster(collection_name, site_config) }
   end
   it 'generates pages to the correct directories' do
     args.each do |a|
@@ -44,19 +51,19 @@ describe 'wax:pagemaster' do
   context 'when given a collection arg not in config' do
     collection_name = 'not_a_collection'
     it 'throws a configuration error' do
-      expect { silence_output { WaxTasks.pagemaster(collection_name, site_config) } }.to raise_error(SystemExit)
+      expect { quiet_output { WaxTasks.pagemaster(collection_name, site_config) } }.to raise_error(SystemExit)
     end
   end
   context 'when given config with bad source' do
     collection_name = bad_src_config['collections'].first[0]
     it 'throws ingest error' do
-      expect { silence_output { WaxTasks.pagemaster(collection_name, bad_src_config) } }.to raise_error(SystemExit)
+      expect { quiet_output { WaxTasks.pagemaster(collection_name, bad_src_config) } }.to raise_error(SystemExit)
     end
   end
   context 'when given config with missing source' do
     collection_name = missing_src_config['collections'].first[0]
     it 'throws io error' do
-      expect { silence_output { WaxTasks.pagemaster(collection_name, missing_src_config) } }.to raise_error(SystemExit)
+      expect { quiet_output { WaxTasks.pagemaster(collection_name, missing_src_config) } }.to raise_error(SystemExit)
     end
   end
   context 'when trying to genrate pages that already exist' do
@@ -64,10 +71,17 @@ describe 'wax:pagemaster' do
       expect { WaxTasks.pagemaster(args.first, site_config) }.to output(/.*Skipping.*/).to_stdout
     end
   end
+  context 'when trying to load a set with duplicate pids' do
+    it 'aborts and lists duplicates' do
+      expect { quiet_output { WaxTasks.pagemaster('bad', site_config) } }.to raise_error(SystemExit)
+    end
+  end
+  Fake.remove_bad_collection
+  site_config = WaxTasks.site_config
 end
 
 describe 'wax:lunr' do
-  silence_output { WaxTasks.lunr(site_config) }
+  quiet_output { WaxTasks.lunr(site_config) }
   it 'generates a lunr index' do
     index = File.open('./js/lunr-index.json', 'r').read
     expect(index.length).to be > 1000
@@ -90,13 +104,20 @@ describe 'wax:iiif' do
 
   FileUtils.mkdir_p(iiif_src_dir)
   images.each { |f| FileUtils.cp(File.expand_path(f), iiif_src_dir) }
-  silence_output { WaxTasks.iiif(collection_name, site_config) }
+  quiet_output { WaxTasks.iiif(collection_name, site_config) }
 
   it 'generates collections' do
     expect(File.exist?("./iiif/#{collection_name}/collection/top.json")).to be true
   end
   it 'generates manifests' do
-    expect(File.exist?("./iiif/#{collection_name}/1/manifest.json")).to be true
+    expect(File.exist?("./iiif/#{collection_name}/0/manifest.json")).to be true
+  end
+  it 'adds manifest metadata fields from config + source' do
+    manifest = JSON.parse(File.read("./iiif/#{collection_name}/0/manifest.json"))
+    %w[label description].each do |k|
+      expect(manifest).to have_key(k)
+      expect(manifest[k]).not_to be_empty
+    end
   end
   it 'generates derivatives' do
     expect(Dir.exist?("./iiif/#{collection_name}/images")).to be true
@@ -109,20 +130,20 @@ describe 'wax:iiif' do
   context 'when looking for a missing dir' do
     it 'throws an io error' do
       collection_name = 'not_a_collection'
-      expect { silence_output { WaxTasks.iiif(collection_name, site_config) } }.to raise_error(SystemExit)
+      expect { quiet_output { WaxTasks.iiif(collection_name, site_config) } }.to raise_error(SystemExit)
     end
   end
 end
 
 describe 'jekyll' do
   it 'builds successfully' do
-    silence_output { Bundler.with_clean_env { system('bundle exec jekyll build') } }
+    quiet_output { Bundler.with_clean_env { system('bundle exec jekyll build') } }
   end
 end
 
 describe 'wax:jspackage' do
   before(:all) do
-    silence_output { system('bundle exec rake wax:jspackage') }
+    quiet_output { system('bundle exec rake wax:jspackage') }
   end
   it 'writes a package.json file' do
     package = File.open('package.json', 'r').read
@@ -132,6 +153,6 @@ end
 
 describe 'wax:test' do
   it 'passes html-proofer' do
-    silence_output { system('bundle exec rake wax:test') }
+    quiet_output { system('bundle exec rake wax:test') }
   end
 end

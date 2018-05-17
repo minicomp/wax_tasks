@@ -15,13 +15,13 @@ module Pagemaster
     skipped = 0
 
     records.each_with_index do |item, index|
-      pagename = WaxTasks.slug(item.fetch('pid'))
-      pagepath = dir + '/' + pagename + '.md'
+      pagename = WaxTasks.slug(item.fetch('pid').to_s)
+      pagepath = "#{dir}/#{pagename}.md"
       if File.exist?(pagepath)
         puts "#{pagename}.md already exits. Skipping."
         skipped += 1
       else
-        item['permalink'] = '/' + collection[:name] + '/' + pagename + permalink_style
+        item['permalink'] = "/#{collection[:name]}/#{pagename}#{permalink_style}"
         item['layout'] = collection[:layout]
         item['order'] = padded_int(index, records.length) if collection[:keep_order]
         File.open(pagepath, 'w') { |f| f.write(item.to_yaml.to_s + '---') }
