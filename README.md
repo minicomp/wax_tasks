@@ -116,6 +116,10 @@ collections:
     lunr_index:
       content: false
       fields: [title, artist, location, _date, object_type, current_location]
+    iiif:
+      meta:
+        label: title
+        location: current_location
 ```
 
 # Contributing
