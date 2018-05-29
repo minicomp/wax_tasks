@@ -1,34 +1,30 @@
 require 'fileutils'
 require 'jekyll'
-require 'yaml'
-require 'faker'
+
+require_relative 'data'
+
+START_DIR     = Dir.pwd
+BUILD_DIR     = "#{START_DIR}/build"
+IMAGE_SRC_DIR = "#{START_DIR}/spec/fake/iiif"
+DATA_DIR      = "#{BUILD_DIR}/_data"
 
 module Fake
   def self.site
-    setup('build')
-
+    FileUtils.mkdir_p("#{DATA_DIR}/iiif")
+    FileUtils.cd(BUILD_DIR)
     fake_config
     fake_gemfile
     fake_rakefile
     fake_index
-
-    quiet_output { Bundler.with_clean_env { system('bundle') } }
-  end
-
-  def self.setup(site_dir)
-    data_dir = site_dir + '/_data'
-    image_dir = Dir.glob('spec/sample/iiif')
-
-    FileUtils.mkdir_p(site_dir)
-    FileUtils.mkdir_p(data_dir)
-    FileUtils.cp_r(image_dir, data_dir)
-    FileUtils.cd(site_dir)
+    Bundler.with_clean_env { system('bundle --quiet') }
+    Fake.data
+    setup_iiif
   end
 
   def self.fake_config
     config = {
+      'title' => 'site',
       'url' => '',
-      'decription' => '',
       'collections_dir' => 'collections',
       'theme' => 'minima',
       'js' => {
@@ -51,7 +47,7 @@ module Fake
 
   def self.fake_rakefile
     File.open('Rakefile', 'w') do |f|
-      f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }')
+      f.puts('Dir.glob("../lib/wax/tasks/*.rake").each { |r| load r }')
     end
   end
 
@@ -60,16 +56,30 @@ module Fake
       f.puts('<html><head></head><body>Home</body></html>')
     end
   end
+
+  def self.setup_iiif
+    imgs = Dir.glob("#{IMAGE_SRC_DIR}/*.jpg")
+    dirs = WaxTasks.site_config[:collections].map { |c| c[0] }
+    dirs.each do |d|
+      target_dir = "#{DATA_DIR}/iiif/#{d}"
+      FileUtils.mkdir_p(target_dir)
+      FileUtils.cp(imgs, target_dir)
+    end
+  end
 end
 
-def quiet_output
-  if $quiet
+def quiet_stdout
+  if QUIET
     begin
       orig_stderr = $stderr.clone
       orig_stdout = $stdout.clone
       $stderr.reopen File.new('/dev/null', 'w')
       $stdout.reopen File.new('/dev/null', 'w')
       retval = yield
+    rescue StandardError => e
+      $stdout.reopen orig_stdout
+      $stderr.reopen orig_stderr
+      raise e
     ensure
       $stdout.reopen orig_stdout
       $stderr.reopen orig_stderr

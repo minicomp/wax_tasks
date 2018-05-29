@@ -1,12 +1,14 @@
-Metrics/MethodLength:
-  Max: 15
+AllCops:
+  Exclude:
+    - 'spec/**/*'
 Metrics/LineLength:
-  Enabled: false
+  Exclude:
+    - 'lib/wax/utilities.rb'
+    - 'lib/wax/index.rb'
 Metrics/BlockLength:
-  Max: 45
-Metrics/AbcSize:
-  Max: 40
+  Exclude:
+    - 'lib/wax/tasks/*'
 Metrics/MethodLength:
-  Max: 25
-Style/GlobalVars:
-  Enabled: false
+  Max: 20
+Metrics/AbcSize:
+  Max: 20

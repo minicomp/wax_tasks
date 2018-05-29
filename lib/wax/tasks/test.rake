@@ -1,4 +1,4 @@
-require 'colorized_string'
+require 'colorize'
 require 'html-proofer'
 
 namespace :wax do
