@@ -1,3 +1,5 @@
+require 'yaml'
+
 require_relative 'wax/collection'
 require_relative 'wax/index'
 require_relative 'wax/iiif_collection'
