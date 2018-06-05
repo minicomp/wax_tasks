@@ -28,6 +28,7 @@ class Index
   def write
     docs = []
     @collections.each { |c| docs.concat(c.data) }
+    docs = add_lunr_ids(docs)
     FileUtils.mkdir_p(File.dirname(@path))
     index = "---\nlayout: none\n---\n#{JSON.pretty_generate(docs)}"
     File.open(@path, 'w') { |f| f.write(index) }
@@ -54,5 +55,16 @@ class Index
       File.open(path, 'w') { |file| file.write(ui) }
       Message.writing_ui(path)
     end
+  end
+
+  def add_lunr_ids(documents)
+    count = 0
+    docs_with_ids = []
+    documents.each do |d|
+      d['lunr_id'] = count
+      docs_with_ids << d
+      count += 1
+    end
+    docs_with_ids
   end
 end

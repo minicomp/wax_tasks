@@ -6,11 +6,6 @@ def rm_diacritics(str)
   str.tr(to_replace, replaced_by)
 end
 
-def thing2string(thing)
-  thing = thing.join(' || ') if thing.is_a?(Array)
-  thing.to_s
-end
-
 def clean(str)
   str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
   str.gsub!(/{%(.*)%}/, '') # remove functional liquid
