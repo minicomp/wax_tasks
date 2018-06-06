@@ -24,7 +24,7 @@ class IiifCollection < Collection
 
   def iiif_builder
     build_opts = {
-      base_url: "#{@s_conf['baseurl']}/iiif/#{@name}",
+      base_url: "#{@s_conf[:baseurl]}/iiif/#{@name}",
       output_dir: @target_dir,
       verbose: true,
       variants: @variants

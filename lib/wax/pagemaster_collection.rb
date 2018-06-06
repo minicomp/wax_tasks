@@ -1,4 +1,3 @@
-
 # document
 class PagemasterCollection < Collection
   attr_accessor :page_dir

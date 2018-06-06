@@ -26,6 +26,7 @@ module Fake
       'title' => 'site',
       'url' => '',
       'collections_dir' => 'collections',
+      'baseurl' => '/test',
       'theme' => 'minima',
       'js' => {
         'jquery' => {
