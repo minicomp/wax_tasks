@@ -28,19 +28,20 @@ class LunrCollection < Collection
       'collection' => @name
     }
     hash['content'] = rm_diacritics(clean(File.read(page))) if @content
-    @fields.each do |f|
-      value = yaml[f]
-      hash[f] = case value
-                when Array
-                  rm_diacritics(value.join(', '))
-                when String
-                  rm_diacritics(value)
-                when Hash
-                  value
-                else
-                  value.to_s
-                end
-    end
+    add_data_fields(hash, yaml)
+  end
+
+  def add_data_fields(hash, yaml)
+    @fields.each { |f| hash[f] = normalize(yaml[f]) }
     hash
+  end
+
+  def normalize(value)
+    case value
+    when Array then rm_diacritics(value.join(', '))
+    when String then rm_diacritics(value)
+    when Hash then value
+    else value.to_s
+    end
   end
 end

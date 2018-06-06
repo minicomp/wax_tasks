@@ -1,4 +1,3 @@
-require 'colorize'
 require 'html-proofer'
 
 namespace :wax do
@@ -14,6 +13,6 @@ namespace :wax do
       verbose: true
     }
     HTMLProofer.check_directory('./_site', opts).run
-    sh 'bundle exec rspec' if File.exist?('.rspec')
+    system('bundle exec rspec') if File.exist?('.rspec')
   end
 end

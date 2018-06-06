@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler', '~> 1'
   s.add_development_dependency 'faker', '~> 1'
   s.add_development_dependency 'rspec', '~> 3'
-  s.add_development_dependency 'rubocop', '>= 0.5'
 end

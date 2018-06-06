@@ -2,13 +2,10 @@ AllCops:
   Exclude:
     - 'spec/**/*'
 Metrics/LineLength:
-  Exclude:
-    - 'lib/wax/utilities.rb'
-    - 'lib/wax/index.rb'
-Metrics/BlockLength:
-  Exclude:
-    - 'lib/wax/tasks/*'
+  Enabled: false
 Metrics/MethodLength:
-  Max: 20
+  Max: 15
+Style/StringLiterals:
+  Enabled: false
 Metrics/AbcSize:
   Max: 20

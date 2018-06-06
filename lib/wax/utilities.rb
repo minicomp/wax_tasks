@@ -73,9 +73,8 @@ class Message
     share("\nProcessing #{source}...")
   end
 
-  def self.pagemaster_results(completed, skipped, dir)
-    msg = "\n#{completed} pages were generated to #{dir} directory."
-    share("#{msg}\n#{skipped} pre-existing items were skipped.")
+  def self.pagemaster_results(completed, dir)
+    share("\n#{completed} pages were generated to #{dir} directory.")
   end
 
   def self.writing_index(path)

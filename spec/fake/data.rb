@@ -5,12 +5,12 @@ module Fake
   def self.data
     # generate
     collections = [
-      DataFile.new({ ext: '.csv', iiif: true }),
-      DataFile.new({ ext: '.yml', nested: true }),
-      DataFile.new({ ext: '.json', nested: true, iiif: true })
+      DataFile.new(ext: '.csv', iiif: true),
+      DataFile.new(ext: '.yml', nested: true),
+      DataFile.new(ext: '.json', nested: true, iiif: true)
     ]
     add_to_config(collections)
-    collections.each { |c| c.write }
+    collections.each(&:write)
   end
 
   def self.add_to_config(collections)
@@ -28,7 +28,7 @@ module Fake
   end
 
   class DataFile
-    attr_reader  :data, :name, :config
+    attr_reader :name, :config
 
     def initialize(opts = {})
       @extension  = opts.fetch(:ext, nil)
@@ -65,13 +65,15 @@ module Fake
           'fields'    => @data.first.keys
         }
       }
-      c_conf['iiif'] = {
-        'meta' => {
-          'label' => @data.first.keys[1],
-          'description' => @data.first.keys[2]
-        },
-        'variants' => [100, 900]
-      } if @iiif
+      if @iiif
+        c_conf['iiif'] = {
+          'meta' => {
+            'label' => @data.first.keys[1],
+            'description' => @data.first.keys[2]
+          },
+          'variants' => [100, 900]
+        }
+      end
       c_conf
     end
 
@@ -79,19 +81,22 @@ module Fake
       data = []
       keys = ['pid']
       5.times { keys << slug(Faker::Lovecraft.unique.word) }
-      3.times do |i|
-        row = {
-          keys[0] => i,
-          keys[1] => slug(Faker::Dune.character),
-          keys[2] => Faker::Lorem.sentence,
-          keys[3] => Faker::TwinPeaks.quote,
-          keys[4] => Faker::Name.name,
-          keys[5] => Faker::Lovecraft.sentence
-        }
-        row[keys[4]] = { '1' => Faker::Name.name, '2' => Faker::Name.name } if @nested
-        data << row
-      end
+      3.times { |i| data << generate_row(keys, i) }
       data
+    end
+
+    def generate_row(keys, i)
+      row = {
+        keys[0] => i,
+        keys[1] => slug(Faker::Dune.character),
+        keys[2] => Faker::TwinPeaks.quote,
+        keys[3] => Faker::Lovecraft.sentence,
+        keys[4] => Faker::Name.name
+      }
+      if @nested
+        row[keys[4]] = { '1' => Faker::Name.name, '2' => Faker::Name.name }
+      end
+      row
     end
 
     def write_csv(path, hashes)

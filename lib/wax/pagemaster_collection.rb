@@ -13,27 +13,23 @@ class PagemasterCollection < Collection
   def generate_pages
     FileUtils.mkdir_p(@page_dir)
     completed = 0
-    skipped = 0
-
     @data.each_with_index do |item, i|
-      name = slug(item.fetch('pid').to_s)
-      path = "#{@page_dir}/#{name}.md"
+      page_slug = slug(item.fetch('pid').to_s)
+      path      = "#{@page_dir}/#{page_slug}.md"
       if File.exist?(path)
-        puts "#{name}.md already exits. Skipping."
-        skipped += 1
+        puts "#{page_slug}.md already exits. Skipping."
       else
-        page = page(item, name, i).to_yaml
-        File.open(path, 'w') { |f| f.write("#{page}---") }
+        File.open(path, 'w') { |f| f.write("#{page(item, page_slug, i).to_yaml}---") }
         completed += 1
       end
     end
-    puts Message.pagemaster_results(completed, skipped, @page_dir)
+    puts Message.pagemaster_results(completed, @page_dir)
   rescue StandardError => e
     Error.page_generation_failure(completed) + "\n#{e}"
   end
 
-  def page(item, name, index)
-    item['permalink'] = "/#{@name}/#{name}#{@s_conf[:permalink]}"
+  def page(item, page_slug, index)
+    item['permalink'] = "/#{@name}/#{page_slug}#{@s_conf[:permalink]}"
     item['layout']    = @layout
     item['order']     = padded_int(index, @data.length) if @ordered
     item

@@ -4,9 +4,9 @@ require 'jekyll'
 require_relative 'data'
 
 START_DIR     = Dir.pwd
-BUILD_DIR     = "#{START_DIR}/build"
-IMAGE_SRC_DIR = "#{START_DIR}/spec/fake/iiif"
-DATA_DIR      = "#{BUILD_DIR}/_data"
+BUILD_DIR     = "#{START_DIR}/build".freeze
+IMAGE_SRC_DIR = "#{START_DIR}/spec/fake/iiif".freeze
+DATA_DIR      = "#{BUILD_DIR}/_data".freeze
 
 module Fake
   def self.site

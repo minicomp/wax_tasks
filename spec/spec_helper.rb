@@ -4,8 +4,9 @@ QUIET = true
 # use codecov + add requirements
 require 'simplecov'
 SimpleCov.start do
-  add_filter '/spec/'
+  add_filter 'spec'
   add_filter 'utilities'
+  add_filter 'branch'
 end
 
 require_relative './../lib/wax_tasks'
