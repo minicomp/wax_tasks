@@ -1,10 +1,11 @@
-Metrics/MethodLength:
-  Max: 15
+AllCops:
+  Exclude:
+    - 'spec/**/*'
 Metrics/LineLength:
   Enabled: false
-Metrics/BlockLength:
-  Max: 35
-Metrics/AbcSize:
-  Max: 40
 Metrics/MethodLength:
-  Max: 25
+  Max: 15
+Style/StringLiterals:
+  Enabled: false
+Metrics/AbcSize:
+  Max: 20
