@@ -38,7 +38,10 @@ class LunrCollection < Collection
 
   def normalize(value)
     case value
-    when Array then rm_diacritics(value.join(', '))
+    when Array
+      if value.first.is_a? Hash then value
+      else rm_diacritics(value.join(', '))
+      end
     when String then rm_diacritics(value)
     when Hash then value
     else value.to_s
