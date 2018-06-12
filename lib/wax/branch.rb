@@ -12,21 +12,19 @@ module Branch
       source: '.',
       destination: '_site',
       config: '_config.yml',
-      baseurl:  baseurl
+      baseurl:  baseurl,
+      verbose: true
     }
     Jekyll::Site.new(Jekyll.configuration(opts)).process
   end
 
   def push
     abort "Cannot find _site.".magenta unless Dir.exist? '_site'
-    Dir.mktmpdir do |tmp|
-      FileUtils.cp_r '_site/.', tmp
-      Dir.chdir tmp
-      system 'git init'
-      system "git add . && git commit -m '#{@commit_message}'"
-      system "git remote add origin #{@origin}"
-      system "git push origin master:refs/heads/#{TARGET} --force"
-    end
+    Dir.chdir('./_site')
+    system 'git init && git add .'
+    system "git commit -m '#{@commit_msg}'"
+    system "git remote add origin #{@origin}"
+    system "git push origin master:refs/heads/#{TARGET} --force"
   end
 end
 
@@ -54,6 +52,8 @@ end
 # configure git branches from local info
 class LocalBranch
   include Branch
+
+  attr_reader :origin, :commit_msg
 
   def initialize
     @origin     = `git config --get remote.origin.url`
