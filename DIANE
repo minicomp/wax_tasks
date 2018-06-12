@@ -1,0 +1,4 @@
+user,message,time
+mnyrop,ready to update wax:lunr to accomodate nested records,Tue Jun  5 16:26:58 2018
+mnyrop,wax:lunr no longer converts hashes to strings,Tue Jun  5 17:31:37 2018
+mnyrop,dropping wax:push:branch hardcoded tasks in favor of wax:push BRANCH argument,Tue Jun  5 22:53:30 2018

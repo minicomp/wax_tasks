@@ -2,7 +2,7 @@ $LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |s|
   s.name          = 'wax_tasks'
-  s.version       = '0.1.0'
+  s.version       = '0.2.0'
   s.authors       = ['Marii Nyrop']
   s.email         = ['m.nyrop@columbia.edu']
   s.license       = 'MIT'
@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler', '~> 1'
   s.add_development_dependency 'faker', '~> 1'
   s.add_development_dependency 'rspec', '~> 3'
-  s.add_development_dependency 'rubocop', '>= 0.5'
 end
