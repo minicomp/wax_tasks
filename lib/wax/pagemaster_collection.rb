@@ -13,7 +13,7 @@ class PagemasterCollection < Collection
     FileUtils.mkdir_p(@page_dir)
     completed = 0
     @data.each_with_index do |item, i|
-      page_slug = slug(item.fetch('pid').to_s)
+      page_slug = Utils.slug(item.fetch('pid').to_s)
       path      = "#{@page_dir}/#{page_slug}.md"
       if File.exist?(path)
         puts "#{page_slug}.md already exits. Skipping."

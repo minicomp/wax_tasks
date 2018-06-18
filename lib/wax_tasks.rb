@@ -8,8 +8,10 @@ require_relative 'wax/lunr_collection'
 require_relative 'wax/pagemaster_collection'
 require_relative 'wax/utilities'
 
-# document
+# Main WaxTasks module
 module WaxTasks
+  # accesses Jekyll site config `_config.yml`
+  # returns a hashmap of relevant site wide info
   def self.site_config
     site_config = YAML.load_file('./_config.yml')
     s_conf = {
@@ -24,4 +26,9 @@ module WaxTasks
     s_conf[:permalink] = s_conf[:permalink] == 'pretty' ? '/' : '.html'
     s_conf
   end
+
+  include Branch
+  include Utils
+  include Message
+  include Error
 end

@@ -15,7 +15,7 @@ class Collection
     Error.missing_key('source', @name) if source.nil?
     src_path = "_data/#{source}"
     data = hash_array(src_path)
-    Message.processing_source(source)
+    puts "Processing #{source}..."
     assert_pids(source, data)
   rescue StandardError => e
     Error.bad_source(source, @name) + "\n#{e}"

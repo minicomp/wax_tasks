@@ -26,7 +26,7 @@ module Fake
       'title' => 'site',
       'url' => '',
       'collections_dir' => 'collections',
-      'baseurl' => '/test',
+      'baseurl' => '',
       'theme' => 'minima',
       'js' => {
         'jquery' => {
@@ -53,8 +53,8 @@ module Fake
   end
 
   def self.fake_index
-    File.open('index.html', 'w') do |f|
-      f.puts('<html><head></head><body>Home</body></html>')
+    File.open('index.md', 'w') do |f|
+      f.puts("---\nlayout: default\n---")
     end
   end
 

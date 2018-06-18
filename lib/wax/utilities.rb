@@ -1,26 +1,31 @@
 require 'colorize'
 
-def rm_diacritics(str)
-  to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
-  replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
-  str.tr(to_replace, replaced_by)
+# WaxTasks utilities
+module Utils
+  # normalizes accents for lunr indexing
+  def self.rm_diacritics(str)
+    to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
+    replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
+    str.tr(to_replace, replaced_by)
+  end
+
+  # cleans yaml + markdown pages for lunr indexing
+  def self.clean(str)
+    str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
+    str.gsub!(/{%(.*)%}/, '') # remove functional liquid
+    str.gsub!(%r{<\/?[^>]*>}, '') # remove html
+    str.gsub!('\\n', '') # remove newlines
+    str.gsub!(/\s+/, ' ') # remove extra space
+    str.tr!('"', "'") # replace double quotes with single
+    str
+  end
+
+  def self.slug(str)
+    str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
+  end
 end
 
-def clean(str)
-  str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
-  str.gsub!(/{%(.*)%}/, '') # remove functional liquid
-  str.gsub!(%r{<\/?[^>]*>}, '') # remove html
-  str.gsub!('\\n', '') # remove newlines
-  str.gsub!(/\s+/, ' ') # remove extra space
-  str.tr!('"', "'") # replace double quotes with single
-  str
-end
-
-def slug(str)
-  str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
-end
-
-# document
+# Error handling with color
 module Error
   def self.complain(error)
     abort error.magenta
@@ -63,18 +68,14 @@ module Error
   end
 end
 
-# document
-class Message
+# Message stdout with color
+module Message
   def self.share(msg)
     puts msg.cyan
   end
 
-  def self.processing_source(source)
-    share("\nProcessing #{source}...")
-  end
-
   def self.pagemaster_results(completed, dir)
-    share("\n#{completed} pages were generated to #{dir} directory.")
+    share("#{completed} pages were generated to #{dir} directory.")
   end
 
   def self.writing_index(path)

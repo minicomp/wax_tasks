@@ -27,7 +27,7 @@ class LunrCollection < Collection
       'link' => "{{'" + yaml.fetch('permalink') + "' | relative_url }}",
       'collection' => @name
     }
-    hash['content'] = rm_diacritics(clean(File.read(page))) if @content
+    hash['content'] = Utils.rm_diacritics(Utils.clean(File.read(page))) if @content
     add_data_fields(hash, yaml)
   end
 
@@ -40,9 +40,9 @@ class LunrCollection < Collection
     case value
     when Array
       if value.first.is_a? Hash then value
-      else rm_diacritics(value.join(', '))
+      else Utils.rm_diacritics(value.join(', '))
       end
-    when String then rm_diacritics(value)
+    when String then Utils.rm_diacritics(value)
     when Hash then value
     else value.to_s
     end
