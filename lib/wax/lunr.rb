@@ -1,11 +1,14 @@
+require_relative 'lunr/index'
+require_relative 'lunr/ui'
+
 # document
 class LunrCollection < Collection
   attr_accessor :fields, :data
 
   def initialize(name, opts = {})
     super(name, opts)
-    @content  = @c_conf['lunr_index'].fetch('content', false)
-    @fields   = @c_conf['lunr_index'].fetch('fields', nil)
+    @content  = @config['lunr_index'].fetch('content', false)
+    @fields   = @config['lunr_index'].fetch('fields', nil)
     @data     = pages_to_hash_array
   end
 

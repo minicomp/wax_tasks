@@ -5,16 +5,18 @@ require_relative 'data'
 
 START_DIR     = Dir.pwd
 BUILD_DIR     = "#{START_DIR}/build".freeze
+SRC_DIR       = "#{BUILD_DIR}/src".freeze
+DATA_DIR      = "#{SRC_DIR}/_data".freeze
 IMAGE_SRC_DIR = "#{START_DIR}/spec/fake/iiif".freeze
-DATA_DIR      = "#{BUILD_DIR}/_data".freeze
 
 module Fake
   def self.site
     FileUtils.mkdir_p("#{DATA_DIR}/iiif")
+    FileUtils.mkdir_p(SRC_DIR)
     FileUtils.cd(BUILD_DIR)
-    fake_config
     fake_gemfile
     fake_rakefile
+    fake_config
     fake_index
     Bundler.with_clean_env { system('bundle --quiet') }
     Fake.data
@@ -26,6 +28,7 @@ module Fake
       'title' => 'site',
       'url' => '',
       'collections_dir' => 'collections',
+      'source' => 'src',
       'baseurl' => '',
       'theme' => 'minima',
       'js' => {
@@ -53,16 +56,18 @@ module Fake
   end
 
   def self.fake_index
-    File.open('index.md', 'w') do |f|
+    File.open("#{SRC_DIR}/index.md", 'w') do |f|
       f.puts("---\nlayout: default\n---")
     end
   end
 
   def self.setup_iiif
     imgs = Dir.glob("#{IMAGE_SRC_DIR}/*.jpg")
-    dirs = WaxTasks.site_config[:collections].map { |c| c[0] }
+    site_config = YAML.load_file('./_config.yml')
+    dirs = site_config['collections'].map { |c| c[0] }
     dirs.each do |d|
       target_dir = "#{DATA_DIR}/iiif/#{d}"
+      puts "TARGET_DIR #{target_dir}"
       FileUtils.mkdir_p(target_dir)
       FileUtils.cp(imgs, target_dir)
     end

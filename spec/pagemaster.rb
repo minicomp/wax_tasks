@@ -18,7 +18,7 @@ describe 'wax:pagemaster' do
   end
   context 'when processed directly' do
     it 'still passes' do
-      FileUtils.rm_r "./collections/_#{ARGS.first}"
+      FileUtils.rm_r "./src/collections/_#{ARGS.first}"
       expect { quiet_stdout { PM_COLLECTIONS.first.generate_pages } }.not_to raise_error
     end
   end
@@ -35,7 +35,7 @@ describe 'wax:pagemaster' do
   context 'when given a bad config' do
     it 'throws a key error' do
       opts = { site_config: {} }
-      expect { PagemasterCollection.new(ARGS.first, opts) }.to raise_error(KeyError)
+      expect { PagemasterCollection.new(ARGS.first, opts) }.to raise_error(NoMethodError)
     end
   end
 end

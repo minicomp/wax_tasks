@@ -3,15 +3,15 @@ require 'wax_tasks'
 namespace :wax do
   desc 'write a simple package.json'
   task :jspackage do
-    s_conf = WaxTasks.site_config
-    if s_conf[:js]
+    site_config = WaxTasks::SITE_CONFIG
+    if site_config[:js]
       names = []
       package = {
-        'name'          => s_conf['title'],
+        'name'          => site_config['title'],
         'version'       => '1.0.0',
         'dependencies'  => {}
       }
-      s_conf[:js].each do |dependency|
+      site_config[:js].each do |dependency|
         name = dependency[0]
         names << name
         version = dependency[1]['version']

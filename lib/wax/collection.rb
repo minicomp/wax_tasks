@@ -1,20 +1,17 @@
 # document
 class Collection
   def initialize(name, opts = {})
-    @name     = name
-    @s_conf   = opts.fetch(:site_config, WaxTasks.site_config)
-    @c_conf   = @s_conf.fetch(:collections).fetch(@name, nil)
-    @page_dir = "_#{@name}"
-    if @s_conf.fetch(:c_dir, false)
-      @page_dir = "#{@s_conf[:c_dir]}/#{@page_dir}"
-    end
+    @name             = name
+    @site_config      = opts.fetch(:site_config, WaxTasks::SITE_CONFIG)
+    @config           = @site_config[:collections].fetch(@name, nil)
+    @page_dir         = construct_page_dir
+
     assert_required(instance_variables)
   end
 
   def ingest(source)
     Error.missing_key('source', @name) if source.nil?
-    src_path = "_data/#{source}"
-    data = hash_array(src_path)
+    data = hash_array(src_path("_data/#{source}"))
     puts "Processing #{source}..."
     assert_pids(source, data)
   rescue StandardError => e
@@ -45,5 +42,17 @@ class Collection
     vars.each do |v|
       Error.invalid_collection(@name) if instance_variable_get(v).nil?
     end
+  end
+
+  def construct_page_dir
+    dir = "_#{@name}"
+    dir = "#{@site_config[:collections_dir]}/#{dir}" if @site_config[:collections_dir]
+    dir = "#{@site_config[:source_dir]}/#{dir}" if @site_config[:source_dir]
+    dir
+  end
+
+  def src_path(path)
+    path = "#{@site_config[:source_dir]}/#{path}" if @site_config[:source_dir]
+    path
   end
 end

@@ -40,13 +40,13 @@ module Fake
     end
 
     def new_name
-      name = Utils.slug(Faker::Dune.unique.character)
+      name = slug(Faker::Dune.unique.character)
       name += '-nested' if @nested
       name
     end
 
     def write
-      path = "_data/#{@name}#{@extension}"
+      path = "src/_data/#{@name}#{@extension}"
       case @extension
       when '.csv' then write_csv(path, @data)
       when '.json' then write_json(path, @data)
@@ -80,7 +80,7 @@ module Fake
     def generate_data
       data = []
       keys = ['pid']
-      5.times { keys << Utils.slug(Faker::Lovecraft.unique.word) }
+      5.times { keys << slug(Faker::Lovecraft.unique.word) }
       3.times { |i| data << generate_row(keys, i) }
       data
     end
@@ -88,7 +88,7 @@ module Fake
     def generate_row(keys, i)
       row = {
         keys[0] => i,
-        keys[1] => Utils.slug(Faker::Dune.character),
+        keys[1] => slug(Faker::Dune.character),
         keys[2] => Faker::TwinPeaks.quote,
         keys[3] => Faker::Lovecraft.sentence,
         keys[4] => Faker::Name.name
@@ -114,6 +114,10 @@ module Fake
 
     def write_yaml(path, data)
       File.open(path, 'w') { |f| f.write(YAML.dump(data)) }
+    end
+
+    def slug(str)
+      str.downcase.tr(' ', '_').gsub(/[^:\w-]/, '')
     end
   end
 end

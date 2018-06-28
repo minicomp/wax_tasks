@@ -8,24 +8,24 @@ describe 'wax:iiif' do
       expect(passes).to eq(true)
     end
     it 'generates collection json' do
-      expect(File.exist?("./iiif/#{ARGS.first}/collection/top.json")).to be true
+      expect(File.exist?("./src/iiif/#{ARGS.first}/collection/top.json")).to be true
     end
     it 'generates manifest json' do
-      expect(File.exist?("./iiif/#{ARGS.first}/0/manifest.json")).to be true
+      expect(File.exist?("./src/iiif/#{ARGS.first}/0/manifest.json")).to be true
     end
     it 'adds manifest metadata fields from config + source' do
-      manifest = JSON.parse(File.read("./iiif/#{ARGS.first}/0/manifest.json"))
+      manifest = JSON.parse(File.read("./src/iiif/#{ARGS.first}/0/manifest.json"))
       %w[label description].each do |k|
         expect(manifest).to have_key(k)
         expect(manifest[k]).not_to be_empty
       end
     end
     it 'generates derivatives' do
-      expect(Dir.exist?("./iiif/#{ARGS.first}/images")).to be true
+      expect(Dir.exist?("./src/iiif/#{ARGS.first}/images")).to be true
     end
     it 'generates custom image variants' do
       [100, 900].each do |size|
-        expect(File.exist?("./iiif/#{ARGS.first}/images/1-1/full/#{size},/0/default.jpg")).to be true
+        expect(File.exist?("./src/iiif/#{ARGS.first}/images/1-1/full/#{size},/0/default.jpg")).to be true
       end
     end
   end

@@ -2,24 +2,24 @@
 QUIET = true
 
 # use codecov + add requirements
+require 'colorize'
 require 'simplecov'
+
 SimpleCov.start do
   add_filter 'spec'
-  add_filter 'utilities'
+  add_filter 'utils'
   add_filter 'branch'
 end
 
-require_relative './../lib/wax_tasks'
-require_relative 'fake/site'
-
 # setup
+require_relative 'fake/site'
 quiet_stdout { Fake.site }
+require_relative './../lib/wax_tasks'
 
 # constants
-SITE_CONFIG = WaxTasks.site_config
-ARGS = SITE_CONFIG[:collections].map { |c| c[0] }
-PM_COLLECTIONS = quiet_stdout { ARGS.map { |a| PagemasterCollection.new(a) } }
-IIIF_COLLECTIONS = ARGS.map { |a| IiifCollection.new(a) }
+ARGS              = WaxTasks::SITE_CONFIG[:collections].map { |c| c[0] }
+PM_COLLECTIONS    = quiet_stdout { ARGS.map { |a| PagemasterCollection.new(a) } }
+IIIF_COLLECTIONS  = ARGS.map { |a| IiifCollection.new(a) }
 
 # run specs
 require_relative 'pagemaster'

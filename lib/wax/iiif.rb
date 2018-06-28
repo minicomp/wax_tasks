@@ -5,17 +5,17 @@ class IiifCollection < Collection
   def initialize(name, opts = {})
     super(name, opts)
 
-    @src_dir    = "_data/iiif/#{@name}"
-    @target_dir = "./iiif/#{@name}"
-    @src_data   = @c_conf.fetch('source', false)
-    @i_conf     = @c_conf.fetch('iiif', {})
-    @meta       = @i_conf.fetch('meta', false)
-    @variants   = validated_variants
+    @src_dir      = src_path("_data/iiif/#{@name}")
+    @target_dir   = src_path("iiif/#{@name}")
+    @src_data     = @config.fetch('source', false)
+    @iiif_config  = @config.fetch('iiif', {})
+    @meta         = @iiif_config.fetch('meta', false)
+    @variants     = validated_variants
   end
 
   def process
     Error.missing_iiif_src(@src_dir) unless Dir.exist?(@src_dir)
-    FileUtils.mkdir_p("./iiif/#{@name}", verbose: false)
+    FileUtils.mkdir_p(@target_dir, verbose: false)
 
     builder = iiif_builder
     builder.load(iiif_records)
@@ -24,7 +24,7 @@ class IiifCollection < Collection
 
   def iiif_builder
     build_opts = {
-      base_url: "#{@s_conf[:baseurl]}/iiif/#{@name}",
+      base_url: "#{WaxTasks::SITE_CONFIG[:baseurl]}/iiif/#{@name}",
       output_dir: @target_dir,
       verbose: true,
       variants: @variants
@@ -33,7 +33,7 @@ class IiifCollection < Collection
   end
 
   def validated_variants
-    vars = @i_conf.fetch('variants', false)
+    vars = @iiif_config.fetch('variants', false)
     if vars.is_a?(Array) && vars.all? { |v| v.is_a?(Integer) }
       variants = {}
       vars.each_with_index { |v, i| variants["custom_variant_#{i}".to_sym] = v }

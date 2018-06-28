@@ -4,9 +4,9 @@ class PagemasterCollection < Collection
 
   def initialize(name, opts = {})
     super(name, opts)
-    @data     = ingest(@c_conf.fetch('source', nil))
-    @layout   = @c_conf.fetch('layout', nil)
-    @ordered  = @c_conf.fetch('keep_order', false)
+    @data     = ingest(@config.fetch('source', nil))
+    @layout   = @config.fetch('layout', nil)
+    @ordered  = @config.fetch('keep_order', false)
   end
 
   def generate_pages
@@ -28,7 +28,7 @@ class PagemasterCollection < Collection
   end
 
   def page(item, page_slug, index)
-    item['permalink'] = "/#{@name}/#{page_slug}#{@s_conf[:permalink]}"
+    item['permalink'] = "/#{@name}/#{page_slug}#{@site_config[:permalink]}"
     item['layout']    = @layout
     item['order']     = padded_int(index, @data.length) if @ordered
     item
