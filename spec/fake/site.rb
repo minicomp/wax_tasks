@@ -51,7 +51,7 @@ module Fake
 
   def self.fake_rakefile
     File.open('Rakefile', 'w') do |f|
-      f.puts('Dir.glob("../lib/wax/tasks/*.rake").each { |r| load r }')
+      f.puts('Dir.glob("../lib/tasks/*.rake").each { |r| load r }')
     end
   end
 
@@ -67,7 +67,6 @@ module Fake
     dirs = site_config['collections'].map { |c| c[0] }
     dirs.each do |d|
       target_dir = "#{DATA_DIR}/iiif/#{d}"
-      puts "TARGET_DIR #{target_dir}"
       FileUtils.mkdir_p(target_dir)
       FileUtils.cp(imgs, target_dir)
     end

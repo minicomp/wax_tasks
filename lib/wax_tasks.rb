@@ -1,11 +1,12 @@
 require 'yaml'
 
-require_relative 'wax/branch'
-require_relative 'wax/collection'
-require_relative 'wax/iiif'
-require_relative 'wax/lunr'
-require_relative 'wax/pagemaster'
-require_relative 'wax/utils'
+require_relative 'wax_tasks/branch'
+require_relative 'wax_tasks/collection'
+require_relative 'wax_tasks/error'
+require_relative 'wax_tasks/iiif'
+require_relative 'wax_tasks/lunr'
+require_relative 'wax_tasks/pagemaster'
+require_relative 'wax_tasks/utils'
 
 # Main WaxTasks module
 module WaxTasks
@@ -18,6 +19,6 @@ module WaxTasks
     collections_dir:  CONFIG_FILE.fetch('collections_dir', false),
     collections:      CONFIG_FILE.fetch('collections', false),
     js:               CONFIG_FILE.fetch('js', false),
-    permalink:        Utils.construct_permalink
+    permalink:        WaxTasks::Utils.construct_permalink(CONFIG_FILE)
   }.freeze
 end

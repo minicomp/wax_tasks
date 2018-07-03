@@ -4,10 +4,6 @@ module Message
     puts msg.cyan
   end
 
-  def self.pagemaster_results(completed, dir)
-    share("#{completed} pages were generated to #{dir} directory.")
-  end
-
   def self.writing_index(path)
     share("Writing lunr index to #{path}")
   end
