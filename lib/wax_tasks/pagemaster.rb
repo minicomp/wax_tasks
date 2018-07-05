@@ -4,30 +4,31 @@ class PagemasterCollection < Collection
 
   def initialize(name, opts = {})
     super(name, opts)
-    @data     = ingest(@config.fetch('source', nil))
+
+    @source   = @config.fetch('source', nil)
+    @data     = ingest(@source)
     @layout   = @config.fetch('layout', nil)
     @ordered  = @config.fetch('keep_order', false)
   end
 
   def generate_pages
     FileUtils.mkdir_p(@page_dir)
-    completed = 0
-    @data.each_with_index do |item, index|
-      page_slug = item.fetch('pid').to_s.slug
-      path      = "#{@page_dir}/#{page_slug}.md"
+    @data.each_with_index { |item, i| write_page(item, i) }
+    puts "#{@data.length} pages were generated to #{@page_dir} directory.".cyan
+  end
 
-      puts "#{page_slug}.md already exits. Skipping." and next if File.exist?(path)
+  def write_page(item, index)
+    page_slug         = item.fetch('pid').to_s.slug
+    path              = "#{@page_dir}/#{page_slug}.md"
 
-      item['permalink'] = "/#{@name}/#{page_slug}#{@site_config[:permalink]}"
-      item['layout']    = @layout
-      item['order']     = padded_int(index, @data.length) if @ordered
+    return puts "#{page_slug}.md already exits. Skipping." if File.exist?(path)
+    item['permalink'] = "/#{@name}/#{page_slug}#{@site_config[:permalink]}"
+    item['layout']    = @layout
+    item['order']     = padded_int(index, @data.length) if @ordered
 
-      File.open(path, 'w') { |f| f.write("#{item.to_yaml}---") }
-      completed += 1
-    end
-    puts "#{completed} pages were generated to #{@page_dir} directory.".cyan
-  rescue KeyError => e
-    raise Error::MissingPid, "Failure after #{completed} pages ~> #{e}"
+    File.open(path, 'w') { |f| f.write("#{item.to_yaml}---") }
+  rescue StandardError => e
+    raise Error::PageFailure, "Failure on page #{page_slug} ~> #{e}"
   end
 
   def padded_int(index, max_idx)

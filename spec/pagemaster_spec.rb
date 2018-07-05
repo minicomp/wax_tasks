@@ -18,21 +18,35 @@
 
 describe 'PagemasterCollection' do
   include_context 'shared'
+  let(:valid_pm_collections) { valid_args.map { |a| PagemasterCollection.new(a) } }
+  let(:invalid_collection) do
+    PagemasterCollection.new(valid_args.first, { site_config: { 'bad' => nil } })
+  end
+  let(:missing_pid_data) do
+    data = PagemasterCollection.new(valid_args.first).data
+    data.first.delete('pid')
+    data
+  end
+  let(:nonunique_data) do
+    data = PagemasterCollection.new(valid_args.first).data
+    data[3] = data.first.dup
+    data
+  end
 
   describe '.new' do
     it 'creates valid collections' do
      expect { valid_pm_collections.all? }
-   end
-   context 'when given invalid an config' do
-     it 'throws NoMethodError' do
-       expect { invalid_collection }.to raise_error(NoMethodError)
-     end
-   end
-   context 'when given a collection arg not in config' do
-       it 'throws Error::InvalidCollection' do
-         expect { quiet_stdout { PagemasterCollection.new('not_a_collection') } }.to raise_error(Error::InvalidCollection)
-       end
-     end
+    end
+    context 'when an given invalid config' do
+      it 'throws NoMethodError' do
+        expect { invalid_collection }.to raise_error(NoMethodError)
+      end
+    end
+    context 'when given a collection arg not in config' do
+      it 'throws Error::InvalidCollection' do
+        expect { quiet_stdout { PagemasterCollection.new('not_a_collection') } }.to raise_error(Error::InvalidCollection)
+      end
+    end
   end
 
   describe '.ingest' do
@@ -44,14 +58,14 @@ describe 'PagemasterCollection' do
     end
     context 'when given data with missing pid' do
       it 'throws Error::MissingPid' do
-        expect { quiet_stdout { missing_pid_collection.generate_pages } }.to raise_error(Error::MissingPid)
+        expect { quiet_stdout { WaxTasks::Utils.assert_pids(missing_pid_data) } }.to raise_error(Error::MissingPid)
       end
     end
-    # context 'when given data nonunique pid' do
-    #   it 'throws Error::NonUniquePid' do
-    #     expect { quiet_stdout { nonunique_pids.generate_pages } }.to raise_error(Error::NonUniquePid)
-    #   end
-    # end
+    context 'when given data nonunique pid' do
+      it 'throws Error::NonUniquePid' do
+        expect { quiet_stdout { WaxTasks::Utils.assert_unique(nonunique_data) } }.to raise_error(Error::NonUniquePid)
+      end
+    end
   end
 
   describe '.generate_pages' do

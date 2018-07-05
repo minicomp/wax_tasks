@@ -19,7 +19,7 @@ module Branch
   end
 
   def push
-    abort "Cannot find _site.".magenta unless Dir.exist? '_site'
+    raise 'Cannot find _site.'.magenta unless Dir.exist? '_site'
     Dir.chdir('./_site')
     system 'git init && git add .'
     system "git commit -m '#{@commit_msg}'"
@@ -44,7 +44,7 @@ class TravisBranch
   end
 
   def build_gh_site
-    abort 'You must add the gh-baseurl to config.' if @repo_name.nil?
+    raise 'You must add the gh-baseurl to config.'.magenta if @repo_name.nil?
     build(@repo_name)
   end
 end
@@ -52,7 +52,6 @@ end
 # configure git branches from local info
 class LocalBranch
   include Branch
-
   attr_reader :origin, :commit_msg
 
   def initialize
@@ -62,9 +61,9 @@ class LocalBranch
   end
 
   def build_gh_site
-    abort "Cannot load config.".magenta unless CONFIG
-    baseurl = CONFIG.fetch('gh-baseurl', false)
-    abort "You must add the gh-baseurl to config.".magenta unless baseurl
+    raise 'Cannot load config.'.magenta unless CONFIG
+    baseurl = CONFIG_FILE.fetch('gh-baseurl', false)
+    raise 'You must add the gh-baseurl to config.'.magenta unless baseurl
     build(baseurl)
   end
 end

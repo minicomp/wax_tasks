@@ -30,29 +30,14 @@ shared_context 'shared', :shared_context => :metadata do
     # valid
     let(:valid_site_config) { WaxTasks::SITE_CONFIG }
     let(:valid_args) { valid_site_config[:collections].map { |c| c[0] } }
-    let(:valid_pm_collections) { valid_args.map { |a| PagemasterCollection.new(a) } }
     let(:valid_iiif_collections) { valid_args.map { |a| IiifCollection.new(a) } }
-    # invalid
-    let(:invalid_collection) do
-      PagemasterCollection.new(valid_args.first, { site_config: { 'bad' => nil } })
-    end
-    let(:missing_pid_collection) do
-      c = PagemasterCollection.new(valid_args.first)
-      c.data.first.delete('pid')
-      c
-    end
-    let(:nonunique_pids) do
-      nonunique_pids = PagemasterCollection.new(valid_args.first)
-      nonunique_pids.data[3] = nonunique_pids.data.first.dup
-      nonunique_pids
-    end
   }
 end
 
 # run specs
-require_relative 'pagemaster'
-# require_relative 'lunr'
-# require_relative 'iiif'
+require_relative 'pagemaster_spec'
+# require_relative 'lunr_spec'
+# require_relative 'iiif_spec'
 #
 # describe 'jekyll' do
 #   it 'builds successfully' do

@@ -6,51 +6,41 @@ class Collection
     @config           = @site_config[:collections].fetch(@name, nil)
     @page_dir         = construct_page_dir
 
-    assert_required(instance_variables)
+    assert_required_instance_vars
   end
 
   def ingest(source)
     source = src_path("_data/#{source}")
     raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
-    ext  = File.extname(source)
-    case ext
-    when '.csv'
-      data = CSV.read(source, { headers: true, encoding: 'utf-8' }).map(&:to_hash)
-    when '.json'
-      data = JSON.parse(File.read(source))
-    when '.yml'
-      data = YAML.load_file(source)
-    else
-      raise Error::InvalidSource, "Cannot load #{ext} files. Culprit: #{source}"
+    case File.extname(source)
+    when '.csv' then data = CSV.read(source, headers: true).map(&:to_hash)
+    when '.json' then data = JSON.parse(File.read(source))
+    when '.yml' then data = YAML.load_file(source)
+    else raise Error::InvalidSource, "Cannot load #{File.extname(source)} files. Culprit: #{source}"
     end
-    assert_pids(data)
+
+    WaxTasks::Utils.assert_pids(data)
+    WaxTasks::Utils.assert_unique(data)
   end
 
-  def assert_pids(data)
-    pids    = data.map { |d| d.fetch('pid', nil) }
-    missing = data.length - pids.compact.length
-    raise Error::MissingPid, "#{@name} is missing #{missing} pids." unless pids.all?
-    not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
-    puts "not unique #{not_unique}"
-    raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
-    data
-  end
+  def assert_required_instance_vars
+    no_name         = @name.to_s.empty?
+    no_site_config  = @site_config.to_s.empty?
+    no_config       = @config.to_s.empty?
+    no_page_dir     = @page_dir.to_s.empty?
 
-  def assert_required(vars)
-    vars.each do |v|
-      raise Error::InvalidCollection, "Configuration for the collection '#{@name}' is invalid." if instance_variable_get(v).nil?
-    end
+    raise Error::InvalidCollection, 'Missing collection @name variable' if no_name
+    raise Error::InvalidCollection, 'Missing collection @site_config variable' if no_site_config
+    raise Error::InvalidCollection, 'Missing collection @config' if no_config
+    raise Error::InvalidCollection, 'Cannot construct the page directory @page_dir' if no_page_dir
   end
 
   def construct_page_dir
-    dir = "_#{@name}"
-    dir = "#{@site_config[:collections_dir]}/#{dir}" if @site_config[:collections_dir]
-    dir = "#{@site_config[:source_dir]}/#{dir}" if @site_config[:source_dir]
-    dir
+    dir = [@site_config[:source_dir], @site_config[:collections_dir], @name]
+    dir.compact.join('/')
   end
 
   def src_path(path)
-    path = "#{@site_config[:source_dir]}/#{path}" if @site_config[:source_dir]
-    path
+    [@site_config[:source_dir], path].compact.join('/')
   end
 end

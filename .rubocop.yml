@@ -1,11 +1,16 @@
 AllCops:
+  TargetRubyVersion: 2.4
   Exclude:
     - 'spec/**/*'
 Metrics/LineLength:
+  IgnoredPatterns:
+    - 'raise'
+    - 'puts'
+    - 'ÈÉÊË'
+    - 'EEEE'
+Style/FrozenStringLiteralComment:
   Enabled: false
-Metrics/MethodLength:
-  Max: 15
-Style/StringLiterals:
+Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
   Max: 20

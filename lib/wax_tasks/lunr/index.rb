@@ -4,20 +4,19 @@ class Index
 
   def initialize(opts = {})
     @site_config  = opts.fetch(:site_config, WaxTasks::SITE_CONFIG)
-    @collections  = collections_to_index
+    @collections  = lunr_collections
     @fields       = total_fields
     @path         = construct_path('js/lunr-index.json')
 
     write_index
   end
 
-  def collections_to_index
-    to_index = @site_config[:collections].find_all { |c| c[1].key?('lunr_index') }
+  def lunr_collections
+    site_collections = @site_config[:collections]
+    to_index = site_collections.find_all { |c| c[1].key?('lunr_index') }
     to_index.map! { |c| c[0] }
-    Error.no_collections_to_index if to_index.nil?
-    lunr_collections = []
-    to_index.each { |c| lunr_collections << LunrCollection.new(c) }
-    lunr_collections
+    # raise Error::no_collections_to_index if to_index.nil?
+    to_index.map { |c| LunrCollection.new(c) }
   end
 
   def total_fields
@@ -27,24 +26,12 @@ class Index
   end
 
   def write_index
-    docs = []
-    @collections.each { |c| docs.concat(c.data) }
-    docs = add_lunr_ids(docs)
-    FileUtils.mkdir_p(File.dirname(@path))
+    docs = @collections.map(&:data)
+    docs.map_with_index! { |d, id| d['lunr_id'] = id }
     index = "---\nlayout: none\n---\n#{JSON.pretty_generate(docs)}"
+    FileUtils.mkdir_p(File.dirname(@path))
     File.open(@path, 'w') { |f| f.write(index) }
-    Message.writing_index(@path)
-  end
-
-  def add_lunr_ids(documents)
-    count = 0
-    docs_with_ids = []
-    documents.each do |d|
-      d['lunr_id'] = count
-      docs_with_ids << d
-      count += 1
-    end
-    docs_with_ids
+    # Message.writing_index(@path)
   end
 
   def construct_path(path)
