@@ -12,14 +12,14 @@ module WaxTasks
     end
 
     def self.assert_pids(data)
-      data.each_with_index { |d, i| raise Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
+      data.each_with_index { |d, i| raise WaxTasks::Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
       data
     end
 
     def self.assert_unique(data)
       pids = data.map { |d| d['pid'] }
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
-      raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
+      raise WaxTasks::Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
       data
     end
 
