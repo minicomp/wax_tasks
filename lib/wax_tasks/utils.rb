@@ -1,5 +1,6 @@
+# document
 module WaxTasks
-  # WaxTasks utility methods
+  # Utility methods
   module Utils
     # Helps contruct permalinks from config
     #
@@ -20,6 +21,24 @@ module WaxTasks
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
       raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
       data
+    end
+
+    def self.validate_csv(source)
+      CSV.read(source, headers: true).map(&:to_hash)
+    rescue StandardError => e
+      raise WaxTasks::Error::InvalidCSV, " #{e}"
+    end
+
+    def self.validate_json(source)
+      JSON.parse(File.read(source))
+    rescue StandardError => e
+      raise WaxTasks::Error::InvalidJSON, " #{e}"
+    end
+
+    def self.validate_yaml(source)
+      YAML.load_file(source)
+    rescue StandardError => e
+      raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
   end
 end

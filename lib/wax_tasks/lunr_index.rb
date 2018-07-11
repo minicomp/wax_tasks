@@ -26,8 +26,8 @@ class Index
   end
 
   def write_index
-    docs = @collections.map(&:data)
-    docs.map_with_index! { |d, id| d['lunr_id'] = id }
+    docs = @collections.map(&:data).flatten
+    docs.each_with_index.map { |d, id| d['lunr_index'] = id }
     index = "---\nlayout: none\n---\n#{JSON.pretty_generate(docs)}"
     FileUtils.mkdir_p(File.dirname(@path))
     File.open(@path, 'w') { |f| f.write(index) }

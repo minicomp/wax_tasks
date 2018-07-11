@@ -94,3 +94,5 @@ def quiet_stdout
     yield
   end
 end
+
+quiet_stdout { Fake.site }

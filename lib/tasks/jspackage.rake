@@ -18,9 +18,6 @@ namespace :wax do
         package['dependencies'][name] = '^' + version
       end
       File.open('package.json', 'w') { |file| file.write(package.to_json) }
-      Message.writing_package_json(names)
-    else
-      Message.skipping_package_json
     end
   end
 end

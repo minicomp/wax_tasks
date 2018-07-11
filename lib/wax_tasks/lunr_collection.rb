@@ -1,5 +1,5 @@
-require_relative 'lunr/index'
-require_relative 'lunr/ui'
+require_relative 'lunr_index'
+require_relative 'lunr_ui'
 
 # document
 class LunrCollection < Collection

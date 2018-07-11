@@ -3,9 +3,9 @@ require 'yaml'
 require_relative 'wax_tasks/branch'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
-require_relative 'wax_tasks/iiif'
-require_relative 'wax_tasks/lunr'
-require_relative 'wax_tasks/pagemaster'
+require_relative 'wax_tasks/iiif_collection'
+require_relative 'wax_tasks/lunr_collection'
+require_relative 'wax_tasks/pagemaster_collection'
 require_relative 'wax_tasks/utils'
 
 # Main WaxTasks module
