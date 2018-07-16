@@ -5,7 +5,7 @@ describe 'WaxTasks::Utils' do
   describe '.construct_permalink' do
     context 'when pretty' do
       it 'ends permalinks with /' do
-        ending = WaxTasks::Utils.construct_permalink({ 'permalink' => 'pretty' })
+        ending = WaxTasks::Utils.construct_permalink({ permalink: 'pretty' })
         expect(ending).to eq('/')
       end
     end
@@ -67,7 +67,7 @@ describe 'WaxTasks::Utils' do
     context 'with a valid json file' do
       it 'loads data as a hash array' do
         path = '../spec/fake/data/valid.json'
-        expect(WaxTasks::Utils.validate_json(path).length).not_to be_zero
+        expect(WaxTasks::Utils.validate_json(File.read(path)).length).not_to be_zero
       end
     end
 

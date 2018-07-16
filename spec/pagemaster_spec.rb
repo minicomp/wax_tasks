@@ -3,39 +3,26 @@ describe 'WaxTasks::PagemasterCollection' do
   include_context 'pagemaster'
 
   describe '.new' do
-    it 'initializes a valid collection' do
-      expect(collections.all?)
-    end
-    it 'accesses collection data' do
-      expect(collections.first.data.length)
-    end
-    context 'when given a collection not it config' do
-      it 'throws WaxTasks::Error::InvalidCollection' do
-        expect { quiet_stdout { invalid_collection } }.to raise_error(WaxTasks::Error::InvalidCollection)
+    context 'when given valid configuration info' do
+      it 'initializes a collection' do
+        expect(valid_collection.name).to eq(args.first)
       end
-    end
-    context 'when given a src file that doesn\'t exist' do
-      it 'throws WaxTasks::Error::MissingSource' do
-        expect { quiet_stdout { missing_src } }.to raise_error(WaxTasks::Error::MissingSource)
+      it 'gets the layout' do
+        expect(valid_collection.layout).to be_a(String)
       end
-    end
-  end
-
-  describe '.generate_pages' do
-    it 'runs without errors' do
-      expect { quiet_stdout { collections.first.generate_pages } }.not_to raise_error
-    end
-
-    it 'skips existing pages' do
-      expect { collections.first.generate_pages }.to output(/.*Skipping.*/).to_stdout
-    end
-
-    context 'when @ordered' do
-      it 'adds an order var to each page' do
-        collections.last.ordered = true
-        quiet_stdout { collections.last.generate_pages }
-        page = Dir.glob("#{collections.last.page_dir}/*.md").first
-        expect(YAML.load_file(page)).to have_key('order')
+      it 'gets the source path' do
+        expect(valid_collection.source).to be_a(String)
+      end
+      it 'keeps the results ordered' do
+        expect(valid_collection.ordered).to eq(true).or eq(false)
+      end
+      it 'ingests the data source file' do
+        expect(valid_collection.data.first).to have_key('pid')
+      end
+      it 'generates pages' do
+        pages = quiet_stdout { valid_collection.generate_pages(write=false) }
+        expect(pages).not_to be_empty
+        expect(pages.first).to have_key('layout')
       end
     end
   end

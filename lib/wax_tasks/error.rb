@@ -9,15 +9,18 @@ module WaxTasks
         super(msg.magenta)
       end
     end
+    class InvalidSiteConfig < WaxTasksError; end
     class InvalidCollection < WaxTasksError; end
-    class InvalidSource < WaxTasksError; end
-    class MissingPid < WaxTasksError; end
-    class MissingSource < WaxTasksError; end
-    class NonUniquePid < WaxTasksError; end
-    class MissingRequiredVars < WaxTasksError; end
-    class PageFailure < WaxTasksError; end
-    class InvalidCSV < WaxTasksError; end
-    class InvalidJSON < WaxTasksError; end
-    class InvalidYAML < WaxTasksError; end
+    class InvalidSource     < WaxTasksError; end
+    class LunrPageLoad      < WaxTasksError; end
+    class MissingSource     < WaxTasksError; end
+    class MissingLayout     < WaxTasksError; end
+    class MissingPid        < WaxTasksError; end
+    class NonUniquePid      < WaxTasksError; end
+    class PageFailure       < WaxTasksError; end
+    class InvalidCSV        < WaxTasksError; end
+    class InvalidJSON       < WaxTasksError; end
+    class InvalidYAML       < WaxTasksError; end
+    class NoLunrCollections < WaxTasksError; end
   end
 end

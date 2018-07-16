@@ -19,11 +19,15 @@ SimpleCov.start do
 end
 
 # setup
+%w(./build ./coverage).each { |d| FileUtils.rm_r(d) if File.directory?(d) }
+
 require_relative 'fake/site'
 require_relative './../lib/wax_tasks'
-
 require_relative 'shared_context'
-require_relative 'pagemaster_spec'
+
+# run the specs
+require_relative 'wax_tasks_spec'
 require_relative 'collection_spec'
+require_relative 'pagemaster_spec'
 require_relative 'utils_spec'
-require_relative 'tasks_spec'
+# require_relative 'tasks_spec'

@@ -1,22 +1,10 @@
 # document
-class Index
-  attr_accessor :collections, :fields, :site_config
+class LunrIndex
+  attr_accessor :collections, :fields
 
-  def initialize(opts = {})
-    @site_config  = opts.fetch(:site_config, WaxTasks::SITE_CONFIG)
-    @collections  = lunr_collections
+  def initialize(collections)
+    @collections  = collections
     @fields       = total_fields
-    @path         = construct_path('js/lunr-index.json')
-
-    write_index
-  end
-
-  def lunr_collections
-    site_collections = @site_config[:collections]
-    to_index = site_collections.find_all { |c| c[1].key?('lunr_index') }
-    to_index.map! { |c| c[0] }
-    # raise Error::no_collections_to_index if to_index.nil?
-    to_index.map { |c| LunrCollection.new(c) }
   end
 
   def total_fields
@@ -25,16 +13,44 @@ class Index
     total_fields.uniq
   end
 
-  def write_index
-    docs = @collections.map(&:data).flatten
-    docs.each_with_index.map { |d, id| d['lunr_index'] = id }
-    index = "---\nlayout: none\n---\n#{JSON.pretty_generate(docs)}"
-    FileUtils.mkdir_p(File.dirname(@path))
-    File.open(@path, 'w') { |f| f.write(index) }
-    # Message.writing_index(@path)
+  def to_s
+    data = @collections.map(&:data).flatten
+    data.each_with_index.map { |d, id| d['lunr_index'] = id }
+    "---\nlayout: none\n---\n#{JSON.pretty_generate(data)}"
   end
 
-  def construct_path(path)
-    "#{@site_config[:source_dir]}/#{path}" if @site_config[:source_dir]
+  def default_ui
+    <<~HEREDOC
+      ---
+      layout: none
+      ---
+      $.getJSON({{ site.baseurl }}/js/lunr-index.json, function(index_json) {
+        window.index = new elasticlunr.Index;
+        window.store = index_json;
+        index.saveDocument(false);
+        index.setRef('lunr_id');
+        #{@fields.map { |f| "index.addField('#{f}');" }.join("\n")}
+        // add docs
+        for (i in store){
+          index.addDoc(store[i]);
+        }
+        $('input#search').on('keyup', function() {
+          var results_div = $('#results');
+          var query = $(this).val();
+          var results = index.search(query, { boolean: 'AND', expand: true });
+          results_div.empty();
+          if (results.length > 10) {
+            results_div.prepend("<p><small>Displaying 10 of " + results.length + " results.</small></p>");
+          }
+          for (var r in results.slice(0, 9)) {
+            var ref = results[r].ref;
+            var item = store[ref];
+            #{@fields.map { |f| "var #{f} = item.#{f};" }.join("\n")}
+            var result = '<div class="result"><b><a href="' + item.link + '">' + title + '</a></b></p></div>';
+            results_div.append(result);
+          }
+        });
+      });
+    HEREDOC
   end
 end

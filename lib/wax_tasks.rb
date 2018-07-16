@@ -1,24 +1,69 @@
+require 'colorize'
+require 'csv'
+require 'json'
 require 'yaml'
 
-require_relative 'wax_tasks/branch'
+# require_relative 'wax_tasks/branch'
 require_relative 'wax_tasks/collection'
-require_relative 'wax_tasks/error'
-require_relative 'wax_tasks/iiif_collection'
 require_relative 'wax_tasks/lunr_collection'
+require_relative 'wax_tasks/lunr_index'
 require_relative 'wax_tasks/pagemaster_collection'
+require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/utils'
 
 # Main WaxTasks module
 module WaxTasks
-  CONFIG_FILE = YAML.load_file('./_config.yml')
-  SITE_CONFIG = {
-    title:            CONFIG_FILE.fetch('title', ''),
-    url:              CONFIG_FILE.fetch('url', ''),
-    baseurl:          CONFIG_FILE.fetch('baseurl', ''),
-    source_dir:       CONFIG_FILE.fetch('source', false),
-    collections_dir:  CONFIG_FILE.fetch('collections_dir', false),
-    collections:      CONFIG_FILE.fetch('collections', false),
-    js:               CONFIG_FILE.fetch('js', false),
-    permalink:        WaxTasks::Utils.construct_permalink(CONFIG_FILE)
-  }.freeze
+  # Constants
+  DEFAULT_CONFIG  = '_config.yml'.freeze
+  LUNR_INDEX_PATH = 'js/lunr_index.json'.freeze
+  LUNR_UI_PATH    = 'js/lunr_ui.js'.freeze
+
+  # comment
+  class TaskRunner
+    attr_accessor :site
+
+    def initialize(config = {})
+      config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
+
+      @site = {
+        title:            config.fetch(:title, ''),
+        url:              config.fetch(:url, ''),
+        baseurl:          config.fetch(:baseurl, ''),
+        source_dir:       config.fetch(:source, nil),
+        collections_dir:  config.fetch(:collections_dir, nil),
+        collections:      config.fetch(:collections, {}),
+        js:               config.fetch(:js, false),
+        permalink:        Utils.construct_permalink(config)
+      }
+    rescue StandardError => e
+      raise Error::InvalidSiteConfig, "Could not load _config.yml. => #{e}"
+    end
+
+    def override(opts)
+      opts.each { |k, v| @site[k] = v }
+      @site[:permalink] = Utils.construct_permalink(opts)
+      self
+    end
+
+    def pagemaster(args)
+      args.each do |name|
+        PagemasterCollection.new(name, @site).generate_pages
+      end
+    end
+
+    def lunr(generate_ui = false)
+      collections = Utils.get_lunr_collections(@site).map do |name|
+        LunrCollection.new(name, @site)
+      end
+
+      index = LunrIndex.new(collections)
+      index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
+
+      FileUtils.mkdir_p(File.dirname(index_path))
+      File.open(index_path, 'w') { |f| f.write(index.to_s) }
+
+      ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
+      File.open(ui_path, 'w') { |f| f.write(index.default_ui) } if generate_ui
+    end
+  end
 end

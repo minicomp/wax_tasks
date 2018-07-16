@@ -1,36 +1,42 @@
-require_relative 'lunr_index'
-require_relative 'lunr_ui'
+module WaxTasks
+  # document
+  class LunrCollection < Collection
+    attr_accessor :fields, :data
 
-# document
-class LunrCollection < Collection
-  attr_accessor :fields, :data
+    def initialize(name, site)
+      super(name, site)
 
-  def initialize(name, opts = {})
-    super(name, opts)
-    @content  = @config['lunr_index'].fetch('content', false)
-    @fields   = @config['lunr_index'].fetch('fields', nil)
-    @data     = hash_array(Dir.glob(@page_dir + '/*.md'))
-  end
+      @index_config = @config[:lunr_index].symbolize_keys
+      @content      = @index_config.fetch(:content, false)
+      @fields       = @index_config.fetch(:fields, nil)
+      @data         = ingest_pages
 
-  def hash_array(pages)
-    # catch
-    abort "There are no pages in '#{@page_dir}'".magenta if pages.empty?
-    abort "There are no fields for #{@name}.".magenta if @fields.empty?
-    puts "Loading #{pages.length} pages from #{@page_dir}"
-    # index each page in collection
-    page_hashes = []
-    pages.each { |page| page_hashes << page_hash(page) }
-    page_hashes
-  end
+      raise "There are no fields for #{@name}.".magenta if @fields.empty?
+    end
 
-  def page_hash(page)
-    yaml = YAML.load_file(page)
-    hash = {
-      'link' => "{{'#{yaml.fetch('permalink')}' | relative_url }}",
-      'collection' => @name
-    }
-    hash['content'] = File.read(page).html_strip.remove_diacritics if @content
-    @fields.each { |f| hash[f] = yaml[f].normalize }
-    hash
+    def ingest_pages
+      data  = []
+      pages = Dir.glob("#{@page_dir}/*.md")
+      return "There are no pages in #{@page_dir} to index.".cyan if pages.empty?
+      pages.each do |p|
+        begin
+          data << load_page(p)
+        rescue StandardError => e
+          raise Error::LunrPageLoad, "Cannot load page #{p}\n#{e}"
+        end
+      end
+      data
+    end
+
+    def load_page(page)
+      yaml = YAML.load_file(page)
+      hash = {
+        'link' => "{{'#{yaml.fetch('permalink')}' | relative_url }}",
+        'collection' => @name
+      }
+      hash['content'] = File.read(page).html_strip.remove_diacritics if @content
+      @fields.each { |f| hash[f] = yaml[f].normalize }
+      hash
+    end
   end
 end

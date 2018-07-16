@@ -7,32 +7,36 @@ module WaxTasks
     # @param  [Hash] the site config as a hash
     # @return [String] the end of the permalink, either '/' or '.html'
     def self.construct_permalink(config)
-      style = config.fetch('permalink', false)
-      style == 'pretty' ? '/' : '.html'
+      case config.fetch(:permalink, false)
+      when 'pretty' || '/'
+        '/'
+      else
+        '.html'
+      end
     end
 
     def self.assert_pids(data)
-      data.each_with_index { |d, i| raise WaxTasks::Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
+      data.each_with_index { |d, i| raise Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
       data
     end
 
     def self.assert_unique(data)
       pids = data.map { |d| d['pid'] }
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
-      raise WaxTasks::Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
+      raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
       data
     end
 
     def self.validate_csv(source)
       CSV.read(source, headers: true).map(&:to_hash)
     rescue StandardError => e
-      raise WaxTasks::Error::InvalidCSV, " #{e}"
+      raise Error::InvalidCSV, " #{e}"
     end
 
     def self.validate_json(source)
-      JSON.parse(File.read(source))
+      JSON.parse(source)
     rescue StandardError => e
-      raise WaxTasks::Error::InvalidJSON, " #{e}"
+      raise Error::InvalidJSON, " #{e}"
     end
 
     def self.validate_yaml(source)
@@ -40,11 +44,39 @@ module WaxTasks
     rescue StandardError => e
       raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
+
+    def self.make_path(*args)
+      args.compact.join('/')
+    end
+
+    def self.ingest_file(source)
+      raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
+
+      case File.extname(source)
+      when '.csv'     then data = validate_csv(source)
+      when '.json'    then data = validate_json(File.read(source))
+      when /\.ya?ml/  then data = validate_yaml(source)
+      else raise Error::InvalidSource, "Cannot load #{File.extname(source)} files. Culprit: #{source}"
+      end
+
+      assert_pids(data)
+      assert_unique(data)
+    end
+
+    def self.get_lunr_collections(site)
+      to_index = site[:collections].find_all { |c| c[1].key?('lunr_index') }
+      raise Error::NoLunrCollections, 'There are no lunr collections to index.' if to_index.nil?
+      to_index.map { |c| c[0] }
+    end
   end
 end
 
 # WaxTasks monkey patching
 class String
+  def remove_yaml
+    self.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
+  end
+
   # cleans yaml + markdown pages for lunr indexing
   def html_strip
     self.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
@@ -91,6 +123,14 @@ class Hash
   # normalize as a string or hash without diacritics for lunr indexing
   def normalize
     self
+  end
+
+  def symbolize_keys
+    hash = self
+    hash.keys.each do |key|
+      hash[key.to_sym || key] = hash.delete(key)
+    end
+    hash
   end
 end
 
