@@ -5,6 +5,7 @@ require 'yaml'
 
 # require_relative 'wax_tasks/branch'
 require_relative 'wax_tasks/collection'
+require_relative 'wax_tasks/iiif_collection'
 require_relative 'wax_tasks/lunr_collection'
 require_relative 'wax_tasks/lunr_index'
 require_relative 'wax_tasks/pagemaster_collection'
@@ -52,11 +53,10 @@ module WaxTasks
     end
 
     def lunr(generate_ui = false)
-      collections = Utils.get_lunr_collections(@site).map do |name|
-        LunrCollection.new(name, @site)
-      end
+      lunr_collections = Utils.get_lunr_collections(@site)
+      lunr_collections.map! { |name| LunrCollection.new(name, @site) }
 
-      index = LunrIndex.new(collections)
+      index = LunrIndex.new(lunr_collections)
       index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
 
       FileUtils.mkdir_p(File.dirname(index_path))
@@ -64,6 +64,12 @@ module WaxTasks
 
       ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
       File.open(ui_path, 'w') { |f| f.write(index.default_ui) } if generate_ui
+    end
+
+    def iiif(args)
+      args.each do |name|
+        IiifCollection.new(name, @site).process
+      end
     end
   end
 end

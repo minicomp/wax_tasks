@@ -112,10 +112,37 @@ describe 'Monkey Patches' do
       end
     end
 
+    describe '.remove_yaml' do
+      it 'removes yaml' do
+        string = "---\nthe yaml\n---\nthe content"
+        expect(string.remove_yaml).to eq("\nthe content")
+      end
+    end
+
+    describe '.slug' do
+      it 'slugifies' do
+        string = Faker::Lovecraft.sentence
+        expect(string.slug).not_to include(' ')
+      end
+    end
+
   end
 
   describe 'Array' do
-
+    describe '.normalize' do
+      context 'when it includes Hashes' do
+        it 'returns itself for Lunr result display' do
+          array = [{ test: 1 }, { test: 2 }]
+          expect(array.normalize).to eq(array)
+        end
+      end
+      context 'when it includes Strings' do
+        it 'joins itself as s String for Lunr result display' do
+          array = ['test1', 'test2']
+          expect(array.normalize).to eq('test1, test2')
+        end
+      end
+    end
   end
 
   describe 'Hash' do

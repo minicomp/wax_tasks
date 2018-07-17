@@ -11,6 +11,7 @@ end
 
 # use codecov + add requirements
 require 'colorize'
+require 'faker'
 require 'simplecov'
 
 SimpleCov.start do
@@ -27,7 +28,6 @@ require_relative 'shared_context'
 
 # run the specs
 require_relative 'wax_tasks_spec'
-require_relative 'collection_spec'
 require_relative 'pagemaster_spec'
 require_relative 'utils_spec'
-# require_relative 'tasks_spec'
+require_relative 'tasks_spec'

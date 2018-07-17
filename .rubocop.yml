@@ -16,3 +16,5 @@ Metrics/AbcSize:
   Max: 20
 Metrics/MethodLength:
   Max: 15
+Style/DoubleNegation:
+  Enabled: false

@@ -5,9 +5,7 @@ namespace :wax do
   task :pagemaster do
     ARGS = ARGV.drop(1).each { |a| task a.to_sym }
     raise 'You must specify a collection after wax:pagemaster' if ARGS.empty?
-    ARGS.each do |name|
-      collection = WaxTasks::PagemasterCollection.new(name)
-      collection.generate_pages
-    end
+    task_runner = WaxTasks::TaskRunner.new
+    task_runner.pagemaster(ARGS)
   end
 end

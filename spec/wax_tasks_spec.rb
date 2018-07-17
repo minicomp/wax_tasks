@@ -50,6 +50,7 @@ describe 'WaxTasks::TaskRunner' do
       task_runner.lunr
       expect(File).to exist(index_path)
     end
+
     it 'that passes json lint' do
       index = File.read(index_path).remove_yaml
       expect { WaxTasks::Utils.validate_json(index) }.to_not raise_error
@@ -60,6 +61,16 @@ describe 'WaxTasks::TaskRunner' do
         task_runner.lunr(generate_ui=true)
         expect(File).to exist(ui_path)
       end
+    end
+  end
+
+  describe '.iiif' do
+    include_context 'shared'
+    it 'generates derivatives' do
+      quiet_stdout { task_runner.iiif(args) }
+      iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
+      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
+      expect(File).to exist("#{first_image}/info.json")
     end
   end
 end

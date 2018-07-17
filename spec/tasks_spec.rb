@@ -7,8 +7,10 @@ context '$ bundle exec rake' do
       expect(passes).to eq(true)
     end
     it 'generates pages' do
-      pages = Dir.glob("#{page_dir}/*.md")
-      expect(pages.length).not_to be_zero
+      page_dirs.each do |dir|
+        pages = Dir.glob("#{dir}/*.md")
+        expect(pages.length).not_to be_zero
+      end
     end
   end
 
@@ -18,10 +20,10 @@ context '$ bundle exec rake' do
       expect(passes).to eq(true)
     end
     it 'generates an index' do
-      expect(File).to exist(index)
+      expect(File).to exist(index_path)
     end
     it 'generates a ui' do
-      expect(File).to exist(ui)
+      expect(File).to exist(ui_path)
     end
   end
 
@@ -31,21 +33,22 @@ context '$ bundle exec rake' do
       expect(passes).to eq(true)
     end
     it 'builds iiif info.json' do
-      first_image = Dir.glob("#{iiif_image_dir}/*").first
+      iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
+      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
       expect(File).to exist("#{first_image}/info.json")
     end
   end
 
-  describe 'wax:jspackage' do
-    it 'passes' do
-      passes = quiet_stdout { system('bundle exec rake wax:jspackage') }
-      expect(passes).to eq(true)
-    end
-    it 'writes a package.json file' do
-      package = File.open('package.json', 'r').read
-      expect(package.length > 90)
-    end
-  end
+  # describe 'wax:jspackage' do
+  #   it 'passes' do
+  #     passes = quiet_stdout { system('bundle exec rake wax:jspackage') }
+  #     expect(passes).to eq(true)
+  #   end
+  #   it 'writes a package.json file' do
+  #     package = File.open('package.json', 'r').read
+  #     expect(package.length > 90)
+  #   end
+  # end
 
   describe 'wax:test' do
     it 'passes html-proofer' do
