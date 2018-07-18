@@ -2,7 +2,5 @@
 Gemfile.lock
 build
 coverage
-_config.yml
-Rakefile
 doc
 .yardoc

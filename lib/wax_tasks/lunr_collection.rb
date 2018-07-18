@@ -8,16 +8,16 @@ module WaxTasks
 
       @index_config = @config[:lunr_index].symbolize_keys
       @content      = @index_config.fetch(:content, false)
-      @fields       = @index_config.fetch(:fields, nil)
+      @fields       = @index_config.fetch(:fields, [])
       @data         = ingest_pages
 
-      raise "There are no fields for #{@name}.".magenta if @fields.empty?
+      raise Error::MissingFields, "There are no fields for #{@name}.".magenta if @fields.empty?
     end
 
     def ingest_pages
       data  = []
       pages = Dir.glob("#{@page_dir}/*.md")
-      return "There are no pages in #{@page_dir} to index.".cyan if pages.empty?
+      puts "There are no pages in #{@page_dir} to index.".cyan if pages.empty?
       pages.each do |p|
         begin
           data << load_page(p)
@@ -35,7 +35,8 @@ module WaxTasks
         'collection' => @name
       }
       hash['content'] = File.read(page).html_strip.remove_diacritics if @content
-      @fields.each { |f| hash[f] = yaml[f].normalize }
+      fields = @fields.push('pid').uniq
+      fields.each { |f| hash[f] = yaml[f].normalize }
       hash
     end
   end

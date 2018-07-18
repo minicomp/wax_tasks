@@ -1,6 +1,9 @@
-describe 'WaxTasks::Utils' do
+describe WaxTasks::Utils do
   include_context 'shared'
-  include_context 'utils'
+
+  let(:valid_data) { WaxTasks::Utils.validate_csv('_data/valid.csv') }
+  let(:missing_pid_data) { WaxTasks::Utils.validate_json('_data/missing_pid.json') }
+  let(:nonunique_data) { WaxTasks::Utils.validate_csv('_data/duplicate_pid.csv') }
 
   describe '.construct_permalink' do
     context 'when pretty' do
@@ -50,15 +53,13 @@ describe 'WaxTasks::Utils' do
   describe '.validate_csv' do
     context 'with a valid csv file' do
       it 'loads data as a hash array' do
-        path = '../spec/fake/data/valid.csv'
-        expect(WaxTasks::Utils.validate_csv(path).length).not_to be_zero
+        expect(WaxTasks::Utils.validate_csv('_data/valid.csv').length).not_to be_zero
       end
     end
 
     context 'with an invalid csv file' do
       it 'thows WaxTasks::Error::InvalidCSV' do
-        path = '../spec/fake/data/invalid.csv'
-        expect { WaxTasks::Utils.validate_csv(path) }.to raise_error(WaxTasks::Error::InvalidCSV)
+        expect { WaxTasks::Utils.validate_csv('_data/invalid.csv') }.to raise_error(WaxTasks::Error::InvalidCSV)
       end
     end
   end
@@ -66,15 +67,14 @@ describe 'WaxTasks::Utils' do
   describe '.validate_json' do
     context 'with a valid json file' do
       it 'loads data as a hash array' do
-        path = '../spec/fake/data/valid.json'
-        expect(WaxTasks::Utils.validate_json(File.read(path)).length).not_to be_zero
+        expect(WaxTasks::Utils.validate_json('_data/valid.json').length).not_to be_zero
       end
     end
 
     context 'with an invalid json file' do
       it 'thows WaxTasks::Error::InvalidJSON' do
         path = '../spec/fake/data/invalid.json'
-        expect { WaxTasks::Utils.validate_json(path) }.to raise_error(WaxTasks::Error::InvalidJSON)
+        expect { WaxTasks::Utils.validate_json('_data/invalid.json') }.to raise_error(WaxTasks::Error::InvalidJSON)
       end
     end
   end
@@ -82,15 +82,13 @@ describe 'WaxTasks::Utils' do
   describe '.validate_yaml' do
     context 'with a valid yaml file' do
       it 'loads data as a hash array' do
-        path = '../spec/fake/data/valid.yml'
-        expect(WaxTasks::Utils.validate_yaml(path).length).not_to be_zero
+        expect(WaxTasks::Utils.validate_yaml('_data/valid.yml').length).not_to be_zero
       end
     end
 
     context 'with an invalid yaml file' do
       it 'thows WaxTasks::Error::InvalidYAML' do
-        path = '../spec/fake/data/invalid.yml'
-        expect { WaxTasks::Utils.validate_yaml(path) }.to raise_error(WaxTasks::Error::InvalidYAML)
+        expect { WaxTasks::Utils.validate_yaml('_data/invalid.yml') }.to raise_error(WaxTasks::Error::InvalidYAML)
       end
     end
   end
@@ -143,13 +141,5 @@ describe 'Monkey Patches' do
         end
       end
     end
-  end
-
-  describe 'Hash' do
-
-  end
-
-  describe 'Integer' do
-
   end
 end

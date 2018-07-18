@@ -1,0 +1,25 @@
+title: 'sample site'
+url: ''
+baseurl: ''
+collections_dir: ''
+source: ''
+js:
+  jquery:
+    cdn: link
+    version: version
+collections:
+  my_collection:
+    source: valid.csv
+    layout: default.html
+    keep_order: true
+    lunr_index:
+      content: false
+      fields:
+        - gambrel
+        - indescribable
+        - blasphemous
+        - furtive
+    iiif:
+      variants: [100, 900]
+      meta:
+        - label: gambrel

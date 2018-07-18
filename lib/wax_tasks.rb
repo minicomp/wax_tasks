@@ -71,5 +71,21 @@ module WaxTasks
         IiifCollection.new(name, @site).process
       end
     end
+
+    def js_package
+      names = []
+      package = {
+        'name'          => site[:title],
+        'version'       => '1.0.0',
+        'dependencies'  => {}
+      }
+      site[:js].each do |dependency|
+        name = dependency[0]
+        names << name
+        version = dependency[1]['version']
+        package['dependencies'][name] = '^' + version
+      end
+      package
+    end
   end
 end

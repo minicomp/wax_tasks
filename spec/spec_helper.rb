@@ -10,8 +10,6 @@ else
 end
 
 # use codecov + add requirements
-require 'colorize'
-require 'faker'
 require 'simplecov'
 
 SimpleCov.start do
@@ -19,15 +17,21 @@ SimpleCov.start do
   add_filter 'branch'
 end
 
-# setup
-%w(./build ./coverage).each { |d| FileUtils.rm_r(d) if File.directory?(d) }
+require 'faker'
+require 'wax_tasks'
+require_relative 'setup'
 
-require_relative 'fake/site'
-require_relative './../lib/wax_tasks'
-require_relative 'shared_context'
+shared_context 'shared', :shared_context => :metadata do
+  let(:task_runner) { WaxTasks::TaskRunner.new }
+  let(:default_site) { task_runner.site }
+  let(:args) { default_site[:collections].map{ |c| c[0] } }
+  let(:index_path) { 'js/lunr_index.json' }
+  let(:ui_path) { 'js/lunr_ui.js'}
+end
 
-# run the specs
-require_relative 'wax_tasks_spec'
-require_relative 'pagemaster_spec'
-require_relative 'utils_spec'
 require_relative 'tasks_spec'
+require_relative 'wax_tasks_spec'
+require_relative 'pagemaster_collection_spec'
+require_relative 'iiif_collection_spec'
+require_relative 'lunr_collection_spec'
+require_relative 'utils_spec'

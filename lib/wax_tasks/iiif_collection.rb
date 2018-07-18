@@ -4,13 +4,13 @@ require 'wax_iiif'
 module WaxTasks
   # document
   class IiifCollection < Collection
-    attr_accessor :target_dir
+    attr_reader :variants, :meta, :target_dir
 
     def initialize(name, site)
       super(name, site)
 
-      @src_data     = @config.fetch('source', false)
-      @iiif_config  = @config.fetch('iiif', {})
+      @src_data     = @config.fetch(:source, false)
+      @iiif_config  = @config.fetch(:iiif, {})
       @meta         = @iiif_config.fetch('meta', false)
       @variants     = validated_variants
       @src_dir      = Utils.make_path(@site[:source_dir],
@@ -55,7 +55,12 @@ module WaxTasks
     def iiif_records
       records = []
       source_images = Dir["#{@src_dir}/*"].sort!
-      metadata = ingest(@src_data) if @meta && @src_data
+      if @meta && @src_data
+        src_path = Utils.make_path(@site[:source_dir], '_data', @src_data)
+        metadata = ingest_file(src_path)
+      else
+        metadata = false
+      end
       source_images.each { |src_img| records << iiif_record(src_img, metadata) }
       records
     end
@@ -65,7 +70,9 @@ module WaxTasks
       record_opts = { id: basename, path: src_img, label: basename }
       if metadata
         src_item = metadata.find { |i| i['pid'].to_s == basename }
-        @meta.each { |k, v| record_opts[k.to_sym] = src_item.fetch(v, '') }
+        @meta.each do |i|
+          record_opts[i.first[0].to_sym] = src_item.fetch(i.first[1], '')
+        end
       end
       IiifS3::ImageRecord.new(record_opts)
     end

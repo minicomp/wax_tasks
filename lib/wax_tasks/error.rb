@@ -16,6 +16,7 @@ module WaxTasks
     class MissingSource     < WaxTasksError; end
     class MissingLayout     < WaxTasksError; end
     class MissingPid        < WaxTasksError; end
+    class MissingFields     < WaxTasksError; end
     class NonUniquePid      < WaxTasksError; end
     class PageFailure       < WaxTasksError; end
     class InvalidCSV        < WaxTasksError; end

@@ -8,7 +8,7 @@ module WaxTasks
 
       @source   = source_path
       @layout   = assert_layout
-      @data     = Utils.ingest_file(@source)
+      @data     = ingest_file(@source)
       @ordered  = @config.fetch(:keep_order, false)
     end
 
@@ -22,7 +22,7 @@ module WaxTasks
       @config[:layout]
     end
 
-    def generate_pages(write = true)
+    def generate_pages
       FileUtils.mkdir_p(@page_dir)
       pages = []
       @data.each_with_index do |item, idx|
@@ -33,7 +33,7 @@ module WaxTasks
         item['order']     = padded_int(idx, @data.length) if @ordered
         pages << item
         next "#{page_slug}.md already exits. Skipping." if File.exist?(path)
-        File.open(path, 'w') { |f| f.write("#{item.to_yaml}---") } if write
+        File.open(path, 'w') { |f| f.write("#{item.to_yaml}---") }
       end
       puts "#{@data.length} pages were generated to #{@page_dir} directory.".cyan
       pages

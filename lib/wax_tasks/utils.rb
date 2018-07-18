@@ -34,7 +34,8 @@ module WaxTasks
     end
 
     def self.validate_json(source)
-      JSON.parse(source)
+      file = File.read(source)
+      JSON.parse(file)
     rescue StandardError => e
       raise Error::InvalidJSON, " #{e}"
     end
@@ -46,21 +47,7 @@ module WaxTasks
     end
 
     def self.make_path(*args)
-      args.compact.join('/')
-    end
-
-    def self.ingest_file(source)
-      raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
-
-      case File.extname(source)
-      when '.csv'     then data = validate_csv(source)
-      when '.json'    then data = validate_json(File.read(source))
-      when /\.ya?ml/  then data = validate_yaml(source)
-      else raise Error::InvalidSource, "Cannot load #{File.extname(source)} files. Culprit: #{source}"
-      end
-
-      assert_pids(data)
-      assert_unique(data)
+      args.compact.reject(&:empty?).join('/')
     end
 
     def self.get_lunr_collections(site)
