@@ -1,5 +1,4 @@
 require 'wax_tasks'
-require 'optparse'
 
 namespace :wax do
   desc 'build lunr search index (with default UI if UI=true)'
