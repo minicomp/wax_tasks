@@ -14,7 +14,7 @@ module WaxTasks
     end
 
     def collection_config
-      @site[:collections].fetch(@name).symbolize_keys
+      @site[:collections].fetch(@name)
     rescue StandardError => e
       raise Error::InvalidCollection, "Cannot load collection config for #{@name}.\n#{e}"
     end

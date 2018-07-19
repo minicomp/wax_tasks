@@ -6,9 +6,9 @@ module WaxTasks
     def initialize(name, site)
       super(name, site)
 
-      @index_config = @config[:lunr_index].symbolize_keys
-      @content      = @index_config.fetch(:content, false)
-      @fields       = @index_config.fetch(:fields, [])
+      @index_config = @config['lunr_index']
+      @content      = @index_config.fetch('content', false)
+      @fields       = @index_config.fetch('fields', [])
       @data         = ingest_pages
 
       raise Error::MissingFields, "There are no fields for #{@name}.".magenta if @fields.empty?

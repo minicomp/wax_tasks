@@ -9,8 +9,8 @@ module WaxTasks
     def initialize(name, site)
       super(name, site)
 
-      @src_data     = @config.fetch(:source, false)
-      @iiif_config  = @config.fetch(:iiif, {})
+      @src_data     = @config.fetch('source', false)
+      @iiif_config  = @config.fetch('iiif', {})
       @meta         = @iiif_config.fetch('meta', false)
       @variants     = validated_variants
       @src_dir      = Utils.make_path(@site[:source_dir],

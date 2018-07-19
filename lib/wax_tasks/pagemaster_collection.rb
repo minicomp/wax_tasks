@@ -9,17 +9,17 @@ module WaxTasks
       @source   = source_path
       @layout   = assert_layout
       @data     = ingest_file(@source)
-      @ordered  = @config.fetch(:keep_order, false)
+      @ordered  = @config.fetch('keep_order', false)
     end
 
     def source_path
-      raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" unless @config.key? :source
-      WaxTasks::Utils.make_path(@site[:source_dir], '_data', @config[:source])
+      raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" unless @config.key? 'source'
+      WaxTasks::Utils.make_path(@site[:source_dir], '_data', @config['source'])
     end
 
     def assert_layout
-      raise WaxTasks::Error::MissingLayout, "Missing collection layout in _config.yml for #{@name}" unless @config.key? :layout
-      @config[:layout]
+      raise WaxTasks::Error::MissingLayout, "Missing collection layout in _config.yml for #{@name}" unless @config.key? 'layout'
+      @config['layout']
     end
 
     def generate_pages

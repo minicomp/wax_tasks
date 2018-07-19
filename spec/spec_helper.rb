@@ -28,10 +28,3 @@ shared_context 'shared', :shared_context => :metadata do
   let(:index_path) { 'js/lunr_index.json' }
   let(:ui_path) { 'js/lunr_ui.js'}
 end
-
-require_relative 'tasks_spec'
-require_relative 'wax_tasks_spec'
-require_relative 'pagemaster_collection_spec'
-require_relative 'iiif_collection_spec'
-require_relative 'lunr_collection_spec'
-require_relative 'utils_spec'
