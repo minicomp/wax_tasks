@@ -1,9 +1,25 @@
-# document
 module WaxTasks
-  # comment
+  # A parent class representing a Jekyll collection that cannot be initialized directly
+  # Only child classes (IiifCollection, LunrCollection, PagemasterCollection) can be created
+  #
+  # @attr config    [Hash]    the collection config within site config
+  # @attr name      [String]  the name of the collection used in site[:collections]
+  # @attr page_dir  [String]  the directory path for generated collection pages
+  # @attr site      [Hash]    the site config
   class Collection
     attr_reader :name, :page_dir
+    private_class_method :new
 
+    # This method ensures child classes can be instantiated though
+    # Collection.new cannot be.
+    def self.inherited(other)
+      public_class_method :new
+    end
+
+    # Creates a new collection with name @name given site config @site
+    #
+    # @param name     [String]  the name of the collection used in site[:collections]
+    # @param site     [Hash]    the site config
     def initialize(name, site)
       @name     = name
       @site     = site
@@ -13,12 +29,22 @@ module WaxTasks
                                   @name)
     end
 
+    # Finds the collection config within the site config
+    #
+    # @return [Hash] the config for the collection
+    # @raise WaxTasks::Error::InvalidCollection
     def collection_config
       @site[:collections].fetch(@name)
     rescue StandardError => e
       raise Error::InvalidCollection, "Cannot load collection config for #{@name}.\n#{e}"
     end
 
+    # Ingests the collection source data as an Array of Hashes
+    #
+    # @param source [String] the path to the CSV, JSON, or YAML source file
+    # @return [Array] the collection data
+    # @raise WaxTasks::Error::MissingSource
+    # @raise WaxTasks::Error::InvalidSource
     def ingest_file(source)
       raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
 

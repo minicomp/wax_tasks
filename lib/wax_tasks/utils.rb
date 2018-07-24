@@ -1,13 +1,12 @@
-# document
 module WaxTasks
-  # Utility methods
+  # Utility helper methods
   module Utils
-    # Helps contruct permalinks from config
+    # Contructs permalink extension from site `permalink` variable
     #
-    # @param  [Hash] the site config as a hash
+    # @param site [Hash] the site config
     # @return [String] the end of the permalink, either '/' or '.html'
-    def self.construct_permalink(config)
-      case config.fetch(:permalink, false)
+    def self.construct_permalink(site)
+      case site.fetch(:permalink, false)
       when 'pretty' || '/'
         '/'
       else
@@ -15,11 +14,21 @@ module WaxTasks
       end
     end
 
+    # Checks and asserts presence of `pid` value for each item
+    #
+    # @param  data [Array] an array of hashes each representing a collection item
+    # @return [Array] same data unless a an item is missing the key `pid`
+    # @raise WaxTasks::Error::MissingPid
     def self.assert_pids(data)
       data.each_with_index { |d, i| raise Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
       data
     end
 
+    # Checks and asserts uniqueness of `pid` value for each item
+    #
+    # @param  data [Array] an array of hashes each representing a collection item
+    # @return [Array] same data unless a an item has a non-unique value for `pid`
+    # @raise WaxTasks::Error::NonUniquePid
     def self.assert_unique(data)
       pids = data.map { |d| d['pid'] }
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
@@ -27,12 +36,22 @@ module WaxTasks
       data
     end
 
+    # Checks that a CSV file is valid
+    #
+    # @param  source [String] path to CSV file
+    # @return [Array] validated CSV data as an Array of Hashes
+    # @raise  WaxTasks::Error::InvalidCSV
     def self.validate_csv(source)
       CSV.read(source, headers: true).map(&:to_hash)
     rescue StandardError => e
       raise Error::InvalidCSV, " #{e}"
     end
 
+    # Checks that a JSON file is valid
+    #
+    # @param  source [String] path to JSON file
+    # @return [Array] validated JSON data as an Array of Hashes
+    # @raise  WaxTasks::Error::InvalidJSON
     def self.validate_json(source)
       file = File.read(source)
       JSON.parse(file)
@@ -40,16 +59,31 @@ module WaxTasks
       raise Error::InvalidJSON, " #{e}"
     end
 
+    # Checks that a YAML file is valid
+    #
+    # @param  source [String] path to YAML file
+    # @return [Array] validated YAML data as an Array of Hashes
+    # @raise  WaxTasks::Error::InvalidYAML
     def self.validate_yaml(source)
       YAML.load_file(source)
     rescue StandardError => e
       raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
 
+    # Creates a file path valid file path with empty strings and
+    # null values dropped
+    #
+    # @param  args [Array] items to concatenate in path
+    # @return [String] file path
     def self.make_path(*args)
       args.compact.reject(&:empty?).join('/')
     end
 
+    # Finds collections in site config where `lunr_index` is enabled
+    #
+    # @param  site [Hash] the site config
+    # @return [Array] a list of collection names
+    # @raise WaxTasks::Error::NoLunrCollections
     def self.get_lunr_collections(site)
       to_index = site[:collections].find_all { |c| c[1].key?('lunr_index') }
       raise Error::NoLunrCollections, 'There are no lunr collections to index.' if to_index.nil?
@@ -58,13 +92,16 @@ module WaxTasks
   end
 end
 
-# WaxTasks monkey patching
+# Monkey-patched String class
 class String
+  # Removes YAML front matter from a string
+  # @return [String]
   def remove_yaml
-    self.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
+    self.gsub!(/\A---(.|\n)*?---/, '')
   end
 
-  # cleans yaml + markdown pages for lunr indexing
+  # Cleans YAML front matter + markdown pages for lunr indexing
+  # @return [String]
   def html_strip
     self.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
     self.gsub!(/{%(.*)%}/, '') # remove functional liquid
@@ -75,27 +112,32 @@ class String
     self
   end
 
-  # normalizes accents for lunr indexing
+  # Normalizes accent marks/diacritics for Lunr indexing
+  # @return [String]
   def remove_diacritics
     to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
     replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
     self.tr(to_replace, replaced_by)
   end
 
-  # converts string to snake case and swaps out special chars
+  # Converts string to snake case and swaps out special chars
+  # @return [String]
   def slug
     self.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
   end
 
-  # normalize as a string or hash without diacritics for lunr indexing
+  # Normalizes string without diacritics for lunr indexing
+  # @return [String]
   def normalize
     self.remove_diacritics
   end
 end
 
-# monkey patch Array class
+# Monkey-patched Array class
 class Array
-  # normalize as a string or hash without diacritics for lunr indexing
+  # Normalizes an array as a string or array of hashes
+  # without diacritics for lunr indexing
+  # @return [Hash || String] description
   def normalize
     if self.first.is_a? Hash
       self
@@ -105,13 +147,16 @@ class Array
   end
 end
 
-# monkey patch Hash class
+# Monkey-patched Hash class
 class Hash
-  # normalize as a string or hash without diacritics for lunr indexing
+  # Normalizes hash as itself for lunr indexing
+  # @return [Hash]
   def normalize
     self
   end
 
+  # Converts hash keys to symbols
+  # @return [Hash]
   def symbolize_keys
     hash = self
     hash.keys.each do |key|
@@ -121,9 +166,10 @@ class Hash
   end
 end
 
-# monkey patch Integer class
+# Monkey-patched Integer class
 class Integer
-  # normalize as a string or hash without diacritics for lunr indexing
+  # Normalizes integer as a string for lunr indexing
+  # @return [String]
   def normalize
     self.to_s
   end
