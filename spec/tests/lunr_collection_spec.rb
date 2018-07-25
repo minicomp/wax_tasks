@@ -14,19 +14,21 @@ describe WaxTasks::LunrCollection do
   describe '.new' do
     context 'when given valid configuration info' do
       it 'initializes a collection' do
+        quiet_stdout { task_runner.pagemaster(args) }
         expect(valid_collection.fields).to be_an(Array)
+        expect(valid_collection.fields).not_to be_empty
       end
     end
 
     context 'when given a collection that doesn\'t exist' do
       it 'throws WaxTasks::Error::InvalidCollection' do
-        expect{ invalid_collection }.to raise_error(WaxTasks::Error::InvalidCollection)
+        expect{ quiet_stdout { invalid_collection } }.to raise_error(WaxTasks::Error::InvalidCollection)
       end
     end
 
     context 'when given a collection without fields to index' do
       it 'throws WaxTasks::Error::MissingFields' do
-        expect{ missing_fields }.to raise_error(WaxTasks::Error::MissingFields)
+        expect{ quiet_stdout { missing_fields  } }.to raise_error(WaxTasks::Error::MissingFields)
       end
     end
   end
@@ -34,7 +36,6 @@ describe WaxTasks::LunrCollection do
   describe '.ingest_pages' do
     context 'when given a directory of markdown pages' do
       it 'loads them as a hash array' do
-        quiet_stdout { task_runner.pagemaster(args) }
         expect(valid_collection.ingest_pages).to be_an(Array)
         expect(valid_collection.ingest_pages.first).to have_key('pid')
       end

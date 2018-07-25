@@ -1,6 +1,10 @@
 context '$ bundle exec rake' do
   include_context 'shared'
 
+  before(:all) do
+    WaxTasks::Test.reset
+  end
+
   describe 'wax:pagemaster' do
     it 'runs without errors' do
       passes = quiet_stdout{ system("bundle exec rake wax:pagemaster #{args.join(' ')}") }
@@ -21,6 +25,10 @@ context '$ bundle exec rake' do
 
     it 'generates an index' do
       expect(File).to exist(index_path)
+      index = File.read(index_path).remove_yaml
+      File.open(index_path, 'w') { |f| f.write(index) }
+      expect { WaxTasks::Utils.validate_json(index_path) }.to_not raise_error
+      expect(JSON.load(File.read(index_path))).not_to be_empty
     end
 
     context 'when run with UI=true' do
@@ -52,14 +60,6 @@ context '$ bundle exec rake' do
     it 'writes a package.json file' do
       package = File.open('package.json', 'r').read
       expect(package.length > 90)
-    end
-  end
-
-  describe 'wax:test' do
-    it 'passes html-proofer' do
-      quiet_stdout { Bundler.with_clean_env { system('bundle exec jekyll build') } }
-      passes = quiet_stdout { system('bundle exec rake wax:test') }
-      expect(passes).to eq(true)
     end
   end
 end

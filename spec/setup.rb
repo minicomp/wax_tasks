@@ -36,5 +36,3 @@ module WaxTasks::Test
     Dir.chdir(BUILD)
   end
 end
-
-WaxTasks::Test.reset

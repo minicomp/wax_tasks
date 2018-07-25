@@ -1,26 +1,24 @@
-#
 # toggle stdout/stderr verbosity
-# run with $ DEBUG=true bundle exec rspec
 #
+# run $ DEBUG=true bundle exec rspec for verbose output
+# run $ bundle exec rspec for sparse output
 case ENV['DEBUG']
-when 'true'
-  QUIET = false
-else
-  QUIET = true
+when 'true' then QUIET = false
+else QUIET = true
 end
 
 # use codecov + add requirements
 require 'simplecov'
-
 SimpleCov.start do
   add_filter 'spec'
   add_filter 'branch'
 end
 
-require 'faker'
+# load + setup
 require 'wax_tasks'
-require_relative 'setup'
+require 'setup'
 
+# provide shared context for tests
 shared_context 'shared', :shared_context => :metadata do
   let(:task_runner) { WaxTasks::TaskRunner.new }
   let(:default_site) { task_runner.site }
@@ -29,9 +27,11 @@ shared_context 'shared', :shared_context => :metadata do
   let(:ui_path) { 'js/lunr_ui.js'}
 end
 
-require_relative 'tasks_spec'
-require_relative 'wax_tasks_spec'
-require_relative 'pagemaster_collection_spec'
-require_relative 'iiif_collection_spec'
-require_relative 'lunr_collection_spec'
-require_relative 'utils_spec'
+# run tests in a more intuitive order
+require 'tests/tasks_spec'
+require 'tests/task_runner_spec'
+require 'tests/utils_spec'
+require 'tests/pagemaster_collection_spec'
+require 'tests/lunr_collection_spec'
+require 'tests/iiif_collection_spec'
+require 'tests/branch_spec'
