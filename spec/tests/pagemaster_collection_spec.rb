@@ -9,7 +9,7 @@ describe WaxTasks::PagemasterCollection do
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_yaml) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => 'invalid.yml'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.yml'} } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
@@ -19,12 +19,12 @@ describe WaxTasks::PagemasterCollection do
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_json) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => 'invalid.json'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.json'} } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_type) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => 'invalid.xls'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.xls'} } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end

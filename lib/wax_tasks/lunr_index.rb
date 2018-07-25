@@ -1,24 +1,34 @@
 module WaxTasks
-  # document
+  # A LunrIndex document that combines data from all collections
+  # in site config that have `lunr_index` parameters.
+  #
+  # @attr collections [Array] a list of LunrCollection objects
+  # @attr fields [Array] shared list of fields to index among LunrCollections
   class LunrIndex
     attr_accessor :collections, :fields
 
+    # Creates a new LunrIndex object
     def initialize(collections)
       @collections  = collections
       @fields       = total_fields
     end
 
+    # @return [Array] shared list of fields to index among LunrCollections
     def total_fields
       total_fields = @collections.map(&:fields).reduce([], :concat)
       total_fields.uniq
     end
 
+    # @return [String] writes index data as pretty JSON with YAML front-matter
     def to_s
       data = @collections.map(&:data).flatten
       data.each_with_index.map { |d, id| d['lunr_index'] = id }
       "---\nlayout: none\n---\n#{JSON.pretty_generate(data)}"
     end
 
+    # Creates a default LunrUI / JS file for displaying the Index
+    #
+    # @return [String]
     def default_ui
       <<~HEREDOC
         ---

@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.email         = ['m.nyrop@columbia.edu']
   s.license       = 'MIT'
   s.homepage      = 'https://github.com/minicomp/wax_tasks'
-  s.summary       = 'Rake tasks for minimal exhibitions.'
-  s.description   = 'Rake tasks for minimal iiif exhibition sites with Jekyll.'
+  s.summary       = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
+  s.description   = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
 
   s.files = Dir['Gemfile', 'lib/**/*']
   s.test_files    = Dir['spec/*']

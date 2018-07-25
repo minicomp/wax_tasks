@@ -62,12 +62,4 @@ context '$ bundle exec rake' do
       expect(package.length > 90)
     end
   end
-
-  describe 'wax:test' do
-    it 'passes html-proofer' do
-      quiet_stdout { Bundler.with_clean_env { system('bundle exec jekyll build') } }
-      passes = quiet_stdout { system('bundle exec rake wax:test') }
-      expect(passes).to eq(true)
-    end
-  end
 end

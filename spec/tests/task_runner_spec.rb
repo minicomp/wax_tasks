@@ -127,4 +127,13 @@ describe WaxTasks::TaskRunner do
       package = task_runner.js_package
     end
   end
+
+  describe '.push_branch' do
+    context 'when given branch `test-branch` locally' do
+      it 'runs without errors' do
+        test_runner = WaxTasks::TaskRunner.new({},'test')
+        expect { test_runner.push_branch('test-branch') }.to output(/Skipping build for branch 'test-branch'/).to_stdout
+      end
+    end
+  end
 end

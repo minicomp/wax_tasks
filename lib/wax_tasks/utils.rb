@@ -143,6 +143,12 @@ class String
   def cyan
     "\e[36m#{self}\e[0m"
   end
+
+  # Colorizes console output to orange (warnings)
+  # @return [String]
+  def orange
+    "\e[33m#{self}\e[0m"
+  end
 end
 
 # Monkey-patched Array class

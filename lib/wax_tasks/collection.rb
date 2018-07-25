@@ -1,7 +1,7 @@
 module WaxTasks
-  # A parent class representing a Jekyll collection that
-  # cannot be created directly.
-  # Only child classes (IiifCollection, LunrCollection, PagemasterCollection)
+  # Parent class representing a Jekyll collection
+  # that cannot be created directly. Only child classes
+  # (IiifCollection, LunrCollection, PagemasterCollection)
   # can be initialized.
   #
   # @attr config    [Hash]    the collection config within site config
@@ -34,7 +34,6 @@ module WaxTasks
     # Finds the collection config within the site config
     #
     # @return [Hash] the config for the collection
-    # @raise WaxTasks::Error::InvalidCollection
     def collection_config
       @site[:collections].fetch(@name)
     rescue StandardError => e
@@ -45,8 +44,6 @@ module WaxTasks
     #
     # @param source [String] the path to the CSV, JSON, or YAML source file
     # @return [Array] the collection data
-    # @raise WaxTasks::Error::MissingSource
-    # @raise WaxTasks::Error::InvalidSource
     def ingest_file(source)
       raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
 

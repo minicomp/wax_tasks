@@ -63,5 +63,9 @@ module WaxTasks
     # Custom Error:
     # No collections in site config have lunr_index parameters
     class NoLunrCollections < WaxTasksError; end
+
+    # Custom Error:
+    # Cannot find _site directory to push to GitHub
+    class MissingSite < WaxTasksError; end
   end
 end

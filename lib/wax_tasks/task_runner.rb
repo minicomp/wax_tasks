@@ -1,15 +1,33 @@
 module WaxTasks
-  # document
+  # Class for running the Rake tasks in ./tasks
+  # TaskRunner is responsible for loading and parsing the site config
+  # from `_config.yml`, which can be overridden with .override(opts)
+  #
+  # @attr site [Hash] main variables from site config normalized + symbolized
   class TaskRunner
-    attr_accessor :site
+    attr_reader :site
 
-    def initialize(config = {})
+    # Creates a new TaskRunner with a config hash or default config file
+    #
+    # @param env    [String]  test/prod. only affects Branch module
+    # @param config [Hash]    optional hash, should mirror a parsed _config.yml
+    # @example give a custom config
+    #   config = {
+    #     title:        'custom title',
+    #     url:          'custom.url',
+    #     collections:  {...}
+    #   }
+    #   WaxTasks::TaskRunner.new(config)
+    # @example use default config from file
+    #   WaxTasks::TaskRunner.new
+    def initialize(config = {}, env = 'prod')
       config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
-
       @site = {
+        env:              env,
         title:            config.fetch(:title, ''),
         url:              config.fetch(:url, ''),
         baseurl:          config.fetch(:baseurl, ''),
+        repo_name:        config.fetch(:repo_name, ''),
         source_dir:       config.fetch(:source, nil),
         collections_dir:  config.fetch(:collections_dir, nil),
         collections:      config.fetch(:collections, {}),
@@ -20,18 +38,36 @@ module WaxTasks
       raise Error::InvalidSiteConfig, "Could not load _config.yml. => #{e}"
     end
 
+    # Overrides a specific part of @site
+    #
+    # @param opts [Hash] part of the site config to be overwritten
+    # @example override title + url
+    #   runner = WaxTasks::TaskRunner.new
+    #   runner.override({ title: 'my new title', url: 'my-new.url' })
     def override(opts)
       opts.each { |k, v| @site[k] = v }
       @site[:permalink] = Utils.construct_permalink(opts)
       self
     end
 
+    # Given an array of command line arguments `args`,
+    # creates a PagemasterCollection for each and generates markdown
+    # pages from its specified data `source` file
+    #
+    # @param args [Array] the arguments/collection names from wax:pagemaster
+    # @return [Nil]
     def pagemaster(args)
       args.each do |name|
         PagemasterCollection.new(name, @site).generate_pages
       end
     end
 
+    # Creates a LunrCollection for each collection
+    # that has lunr_index parameters in the site config
+    # and generates a lunr-index.json file from the collection data
+    #
+    # @param generate_ui [Boolean] whether/not to generate a default lunr UI
+    # @return [Nil]
     def lunr(generate_ui = false)
       lunr_collections = Utils.get_lunr_collections(@site)
       lunr_collections.map! { |name| LunrCollection.new(name, @site) }
@@ -46,12 +82,23 @@ module WaxTasks
       File.open(ui_path, 'w') { |f| f.write(index.default_ui) } if generate_ui
     end
 
+    # Given an array of command line arguments `args`,
+    # creates a IiifCollection for each and generates iiif
+    # derivative images, manifests, etc. from source image files
+    #
+    # @param args [Array] the arguments/collection names from wax:pagemaster
+    # @return [Nil]
     def iiif(args)
       args.each do |name|
         IiifCollection.new(name, @site).process
       end
     end
 
+    # Finds the JS dependencies listed in site config and
+    # writes them to a package.json file
+    # in orderto easily track / monitor / update them
+    #
+    # @return [Nil]
     def js_package
       names = []
       package = {
@@ -66,6 +113,22 @@ module WaxTasks
         package['dependencies'][name] = '^' + version
       end
       package
+    end
+
+    # Constructs a TravisBranch or LocalBranch object
+    # with appropriate Git credentials and pushes
+    # the compiled Jekyll site to the target GitHub branch
+    #
+    # @param target [String] the name of the Git branch to deploy to
+    # @return [Nil]
+    def push_branch(target)
+      case ENV.fetch('CI', false)
+      when true
+        branch = TravisBranch.new(self.site, target)
+      when false
+        branch = LocalBranch.new(self.site, target)
+      end
+      branch.push
     end
   end
 end

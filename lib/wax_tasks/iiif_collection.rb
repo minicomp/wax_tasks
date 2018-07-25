@@ -12,7 +12,7 @@ module WaxTasks
   class IiifCollection < Collection
     attr_reader :variants, :meta, :target_dir
 
-    # Creates a new collection with name @name given site config @site
+    # Creates a new IiifCollection with name @name given site config @site
     def initialize(name, site)
       super(name, site)
 

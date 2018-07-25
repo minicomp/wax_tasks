@@ -1,7 +1,7 @@
 require 'wax_tasks'
 
 namespace :wax do
-  desc 'write a simple package.json'
+  desc 'write a simple package.json for monitoring js dependencies'
   task :jspackage do
     task_runner = WaxTasks::TaskRunner.new
     package = task_runner.js_package
