@@ -122,7 +122,7 @@ module WaxTasks
     # @param target [String] the name of the Git branch to deploy to
     # @return [Nil]
     def push_branch(target)
-      on_travis = ENV.fetch('CI', false)
+      on_travis = !!ENV.fetch('CI', false)
       opts      = self.site, target
       branch    = on_travis ? TravisBranch.new(opts) : LocalBranch.new(opts)
       branch.push
