@@ -123,10 +123,10 @@ module WaxTasks
     # @return [Nil]
     def push_branch(target)
       case ENV.fetch('CI', false)
-      when true
-        branch = TravisBranch.new(self.site, target)
       when false
         branch = LocalBranch.new(self.site, target)
+      else
+        branch = TravisBranch.new(self.site, target)
       end
       branch.push
     end
