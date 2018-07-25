@@ -10,7 +10,7 @@ require_relative 'wax_tasks/utils'
 
 # The WaxTasks module powers the Rake tasks in `./tasks`, including:
 #
-# wax:pagemaster  :: generate collection md pages from csv, json, or yaml data file
+# wax:pagemaster  :: generate collection md pages from csv, json, or yaml file
 # wax:lunr        :: build lunr search index (with default UI if UI=true)
 # wax:iiif        :: generate iiif derivatives from local image files
 # wax:jspackage   :: write a simple package.json for monitoring js dependencies
