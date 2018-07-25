@@ -45,7 +45,7 @@ describe WaxTasks::IiifCollection do
 
       context 'without custom metadata' do
         it 'builds without errors' do
-          expect(no_meta.meta).to eq(false)
+          expect(no_meta.meta).to eq(nil)
         end
       end
     end

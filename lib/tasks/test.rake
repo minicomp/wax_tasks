@@ -1,7 +1,7 @@
 require 'html-proofer'
 
 namespace :wax do
-  desc 'run htmlproofer, rspec if exists'
+  desc 'run htmlproofer, rspec if .rspec file exists'
   task :test do
     opts = {
       check_external_hash: true,

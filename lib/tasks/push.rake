@@ -1,18 +1,13 @@
 require 'wax_tasks'
 
 namespace :wax do
-  desc 'push compiled site to git branch BRANCH'
+  desc 'push compiled Jekyll site to git branch BRANCH'
   task :push do
-    ARGS    = ARGV.drop(1).each { |a| task a.to_sym }
-    TARGET  = slug(ARGS.first)
-    TRAVIS  = ENV.fetch('CI', false)
-    CONFIG  = YAML.load_file('./_config.yml')
-    GH      = TARGET == 'gh-pages'
+    ARGS = ARGV.drop(1).each { |a| task a.to_sym }
+    raise 'You must specify a branch after \'wax:push:branch\'' if ARGS.empty?
 
-    abort "You must specify a branch after 'wax:push:branch'" if ARGS.empty?
-
-    branch = TRAVIS ? TravisBranch.new : LocalBranch.new
-    branch.build_gh_site if GH
-    branch.push
+    target = WaxTasks::Utils.slug(ARGS.first)
+    task_runner = WaxTasks::TaskRunner.new
+    task_runner.push_branch(target)
   end
 end
