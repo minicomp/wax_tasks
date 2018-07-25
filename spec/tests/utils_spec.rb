@@ -119,7 +119,7 @@ describe 'Monkey Patches' do
 
     describe '.slug' do
       it 'slugifies' do
-        string = Faker::Lovecraft.sentence
+        string = "Effulge\n[ce' bl^s/p/\/hems squam{ous sing}ular_abno...."
         expect(string.slug).not_to include(' ')
       end
     end

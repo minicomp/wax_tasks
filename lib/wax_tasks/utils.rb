@@ -16,7 +16,7 @@ module WaxTasks
 
     # Checks and asserts presence of `pid` value for each item
     #
-    # @param  data [Array] an array of hashes each representing a collection item
+    # @param  data [Array] array of hashes each representing a collection item
     # @return [Array] same data unless a an item is missing the key `pid`
     # @raise WaxTasks::Error::MissingPid
     def self.assert_pids(data)
@@ -26,8 +26,8 @@ module WaxTasks
 
     # Checks and asserts uniqueness of `pid` value for each item
     #
-    # @param  data [Array] an array of hashes each representing a collection item
-    # @return [Array] same data unless a an item has a non-unique value for `pid`
+    # @param  data [Array] array of hashes each representing a collection item
+    # @return [Array] same data unless an item has non-unique value for `pid`
     # @raise WaxTasks::Error::NonUniquePid
     def self.assert_unique(data)
       pids = data.map { |d| d['pid'] }
@@ -130,6 +130,18 @@ class String
   # @return [String]
   def normalize
     self.remove_diacritics
+  end
+
+  # Colorizes console output to magenta (errors)
+  # @return [String]
+  def magenta
+    "\e[35m#{self}\e[0m"
+  end
+
+  # Colorizes console output to cyan (messages)
+  # @return [String]
+  def cyan
+    "\e[36m#{self}\e[0m"
   end
 end
 

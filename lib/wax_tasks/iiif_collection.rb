@@ -6,7 +6,7 @@ module WaxTasks
   # @attr src_data    [String]  the path to the data source file
   # @attr iiif_config [Hash]    the iiif configuration for the collection
   # @attr meta        [Array]   metadata k,v rules
-  # @attr variants    [Hash]    iiif image variants to generate, e.g. { med: 650 }
+  # @attr variants    [Hash]    image variants to generate e.g. { med: 650 }
   # @attr src_dir     [String]  path to existing iiif source images
   # @attr target_dir  [String]  target path for iiif derivatives
   class IiifCollection < Collection

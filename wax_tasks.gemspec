@@ -15,13 +15,11 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.requirements << 'imagemagick'
 
-  s.add_dependency 'colorize', '~> 0.8'
   s.add_dependency 'html-proofer', '~> 3'
   s.add_dependency 'jekyll', '~> 3'
   s.add_dependency 'rake', '~> 12'
   s.add_dependency 'wax_iiif', '~> 0.0.2'
 
   s.add_development_dependency 'bundler', '~> 1'
-  s.add_development_dependency 'faker', '~> 1'
   s.add_development_dependency 'rspec', '~> 3'
 end

@@ -1,5 +1,3 @@
-require 'colorize'
-
 module WaxTasks
   # Custom WaxTasks Errors module
   module Error
@@ -10,33 +8,60 @@ module WaxTasks
       end
     end
 
-    # Custom error: site config cannot be found / parsed
+    # Custom Error:
+    # Site config cannot be found / parsed
     class InvalidSiteConfig < WaxTasksError; end
-    # Custom error: collection specified cannot be found / parsed in site config
+
+    # Custom Error:
+    # Collection specified cannot be found / parsed in site config
     class InvalidCollection < WaxTasksError; end
-    # Custom error: data source for collection is not the correct type or is an invalid file
+
+    # Custom Error:
+    # Collection data source type is not allowed or is an invalid file
     class InvalidSource     < WaxTasksError; end
-    # Custom error: data source file could not be found
+
+    # Custom Error:
+    # Data source file could not be found
     class MissingSource     < WaxTasksError; end
-    # Custom error: while loading markdown pages to index, one could not be read
+
+    # Custom Error:
+    # While loading markdown pages to index, one could not be read
     class LunrPageLoad      < WaxTasksError; end
-    # Custom error: a lunr collection does not have fields specified to index
+
+    # Custom Error:
+    # Lunr collection does not have fields specified to index
     class MissingFields     < WaxTasksError; end
-    # Custom error: a page layout was not specified for a pagemaster collection
+
+    # Custom Error:
+    # Page layout was not specified for a pagemaster collection
     class MissingLayout     < WaxTasksError; end
-    # Custom error: a collection item does not have a required pid value
+
+    # Custom Error:
+    # Collection item does not have a required pid value
     class MissingPid        < WaxTasksError; end
-    # Custom error: a collection item has a non-unique pud value
+
+    # Custom Error:
+    # Collection item has a non-unique pud value
     class NonUniquePid      < WaxTasksError; end
-    # Custom error: a collection page item could not be generated
+
+    # Custom Error:
+    # Collection page item could not be generated
     class PageFailure       < WaxTasksError; end
-    # Custom error: a csv file failed to lint could not be loaded
+
+    # Custom Error:
+    # CSV file failed to lint + could not be loaded
     class InvalidCSV        < WaxTasksError; end
-    # Custom error: a json file failed to lint could not be loaded
+
+    # Custom Error:
+    # JSON file failed to lint + could not be loaded
     class InvalidJSON       < WaxTasksError; end
-    # Custom error: a yaml file failed to lint could not be loaded
+
+    # Custom Error:
+    # YAML file failed to lint + could not be loaded
     class InvalidYAML       < WaxTasksError; end
-    # Custom error: no collections in site config have the required lunr_index parameters
+
+    # Custom Error:
+    # No collections in site config have lunr_index parameters
     class NoLunrCollections < WaxTasksError; end
   end
 end

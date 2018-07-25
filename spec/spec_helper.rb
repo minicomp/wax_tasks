@@ -17,7 +17,7 @@ SimpleCov.start do
   add_filter 'branch'
 end
 
-require 'faker'
+# require 'faker'
 require 'wax_tasks'
 require_relative 'setup'
 
@@ -28,3 +28,5 @@ shared_context 'shared', :shared_context => :metadata do
   let(:index_path) { 'js/lunr_index.json' }
   let(:ui_path) { 'js/lunr_ui.js'}
 end
+
+# require

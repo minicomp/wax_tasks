@@ -1,4 +1,3 @@
-require 'colorize'
 require 'csv'
 require 'json'
 require 'yaml'

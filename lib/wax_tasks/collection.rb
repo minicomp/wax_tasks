@@ -1,9 +1,11 @@
 module WaxTasks
-  # A parent class representing a Jekyll collection that cannot be initialized directly
-  # Only child classes (IiifCollection, LunrCollection, PagemasterCollection) can be created
+  # A parent class representing a Jekyll collection that
+  # cannot be created directly.
+  # Only child classes (IiifCollection, LunrCollection, PagemasterCollection)
+  # can be initialized.
   #
   # @attr config    [Hash]    the collection config within site config
-  # @attr name      [String]  the name of the collection used in site[:collections]
+  # @attr name      [String]  the name of the collection in site:collections
   # @attr page_dir  [String]  the directory path for generated collection pages
   # @attr site      [Hash]    the site config
   class Collection
@@ -12,13 +14,13 @@ module WaxTasks
 
     # This method ensures child classes can be instantiated though
     # Collection.new cannot be.
-    def self.inherited(other)
+    def self.inherited(*)
       public_class_method :new
     end
 
     # Creates a new collection with name @name given site config @site
     #
-    # @param name     [String]  the name of the collection used in site[:collections]
+    # @param name     [String]  the name of the collection in site:collections
     # @param site     [Hash]    the site config
     def initialize(name, site)
       @name     = name
