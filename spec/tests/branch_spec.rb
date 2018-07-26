@@ -1,3 +1,5 @@
+require 'uri'
+
 context WaxTasks::Branch do
   include_context 'shared'
 
@@ -25,7 +27,7 @@ context WaxTasks::Branch do
 
       it 'gets the origin' do
         expect(local_branch.origin).to start_with('https://')
-        expect(local_branch.origin).to end_with('wax_tasks.git')
+        expect(local_branch.origin).to include('wax_tasks')
       end
 
       it 'gets the commit message' do
@@ -56,7 +58,7 @@ context WaxTasks::Branch do
 
       it 'gets the origin' do
         expect(travis_branch.origin).to start_with('https://')
-        expect(travis_branch.origin).to end_with('wax_tasks.git')
+        expect(travis_branch.origin).to include('wax_tasks')
       end
 
       it 'gets the commit message' do
