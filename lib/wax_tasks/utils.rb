@@ -177,7 +177,7 @@ class Hash
   # @return [Hash]
   def symbolize_keys
     hash = self
-    hash.keys.each do |key|
+    hash.each_key do |key|
       hash[key.to_sym || key] = hash.delete(key)
     end
     hash
