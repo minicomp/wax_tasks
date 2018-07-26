@@ -10,19 +10,14 @@ It can be used to generate collection markdown pages from a data file ([wax:page
 Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wax](https://minicomp.github.io/wax/).
 
 ```sh
------------------------------------------------
-NOTE >> wax_tasks is under rapid development.
-        it will be relatively volatile leading
-        up to the beta release (v0.5.0).
------------------------------------------------
+--------------------------------------------------------------------
+NOTE >> wax_tasks is being developed rapidly. it will be relatively 
+        volatile leading up to the beta release (v0.5.0).
+--------------------------------------------------------------------
 ```
 
 <br>
-<img src="https://raw.githubusercontent.com/minicomp/wiki/master/docs/assets/wax_screen.gif" style="max-width:400px;">
-<br><br><br>
-<img src="https://media.giphy.com/media/e7OR7qbQjF2ocNVS7V/giphy.gif" style="max-width:400px;">
-
-
+<img src="https://raw.githubusercontent.com/minicomp/wiki/master/docs/assets/wax_screen.gif"/>
 
 
 # Getting Started
@@ -48,7 +43,7 @@ $ convert -version
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
 
-Next, you'll need a Jekyll site. You can clone the [Minicomp/Wax demo site](https://github.com/minicomp/wax/) or start a site from scratch with:
+Next, you'll need a Jekyll site. You can clone the [minicomp/wax demo site](https://github.com/minicomp/wax/) or start a site from scratch with:
 
 ```sh
 $ gem install jekyll
@@ -57,7 +52,7 @@ $ jekyll new wax && cd wax
 
 ## Installation
 
-Add `wax_tasks` to your Jekyll site's Gemfile:
+Add `wax_tasks` to your Jekyll site's `Gemfile`:
 
 ```ruby
 gem 'wax_tasks'
@@ -77,7 +72,10 @@ Dir.glob("#{spec.gem_dir}/lib/tasks/*.rake").each { |r| load r }
 
 # Usage
 
-After following the installation instructions above, you will have access to the rake tasks in your shell by running `$ bundle exec rake wax:taskname` in the root directory of your Jekyll site.
+After following the installation instructions above, you will have access to the Rake tasks in your shell by running `$ bundle exec rake wax:taskname` in the root directory of your Jekyll site.
+
+<br>
+<img src="https://media.giphy.com/media/e7OR7qbQjF2ocNVS7V/giphy.gif"/>
 
 ## Sample site `_config.yml` file:
 
@@ -121,9 +119,9 @@ The above example includes a single collection `objects` that comprises:
 1. a CSV `source` file (`objects.csv`), and
 2. a directory of images files.
 
-__wax_tasks__ will expect to find the `source` file in the `_data` directory, i.e., at `_data/objects.csv`. It will also expect to find the source images in a directory named after the collection within `_data/iiif`, i.e., `_data/iiif/objects/*.jpg`.
+__wax_tasks__ will expect to find the `source` file in the `_data` directory, i.e., at `_data/objects.csv`. It will also expect to find the source images in a directory named after the collection within `_data/iiif`, i.e., `_data/iiif/objects/*.jpg`. Some tasks will require you to invoke the collection by name, e.g., `$ bundle exec rake wax:pagemaster objects` and `$ bundle exec rake wax:iiif objects`.
 
-For more information on configuring collections for __wax_tasks__, check out the [wiki](https://minicomp.github.io/wiki/).
+For more information on configuring Jekyll collections for __wax_tasks__, check out the [minicomp/wax wiki](https://minicomp.github.io/wiki/#/wax/) and <https://jekyllrb.com/docs/collections/>.
 
 ## Running the tasks
 
@@ -139,8 +137,12 @@ Generates a client-side JSON search index of your site for use with [ElasticLunr
 
 `$ bundle exec rake wax:lunr`
 
-> Note: It will also generate a default lunr UI to use if you run:
-`$ bundle exec rake wax:lunr UI=true`
+```sh
+------------------------------------------------------------------------
+NOTE >> wax_lunr will also generate a default lunr UI to use if you run:
+        $ bundle exec rake wax:lunr UI=true
+------------------------------------------------------------------------
+```
 
 ### wax:iiif
 
@@ -158,7 +160,16 @@ Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compile
 
 Fork/clone the repository. After making code changes, run the tests (`$ bundle exec rubocop` and `$ bundle exec rspec`) before submitting a pull request. You can enable verbose tests with `$ DEBUG=true bundle exec rspec`.
 
-> __Note:__ The cannonical repository is [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/). Please submit all issues and pull requests to the Minicomp repo.
+> __Note:__ The cannonical repository is [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/). Please submit all issues and pull requests to the [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/) repo.
+
+
+```sh
+---------------------------------------------------------------------------
+NOTE >> The cannonical repository is minicomp/wax_tasks. 
+        Please submit all issues and pull requests to the cannonical repo.
+---------------------------------------------------------------------------
+```
+<p align="right"><a href='https://github.com/minicomp/wax_tasks/'>minicomp/wax_tasks ~></a></p>
 
 # License
 
