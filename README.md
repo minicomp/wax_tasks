@@ -24,7 +24,7 @@ NOTE >> wax_tasks is being developed rapidly. it will be relatively
 
 ## Prerequisites
 
-You'll need `Ruby >= 2.2` with `bundler` installed. Check your versions with:
+You'll need `Ruby >= 2.3` with `bundler` installed. Check your versions with:
 ```bash
 $ ruby -v
   ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-darwin15]
