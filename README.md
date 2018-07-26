@@ -44,6 +44,13 @@ $ convert -version
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
 ```
 
+Next, you'll need a Jekyll site. You can clone the [Minicomp/Wax demo site](https://github.com/minicomp/wax/) or start a site from scratch with:
+
+```sh
+$ gem install jekyll
+$ jekyll new wax && cd wax
+```
+
 ### Installation
 
 Add `wax_tasks` to your Jekyll site's Gemfile:
