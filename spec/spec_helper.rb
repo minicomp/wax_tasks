@@ -1,47 +1,37 @@
 # toggle stdout/stderr verbosity
-QUIET = true
+#
+# run $ DEBUG=true bundle exec rspec for verbose output
+# run $ bundle exec rspec for sparse output
+case ENV['DEBUG']
+when 'true' then QUIET = false
+else QUIET = true
+end
 
 # use codecov + add requirements
 require 'simplecov'
 SimpleCov.start do
   add_filter 'spec'
-  add_filter 'utilities'
   add_filter 'branch'
 end
 
-require_relative './../lib/wax_tasks'
-require_relative 'fake/site'
+# load + setup
+require 'wax_tasks'
+require 'setup'
 
-# setup
-quiet_stdout { Fake.site }
-
-# constants
-SITE_CONFIG = WaxTasks.site_config
-ARGS = SITE_CONFIG[:collections].map { |c| c[0] }
-PM_COLLECTIONS = quiet_stdout { ARGS.map { |a| PagemasterCollection.new(a) } }
-IIIF_COLLECTIONS = ARGS.map { |a| IiifCollection.new(a) }
-
-# run specs
-require_relative 'pagemaster'
-require_relative 'lunr'
-require_relative 'iiif'
-
-describe 'jekyll' do
-  it 'builds successfully' do
-    quiet_stdout { Bundler.with_clean_env { system('bundle exec jekyll build') } }
-  end
+# provide shared context for tests
+shared_context 'shared', :shared_context => :metadata do
+  let(:task_runner) { WaxTasks::TaskRunner.new }
+  let(:default_site) { task_runner.site }
+  let(:args) { default_site[:collections].map{ |c| c[0] } }
+  let(:index_path) { 'js/lunr_index.json' }
+  let(:ui_path) { 'js/lunr_ui.js'}
 end
 
-describe 'wax:jspackage' do
-  it 'writes a package.json file' do
-    quiet_stdout { system('bundle exec rake wax:jspackage') }
-    package = File.open('package.json', 'r').read
-    expect(package.length > 90)
-  end
-end
-
-describe 'wax:test' do
-  it 'passes html-proofer' do
-    quiet_stdout { system('bundle exec rake wax:test') }
-  end
-end
+# run tests in a more intuitive order
+require 'tests/tasks_spec'
+require 'tests/task_runner_spec'
+require 'tests/utils_spec'
+require 'tests/pagemaster_collection_spec'
+require 'tests/lunr_collection_spec'
+require 'tests/iiif_collection_spec'
+require 'tests/branch_spec'
