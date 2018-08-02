@@ -1,6 +1,5 @@
 require 'jekyll'
 require 'logger'
-require 'time'
 require 'tmpdir'
 
 module WaxTasks
@@ -37,10 +36,10 @@ module WaxTasks
         msg = 'Building the gh-pages _site without a baseurl is not recommended'
         Logger.new($stdout).warn(msg.orange)
       end
-      FileUtils.rm_r(SITE_DIR) if File.directory?(SITE_DIR)
+      FileUtils.rm_r(SITE_DIR) if File.directory?(WaxTasks::SITE_DIR)
       opts = {
         source: '.',
-        destination: SITE_DIR,
+        destination: WaxTasks::SITE_DIR,
         baseurl:  @baseurl,
         verbose: true
       }
@@ -52,7 +51,7 @@ module WaxTasks
     def push
       if @site[:env] == 'prod'
         rebuild if @target == 'gh-pages'
-        raise Error::MissingSite, "Cannot find #{SITE_DIR}" unless Dir.exist? SITE_DIR
+        raise Error::MissingSite, "Cannot find #{WaxTasks::SITE_DIR}" unless Dir.exist? WaxTasks::SITE_DIR
         Dir.chdir(SITE_DIR)
         system 'git init && git add .'
         system "git commit -m '#{@commit_msg}'"
@@ -62,49 +61,6 @@ module WaxTasks
       else
         puts "Skipping build for branch '#{@target}' on env='test'".orange
       end
-    end
-  end
-
-  # Branch object for `$ wax:push` task when run on Travis-CI VM
-  # using encrypted Travis environment vars
-  #
-  # @attr repo_slug   [String] the 'user/repo_name'
-  # @attr user        [String] the GitHub user making the commit/push
-  # @attr token       [String] secret git access token
-  # @attr commit_msg  [String] the commit message to use on push
-  # @attr origin      [String] the current repository remote
-  # @attr baseurl     [String] the site baseurl to build with (if on gh-pages)
-  # @attr success_msg [String] informative message to be output to console
-  class TravisBranch < Branch
-    def initialize(site, target)
-      super(site, target)
-
-      @repo_slug    = ENV['TRAVIS_REPO_SLUG']
-      @user         = @repo_slug.split('/').first
-      @token        = ENV['ACCESS_TOKEN']
-
-      @commit_msg   = "Updated via #{ENV['TRAVIS_COMMIT']} @#{Time.now.utc}"
-      @origin       = "https://#{@user}:#{@token}@github.com/#{@repo_slug}.git"
-      @baseurl      = @repo_slug.split('/').last
-      @success_msg  = "Deploying to #{@target} branch from Travis as #{@user}."
-    end
-  end
-
-  # Branch object for `$ wax:push` task when run on local machine
-  # using local credentials
-  #
-  # @attr origin      [String] the current repository remote
-  # @attr commit_msg  [String] the commit message to use on push
-  # @attr baseurl     [String] the site baseurl to build with (if on gh-pages)
-  # @attr success_msg [String] informative message to be output to console
-  class LocalBranch < Branch
-    def initialize(site, target)
-      super(site, target)
-
-      @origin       = `git config --get remote.origin.url`.strip
-      @commit_msg   = "Updated via local task at #{Time.now.utc}"
-      @baseurl      = @origin.split('/').last.gsub('.git', '')
-      @success_msg  = "Deploying to #{@target} branch from local task."
     end
   end
 end
