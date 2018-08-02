@@ -1,8 +1,6 @@
-# toggle stdout/stderr verbosity
-#
 # run $ DEBUG=true bundle exec rspec for verbose output
 # run $ bundle exec rspec for sparse output
-QUEIT = !ENV['DEBUG']
+QUIET = !ENV['DEBUG']
 
 # use codecov + add requirements
 require 'simplecov'
