@@ -1,7 +1,7 @@
 # wax_tasks 🐝
-[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) ![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg) [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) ![Libraries.io for GitHub](https://img.shields.io/librariesio/github/mnyrop/wax_tasks.svg)
+[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) ![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://marii.info/wax_tasks/)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/test_coverage)](https://codeclimate.com/github/mnyrop/wax_tasks/test_coverage) [![](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://marii.info/wax_tasks/)
+[![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![](https://img.shields.io/librariesio/github/mnyrop/wax_tasks.svg)](https://libraries.io/github/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/test_coverage)](https://codeclimate.com/github/mnyrop/wax_tasks/test_coverage) 
 
 __wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
@@ -24,7 +24,7 @@ NOTE >> wax_tasks is being developed rapidly. it will be relatively
 
 ## Prerequisites
 
-You'll need `Ruby >= 2.2` with `bundler` installed. Check your versions with:
+You'll need `Ruby >= 2.3` with `bundler` installed. Check your versions with:
 ```bash
 $ ruby -v
   ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-darwin15]
