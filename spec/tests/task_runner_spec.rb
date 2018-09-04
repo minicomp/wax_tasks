@@ -86,7 +86,7 @@ describe WaxTasks::TaskRunner do
     end
 
     it 'that passes json lint' do
-      index = File.read(index_path).remove_yaml
+      index = WaxTasks::Utils.remove_yaml(File.read(index_path))
       File.open(index_path, 'w') { |f| f.write(index) }
       expect { WaxTasks::Utils.validate_json(index_path) }.to_not raise_error
       expect(WaxTasks::Utils.validate_json(index_path)).not_to be_empty
@@ -104,8 +104,8 @@ describe WaxTasks::TaskRunner do
         quiet_stdout { multi_collection_runner.pagemaster(['c1', 'c2']) }
         lunr_collections = WaxTasks::Utils.get_lunr_collections(multi_collection_runner.site)
         lunr_collections.map! { |name| WaxTasks::LunrCollection.new(name, multi_collection_runner.site) }
-        index = WaxTasks::LunrIndex.new(lunr_collections).to_s.remove_yaml
-        expect(JSON.load(index).length).to eq(6)
+        index = WaxTasks::LunrIndex.new(lunr_collections)
+        expect(JSON.load(WaxTasks::Utils.remove_yaml(index)).length).to eq(6)
       end
     end
   end

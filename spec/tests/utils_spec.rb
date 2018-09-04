@@ -99,28 +99,28 @@ describe 'Monkey Patches' do
     describe '.html_strip' do
       it 'strips yaml, html, and some special characters' do
         string = '---fiugkafkb\/\.\:%---\n"P<div></span786g>'
-        expect(string.html_strip).to eq('\'P')
+        expect(WaxTasks::Utils.html_strip(string)).to eq('\'P')
       end
     end
 
     describe '.remove_diacritics' do
       it 'swaps out øéÏŖŗŘřŚś for oeIRrRrSs' do
         string = 'øéÏŖŗŘřŚś'
-        expect(string.remove_diacritics).to eq('oeIRrRrSs')
+        expect(WaxTasks::Utils.remove_diacritics(string)).to eq('oeIRrRrSs')
       end
     end
 
     describe '.remove_yaml' do
       it 'removes yaml' do
         string = "---\nthe yaml\n---\nthe content"
-        expect(string.remove_yaml).to eq("\nthe content")
+        expect(WaxTasks::Utils.remove_yaml(string)).to eq("\nthe content")
       end
     end
 
     describe '.slug' do
       it 'slugifies' do
         string = "Effulge\n[ce' bl^s/p/\/hems squam{ous sing}ular_abno...."
-        expect(string.slug).not_to include(' ')
+        expect(WaxTasks::Utils.slug(string)).not_to include(' ')
       end
     end
 
@@ -131,13 +131,13 @@ describe 'Monkey Patches' do
       context 'when it includes Hashes' do
         it 'returns itself for Lunr result display' do
           array = [{ test: 1 }, { test: 2 }]
-          expect(array.normalize).to eq(array)
+          expect(array.lunr_normalize).to eq(array)
         end
       end
       context 'when it includes Strings' do
         it 'joins itself as s String for Lunr result display' do
           array = ['test1', 'test2']
-          expect(array.normalize).to eq('test1, test2')
+          expect(array.lunr_normalize).to eq('test1, test2')
         end
       end
     end

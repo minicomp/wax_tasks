@@ -50,9 +50,12 @@ module WaxTasks
         'link' => "{{'#{yaml.fetch('permalink')}' | relative_url }}",
         'collection' => @name
       }
-      hash['content'] = File.read(page).html_strip.remove_diacritics if @content
+      if @content
+        content = WaxTasks::Utils.html_strip(File.read(page))
+        hash['content'] = WaxTasks::Utils.remove_diacritics (content)
+      end
       fields = @fields.push('pid').uniq
-      fields.each { |f| hash[f] = yaml[f].normalize }
+      fields.each { |f| hash[f] = yaml[f].lunr_normalize }
       hash
     end
   end
