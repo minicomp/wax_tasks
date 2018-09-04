@@ -52,7 +52,7 @@ module WaxTasks
       }
       if @content
         content = WaxTasks::Utils.html_strip(File.read(page))
-        hash['content'] = WaxTasks::Utils.remove_diacritics (content)
+        hash['content'] = WaxTasks::Utils.remove_diacritics(content)
       end
       fields = @fields.push('pid').uniq
       fields.each { |f| hash[f] = yaml[f].lunr_normalize }
