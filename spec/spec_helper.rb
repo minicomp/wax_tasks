@@ -21,12 +21,3 @@ shared_context 'shared', :shared_context => :metadata do
   let(:index_path) { 'js/lunr_index.json' }
   let(:ui_path) { 'js/lunr_ui.js'}
 end
-
-# run tests in a more intuitive order
-require 'tests/tasks_spec'
-require 'tests/task_runner_spec'
-require 'tests/utils_spec'
-require 'tests/pagemaster_collection_spec'
-require 'tests/lunr_collection_spec'
-require 'tests/iiif_collection_spec'
-require 'tests/branch_spec'

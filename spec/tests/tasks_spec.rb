@@ -25,7 +25,7 @@ context '$ bundle exec rake' do
 
     it 'generates an index' do
       expect(File).to exist(index_path)
-      index = File.read(index_path).remove_yaml
+      index = WaxTasks::Utils.remove_yaml(File.read(index_path))
       File.open(index_path, 'w') { |f| f.write(index) }
       expect { WaxTasks::Utils.validate_json(index_path) }.to_not raise_error
       expect(JSON.load(File.read(index_path))).not_to be_empty
