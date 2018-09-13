@@ -18,3 +18,5 @@ Metrics/MethodLength:
   Max: 15
 Style/DoubleNegation:
   Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
