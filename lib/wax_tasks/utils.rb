@@ -193,8 +193,8 @@ class Integer
   end
 end
 
-# Monkey-patched Null class
-class Null
+# Monkey-patched Nil class
+class NilClass
   # Normalizes integer as a string for lunr indexing
   # @return [String]
   def lunr_normalize
