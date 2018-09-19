@@ -12,7 +12,7 @@ context '$ bundle exec rake' do
     end
 
     it 'generates pages' do
-      pages = Dir.glob('my_collection/*.md')
+      pages = Dir.glob('_my_collection/*.md')
       expect(pages.length).not_to be_zero
     end
   end

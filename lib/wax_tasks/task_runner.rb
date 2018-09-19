@@ -68,7 +68,7 @@ module WaxTasks
     #
     # @param generate_ui [Boolean] whether/not to generate a default lunr UI
     # @return [Nil]
-    def lunr(generate_ui = false)
+    def lunr(generate_ui: false)
       lunr_collections = Utils.get_lunr_collections(@site)
       lunr_collections.map! { |name| LunrCollection.new(name, @site) }
 
@@ -76,10 +76,14 @@ module WaxTasks
       index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
 
       FileUtils.mkdir_p(File.dirname(index_path))
-      File.open(index_path, 'w') { |f| f.write(index.to_s) }
+      File.open(index_path, 'w') { |f| f.write(index) }
+      puts "Writing lunr search index to #{index_path}.".cyan
 
-      ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
-      File.open(ui_path, 'w') { |f| f.write(index.default_ui) } if generate_ui
+      if generate_ui
+        ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
+        puts "Writing default lunr UI to #{ui_path}.".cyan
+        File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
+      end
     end
 
     # Given an array of command line arguments `args`,
