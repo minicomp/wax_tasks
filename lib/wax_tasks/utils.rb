@@ -192,3 +192,12 @@ class Integer
     self.to_s
   end
 end
+
+# Monkey-patched Nil class
+class NilClass
+  # Normalizes integer as a string for lunr indexing
+  # @return [String]
+  def lunr_normalize
+    self.to_s
+  end
+end
