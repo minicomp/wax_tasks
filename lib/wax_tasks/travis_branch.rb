@@ -21,7 +21,7 @@ module WaxTasks
 
       @commit_msg   = "Updated via #{ENV['TRAVIS_COMMIT']} @#{Time.now.utc}"
       @origin       = "https://#{@user}:#{@token}@github.com/#{@repo_slug}.git"
-      @baseurl      = @repo_slug.split('/').last
+      @baseurl      = "/#{@repo_slug.split('/').last}"
       @success_msg  = "Deploying to #{@target} branch from Travis as #{@user}."
     end
   end
