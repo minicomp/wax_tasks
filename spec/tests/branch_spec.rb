@@ -35,7 +35,7 @@ context WaxTasks::Branch do
       end
 
       it 'gets the baseurl' do
-        expect(local_branch.baseurl).to eq('wax_tasks')
+        expect(local_branch.baseurl).to eq('/wax_tasks')
       end
     end
 
@@ -66,7 +66,7 @@ context WaxTasks::Branch do
       end
 
       it 'gets the baseurl' do
-        expect(travis_branch.baseurl).to eq('wax_tasks')
+        expect(travis_branch.baseurl).to eq('/wax_tasks')
       end
     end
 
