@@ -38,8 +38,9 @@ module WaxTasks
       end
       FileUtils.rm_r(SITE_DIR) if File.directory?(WaxTasks::SITE_DIR)
       opts = {
-        source: '.',
+        source: @site[:source_dir] || '.',
         destination: WaxTasks::SITE_DIR,
+        config: WaxTasks::DEFAULT_CONFIG,
         baseurl:  @baseurl,
         verbose: true
       }

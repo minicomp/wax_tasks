@@ -14,7 +14,7 @@ module WaxTasks
 
       @origin       = `git config --get remote.origin.url`.strip
       @commit_msg   = "Updated via local task at #{Time.now.utc}"
-      @baseurl      = @origin.split('/').last.gsub('.git', '')
+      @baseurl      = "/#{@origin.split('/').last.gsub('.git', '')}"
       @success_msg  = "Deploying to #{@target} branch from local task."
     end
   end
