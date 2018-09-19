@@ -94,7 +94,7 @@ describe WaxTasks::TaskRunner do
 
     context 'when generate_ui=true' do
       it 'generates a default ui' do
-        task_runner.lunr(generate_ui: true)
+        quiet_stdout { task_runner.lunr(generate_ui: true) }
         expect(File).to exist(ui_path)
       end
     end

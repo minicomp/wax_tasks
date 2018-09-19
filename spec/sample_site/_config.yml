@@ -13,7 +13,7 @@ collections:
     layout: default.html
     keep_order: true
     lunr_index:
-      content: false
+      content: true
       fields:
         - gambrel
         - indescribable
