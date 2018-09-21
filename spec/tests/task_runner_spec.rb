@@ -65,7 +65,7 @@ describe WaxTasks::TaskRunner do
         expect { quiet_stdout { task_runner.pagemaster(args) } }.not_to raise_error
       end
       it 'generates pages' do
-        expect(Dir.glob("my_collection/*.md")).not_to be_empty
+        expect(Dir.glob('_my_collection/*.md')).not_to be_empty
       end
     end
 
@@ -78,7 +78,7 @@ describe WaxTasks::TaskRunner do
 
   describe '.lunr' do
     it 'runs without errors' do
-      expect { task_runner.lunr }.not_to raise_error
+      expect { quiet_stdout { task_runner.lunr } }.not_to raise_error
     end
 
     it 'generates an index' do
@@ -94,7 +94,7 @@ describe WaxTasks::TaskRunner do
 
     context 'when generate_ui=true' do
       it 'generates a default ui' do
-        task_runner.lunr(generate_ui=true)
+        quiet_stdout { task_runner.lunr(generate_ui: true) }
         expect(File).to exist(ui_path)
       end
     end

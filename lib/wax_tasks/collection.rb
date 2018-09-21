@@ -28,7 +28,7 @@ module WaxTasks
       @config   = collection_config
       @page_dir = Utils.make_path(@site[:source_dir],
                                   @site[:collections_dir],
-                                  @name)
+                                  "_#{@name}")
     end
 
     # Finds the collection config within the site config
