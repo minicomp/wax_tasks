@@ -65,7 +65,7 @@ describe WaxTasks::TaskRunner do
         expect { quiet_stdout { task_runner.pagemaster(args) } }.not_to raise_error
       end
       it 'generates pages' do
-        expect(Dir.glob("my_collection/*.md")).not_to be_empty
+        expect(Dir.glob('_my_collection/*.md')).not_to be_empty
       end
     end
 
@@ -78,7 +78,7 @@ describe WaxTasks::TaskRunner do
 
   describe '.lunr' do
     it 'runs without errors' do
-      expect { task_runner.lunr }.not_to raise_error
+      expect { quiet_stdout { task_runner.lunr } }.not_to raise_error
     end
 
     it 'generates an index' do
@@ -86,7 +86,7 @@ describe WaxTasks::TaskRunner do
     end
 
     it 'that passes json lint' do
-      index = File.read(index_path).remove_yaml
+      index = WaxTasks::Utils.remove_yaml(File.read(index_path))
       File.open(index_path, 'w') { |f| f.write(index) }
       expect { WaxTasks::Utils.validate_json(index_path) }.to_not raise_error
       expect(WaxTasks::Utils.validate_json(index_path)).not_to be_empty
@@ -94,7 +94,7 @@ describe WaxTasks::TaskRunner do
 
     context 'when generate_ui=true' do
       it 'generates a default ui' do
-        task_runner.lunr(generate_ui=true)
+        quiet_stdout { task_runner.lunr(generate_ui: true) }
         expect(File).to exist(ui_path)
       end
     end
@@ -104,8 +104,8 @@ describe WaxTasks::TaskRunner do
         quiet_stdout { multi_collection_runner.pagemaster(['c1', 'c2']) }
         lunr_collections = WaxTasks::Utils.get_lunr_collections(multi_collection_runner.site)
         lunr_collections.map! { |name| WaxTasks::LunrCollection.new(name, multi_collection_runner.site) }
-        index = WaxTasks::LunrIndex.new(lunr_collections).to_s.remove_yaml
-        expect(JSON.load(index).length).to eq(6)
+        index = WaxTasks::LunrIndex.new(lunr_collections)
+        expect(JSON.load(WaxTasks::Utils.remove_yaml(index)).length).to eq(6)
       end
     end
   end

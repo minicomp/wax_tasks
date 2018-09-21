@@ -43,7 +43,7 @@ module WaxTasks
       FileUtils.mkdir_p(@page_dir)
       pages = []
       @data.each_with_index do |item, idx|
-        page_slug         = item.fetch('pid').to_s.slug
+        page_slug         = Utils.slug(item.fetch('pid'))
         path              = "#{@page_dir}/#{page_slug}.md"
         item['permalink'] = "/#{@name}/#{page_slug}#{@site[:permalink]}"
         item['layout']    = @layout

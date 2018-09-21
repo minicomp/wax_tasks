@@ -2,5 +2,5 @@
 Gemfile.lock
 build
 coverage
-doc
+docs
 .yardoc

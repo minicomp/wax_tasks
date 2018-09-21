@@ -89,47 +89,47 @@ module WaxTasks
       raise Error::NoLunrCollections, 'There are no lunr collections to index.' if to_index.nil?
       to_index.map { |c| c[0] }
     end
+
+    # Removes YAML front matter from a string
+    # @return [String]
+    def self.remove_yaml(str)
+      str.to_s.gsub!(/\A---(.|\n)*?---/, '')
+    end
+
+    # Cleans YAML front matter + markdown pages for lunr indexing
+    # @return [String]
+    def self.html_strip(str)
+      str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
+      str.gsub!(/{%(.*)%}/, '') # remove functional liquid
+      str.gsub!(%r{<\/?[^>]*>}, '') # remove html
+      str.gsub!('\\n', '') # remove newlines
+      str.gsub!(/\s+/, ' ') # remove extra space
+      str.tr!('"', "'") # replace double quotes with single
+      str
+    end
+
+    # Normalizes accent marks/diacritics for Lunr indexing
+    # @return [String]
+    def self.remove_diacritics(str)
+      to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
+      replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
+      str.to_s.tr(to_replace, replaced_by)
+    end
+
+    # Converts string to snake case and swaps out special chars
+    # @return [String]
+    def self.slug(str)
+      str.to_s.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
+    end
   end
 end
 
 # Monkey-patched String class
 class String
-  # Removes YAML front matter from a string
-  # @return [String]
-  def remove_yaml
-    self.gsub!(/\A---(.|\n)*?---/, '')
-  end
-
-  # Cleans YAML front matter + markdown pages for lunr indexing
-  # @return [String]
-  def html_strip
-    self.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
-    self.gsub!(/{%(.*)%}/, '') # remove functional liquid
-    self.gsub!(%r{<\/?[^>]*>}, '') # remove html
-    self.gsub!('\\n', '') # remove newlines
-    self.gsub!(/\s+/, ' ') # remove extra space
-    self.tr!('"', "'") # replace double quotes with single
-    self
-  end
-
-  # Normalizes accent marks/diacritics for Lunr indexing
-  # @return [String]
-  def remove_diacritics
-    to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
-    replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
-    self.tr(to_replace, replaced_by)
-  end
-
-  # Converts string to snake case and swaps out special chars
-  # @return [String]
-  def slug
-    self.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
-  end
-
   # Normalizes string without diacritics for lunr indexing
   # @return [String]
-  def normalize
-    self.remove_diacritics
+  def lunr_normalize
+    WaxTasks::Utils.remove_diacritics(self)
   end
 
   # Colorizes console output to magenta (errors)
@@ -156,11 +156,11 @@ class Array
   # Normalizes an array as a string or array of hashes
   # without diacritics for lunr indexing
   # @return [Hash || String] description
-  def normalize
+  def lunr_normalize
     if self.first.is_a? Hash
       self
     else
-      self.join(', ').remove_diacritics
+      WaxTasks::Utils.remove_diacritics(self.join(', '))
     end
   end
 end
@@ -169,7 +169,7 @@ end
 class Hash
   # Normalizes hash as itself for lunr indexing
   # @return [Hash]
-  def normalize
+  def lunr_normalize
     self
   end
 
@@ -188,7 +188,16 @@ end
 class Integer
   # Normalizes integer as a string for lunr indexing
   # @return [String]
-  def normalize
+  def lunr_normalize
+    self.to_s
+  end
+end
+
+# Monkey-patched Nil class
+class NilClass
+  # Normalizes integer as a string for lunr indexing
+  # @return [String]
+  def lunr_normalize
     self.to_s
   end
 end

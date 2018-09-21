@@ -1,13 +1,8 @@
 AllCops:
-  TargetRubyVersion: 2.3
-  Exclude:
-    - 'spec/**/*'
+  TargetRubyVersion: 2.4
+  Exclude: ['spec/**/*']
 Metrics/LineLength:
-  IgnoredPatterns:
-    - 'raise'
-    - 'puts'
-    - 'ÈÉÊË'
-    - 'EEEE'
+  IgnoredPatterns: ['raise', 'puts', 'ÈÉÊË', 'EEEE']
 Style/FrozenStringLiteralComment:
   Enabled: false
 Style/RedundantSelf:
@@ -17,4 +12,8 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 15
 Style/DoubleNegation:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
   Enabled: false

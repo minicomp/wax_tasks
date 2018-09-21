@@ -28,7 +28,7 @@ module WaxTasks
       @config   = collection_config
       @page_dir = Utils.make_path(@site[:source_dir],
                                   @site[:collections_dir],
-                                  @name)
+                                  "_#{@name}")
     end
 
     # Finds the collection config within the site config
@@ -47,12 +47,16 @@ module WaxTasks
     def ingest_file(source)
       raise Error::MissingSource, "Cannot find #{source}" unless File.exist? source
 
-      case File.extname(source)
-      when '.csv'     then data = WaxTasks::Utils.validate_csv(source)
-      when '.json'    then data = WaxTasks::Utils.validate_json(source)
-      when /\.ya?ml/  then data = WaxTasks::Utils.validate_yaml(source)
-      else raise Error::InvalidSource, "Cannot load #{File.extname(source)} files. Culprit: #{source}"
-      end
+      data = case File.extname(source)
+             when '.csv'
+               WaxTasks::Utils.validate_csv(source)
+             when '.json'
+               WaxTasks::Utils.validate_json(source)
+             when /\.ya?ml/
+               WaxTasks::Utils.validate_yaml(source)
+             else
+               raise Error::InvalidSource, "Can't load #{File.extname(source)} files. Culprit: #{source}"
+             end
 
       WaxTasks::Utils.assert_pids(data)
       WaxTasks::Utils.assert_unique(data)

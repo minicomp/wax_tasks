@@ -1,7 +1,7 @@
 # wax_tasks 🐝
-[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) ![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://marii.info/wax_tasks/)
+[![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) ![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](https://www.rubydoc.info/github/mnyrop/wax_tasks/)
 
-[![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![](https://img.shields.io/librariesio/github/mnyrop/wax_tasks.svg)](https://libraries.io/github/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/test_coverage)](https://codeclimate.com/github/mnyrop/wax_tasks/test_coverage) 
+[![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![](https://img.shields.io/librariesio/github/mnyrop/wax_tasks.svg)](https://libraries.io/github/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/test_coverage)](https://codeclimate.com/github/mnyrop/wax_tasks/test_coverage)
 
 __wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
 
@@ -11,7 +11,7 @@ Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wa
 
 ```sh
 --------------------------------------------------------------------
-NOTE >> wax_tasks is being developed rapidly. it will be relatively 
+NOTE >> wax_tasks is being developed rapidly. it will be relatively
         volatile leading up to the beta release (v0.5.0).
 --------------------------------------------------------------------
 ```
@@ -165,7 +165,7 @@ Fork/clone the repository. After making code changes, run the tests (`$ bundle e
 
 ```sh
 ---------------------------------------------------------------------------
-NOTE >> The cannonical repository is minicomp/wax_tasks. 
+NOTE >> The cannonical repository is minicomp/wax_tasks.
         Please submit all issues and pull requests to the cannonical repo.
 ---------------------------------------------------------------------------
 ```
