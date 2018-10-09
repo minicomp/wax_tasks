@@ -33,7 +33,7 @@ $ bundler -v
   Bundler version 1.16.1
 ```
 
-To use the IIIF task, you will also need to have ImageMagick installed and functional. You can check to see if you have ImageMagick by running:
+To use the IIIF task, you will also need to have ImageMagick and Ghostscript installed and functional. You can check to see if you have ImageMagick by running:
 ```bash
 $ convert -version
   Version: ImageMagick 6.9.9-20 Q16 x86_64 2017-10-15 http://www.imagemagick.org
@@ -41,6 +41,13 @@ $ convert -version
   License: http://www.imagemagick.org/script/license.php
   Features: Cipher DPC Modules
   Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib
+```
+
+... and check Ghostscript with:
+```bash
+$ gs -version
+  GPL Ghostscript 9.21 (2017-03-16)
+  Copyright (C) 2017 Artifex Software, Inc.  All rights reserved.
 ```
 
 Next, you'll need a Jekyll site. You can clone the [minicomp/wax demo site](https://github.com/minicomp/wax/) or start a site from scratch with:

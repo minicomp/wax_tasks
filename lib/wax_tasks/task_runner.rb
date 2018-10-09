@@ -93,9 +93,17 @@ module WaxTasks
     # @param args [Array] the arguments/collection names from wax:pagemaster
     # @return [Nil]
     def iiif(args)
-      args.each do |name|
-        IiifCollection.new(name, @site).process
-      end
+      build_opts = {
+        base_url: "#{@site[:baseurl]}/iiif",
+        output_dir: Utils.make_path(@site[:source_dir], 'iiif'),
+        verbose: true
+      }
+      builder = WaxIiif::Builder.new(build_opts)
+      records = []
+      args.each { |name| records << IiifCollection.new(name, @site).records }
+      records.flatten!
+      builder.load(records)
+      builder.process_data
     end
 
     # Finds the JS dependencies listed in site config and

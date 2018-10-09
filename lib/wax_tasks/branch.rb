@@ -27,6 +27,7 @@ module WaxTasks
     def initialize(site, target)
       @site   = site
       @target = target
+      @time   = Time.now.strftime("Updated at %H:%M on %Y-%m-%d")
     end
 
     # Rebuild the Jekyll site with branch @baseurl
@@ -54,6 +55,7 @@ module WaxTasks
         rebuild if @target == 'gh-pages'
         raise Error::MissingSite, "Cannot find #{WaxTasks::SITE_DIR}" unless Dir.exist? WaxTasks::SITE_DIR
         Dir.chdir(SITE_DIR)
+        File.open('.info', 'w') { |f| f.write(@time) }
         system 'git init && git add .'
         system "git commit -m '#{@commit_msg}'"
         system "git remote add origin #{@origin}"

@@ -1,6 +1,6 @@
 .DS_Store
 Gemfile.lock
-build
+test_build
 coverage
 docs
 .yardoc

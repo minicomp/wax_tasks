@@ -9,7 +9,7 @@ module WaxTasks
   # @attr page_dir  [String]  the directory path for generated collection pages
   # @attr site      [Hash]    the site config
   class Collection
-    attr_reader :name, :page_dir
+    attr_accessor :name, :page_dir
     private_class_method :new
 
     # This method ensures child classes can be instantiated though

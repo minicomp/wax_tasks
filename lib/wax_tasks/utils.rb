@@ -76,7 +76,7 @@ module WaxTasks
     # @param  args [Array] items to concatenate in path
     # @return [String] file path
     def self.make_path(*args)
-      args.compact.reject(&:empty?).join('/')
+      args.insert(0, '.').compact.reject(&:empty?).join('/')
     end
 
     # Finds collections in site config where `lunr_index` is enabled

@@ -38,7 +38,7 @@ describe WaxTasks::TaskRunner do
 
     it 'gets the collections' do
       expect(default_site[:collections]).to be_a(Hash)
-      expect(default_site[:collections]).to have_key('my_collection')
+      expect(default_site[:collections]).to have_key(args.first)
     end
 
     context 'when overriding with opts={}' do
@@ -62,10 +62,10 @@ describe WaxTasks::TaskRunner do
   describe '.pagemaster' do
     context "with valid collection 'my_collection'" do
       it 'runs without errors' do
-        expect { quiet_stdout { task_runner.pagemaster(args) } }.not_to raise_error
+        expect { quiet_stdout { task_runner.pagemaster([args.first]) } }.not_to raise_error
       end
       it 'generates pages' do
-        expect(Dir.glob('_my_collection/*.md')).not_to be_empty
+        expect(Dir.glob("_#{args.first}/*.md")).not_to be_empty
       end
     end
 
@@ -110,17 +110,17 @@ describe WaxTasks::TaskRunner do
     end
   end
 
-  describe '.iiif' do
-    it 'runs without errors' do
-      expect { quiet_stdout { task_runner.iiif(args) } }.not_to raise_error
-    end
-
-    it 'generates derivatives' do
-      iiif_collection = WaxTasks::IiifCollection.new(args.first, default_site)
-      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
-      expect(File).to exist("#{first_image}/info.json")
-    end
-  end
+  # describe '.iiif' do
+    # it 'runs without errors' do
+    #   expect { quiet_stdout { task_runner.iiif(args) } }.not_to raise_error
+    # end
+    #
+    # it 'generates derivatives' do
+    #   iiif_collection = WaxTasks::IiifCollection.new(args.first, default_site)
+    #   first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
+    #   expect(File).to exist("#{first_image}/info.json")
+    # end
+  # end
 
   describe '.js_package' do
     it 'creates a package.json file' do

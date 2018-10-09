@@ -67,5 +67,9 @@ module WaxTasks
     # Custom Error:
     # Cannot find _site directory to push to GitHub
     class MissingSite < WaxTasksError; end
+
+    # Custom Error:
+    # Cannot find IIIF source image files
+    class MissingIiifSrc < WaxTasksError; end
   end
 end

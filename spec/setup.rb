@@ -3,7 +3,7 @@ require 'fileutils'
 #constants
 ROOT    = `pwd`.strip.freeze
 SAMPLE  = "#{ROOT}/spec/sample_site".freeze
-BUILD   = "#{ROOT}/build".freeze
+BUILD   = "#{ROOT}/test_build".freeze
 
 # helper methods
 def quiet_stdout

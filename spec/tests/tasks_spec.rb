@@ -7,7 +7,7 @@ context '$ bundle exec rake' do
 
   describe 'wax:pagemaster' do
     it 'runs without errors' do
-      passes = quiet_stdout{ system("bundle exec rake wax:pagemaster #{args.join(' ')}") }
+      passes = quiet_stdout{ system("bundle exec rake wax:pagemaster #{args.first}") }
       expect(passes).to eq(true)
     end
 
@@ -39,18 +39,18 @@ context '$ bundle exec rake' do
     end
   end
 
-  describe 'wax:iiif' do
-    it 'runs without errors' do
-      passes = quiet_stdout { system("bundle exec rake wax:iiif #{args.last}") }
-      expect(passes).to eq(true)
-    end
-
-    it 'builds iiif info.json' do
-      iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
-      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
-      expect(File).to exist("#{first_image}/info.json")
-    end
-  end
+  # describe 'wax:iiif' do
+  #   it 'runs without errors' do
+  #     passes = quiet_stdout { system("bundle exec rake wax:iiif #{args.last}") }
+  #     expect(passes).to eq(true)
+  #   end
+  #
+  #   it 'builds iiif info.json' do
+  #     iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
+  #     first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
+  #     expect(File).to exist("#{first_image}/info.json")
+  #   end
+  # end
 
   describe 'wax:jspackage' do
     it 'passes' do
