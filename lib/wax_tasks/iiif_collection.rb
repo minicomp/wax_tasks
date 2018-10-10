@@ -24,19 +24,25 @@ module WaxTasks
       @variants     = validate_variants
     end
 
+    # @return [Boolean]
     def document?
-      @is_document || self.pdf?
+      !!@is_document || self.pdf?
     end
 
+    # @return [Boolean]
     def pdf?
       File.exist? @src_pdf
     end
 
+    # Splits the @src_pdf into jpegs with WaxIiif and Ghostscript
+    # @return [Nil]
     def split_pdf
       pdf_opts = { output_dir: @src_dir, verbose: true }
       WaxIiif::Utilities::PdfSplitter.split(@src_pdf, pdf_opts)
     end
 
+    # Constructs the target directory for output iiif derivatives/json
+    # @return [String]
     def make_target_dir
       dir = Utils.make_path(@site[:source_dir], 'iiif')
       dir += "/#{@name}" unless self.document?
@@ -80,8 +86,7 @@ module WaxTasks
       configure_primary_images(records)
     end
 
-    #
-    #
+    # @return [Hash]
     def doc_opts(img, idx)
       bname = File.basename(img, '.*').to_s
       {
@@ -93,8 +98,7 @@ module WaxTasks
       }
     end
 
-    #
-    #
+    # @return [Hash]
     def img_opts(img)
       name = "#{@name}-#{File.basename(img, '.*')}"
       {
@@ -104,8 +108,10 @@ module WaxTasks
       }
     end
 
+    # Set one primary image per document/object and return
+    # updated array of records
     #
-    #
+    # @return [Array]
     def configure_primary_images(records)
       if self.document?
         # set only the first image as primary to the record
