@@ -96,6 +96,21 @@ module WaxTasks
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
     end
 
+    # Opens IIIF JSON files and prepends yaml front matter
+    # So that liquid vars can be read by Jekyll
+    #
+    # @return [Nil]
+    def self.add_yaml_front_matter(iiif_json_files)
+      front_matter = "---\nlayout: none\n---\n"
+      iiif_json_files.each do |file|
+        json = JSON.parse(File.read(file))
+        File.open(file, 'w') do |f|
+          f.puts(front_matter)
+          f.puts(JSON.pretty_generate(json))
+        end
+      end
+    end
+
     # Cleans YAML front matter + markdown pages for lunr indexing
     # @return [String]
     def self.html_strip(str)
