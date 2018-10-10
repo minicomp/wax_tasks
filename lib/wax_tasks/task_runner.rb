@@ -99,10 +99,11 @@ module WaxTasks
         verbose: true
       }
       builder = WaxIiif::Builder.new(build_opts)
-      records = []
-      args.each { |name| records << IiifCollection.new(name, @site).records }
-      records.flatten!
-      builder.load(records)
+      image_records = args.map do |name|
+        IiifCollection.new(name, @site).records
+      end
+      image_records.flatten!
+      builder.load(image_records)
       builder.process_data
     end
 

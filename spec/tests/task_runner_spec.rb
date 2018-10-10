@@ -110,17 +110,74 @@ describe WaxTasks::TaskRunner do
     end
   end
 
-  # describe '.iiif' do
-    # it 'runs without errors' do
-    #   expect { quiet_stdout { task_runner.iiif(args) } }.not_to raise_error
+  describe '.iiif' do
+    it 'runs without errors' do
+      expect { quiet_stdout { task_runner.iiif(args) } }.not_to raise_error
+    end
+
+    it 'generates collection json' do
+      expect(File).to exist("#{BUILD}/iiif/collection/top.json")
+    end
+
+    it 'builds image directories' do
+      expect(Dir).to exist("#{BUILD}/iiif/images")
+      image_dirs = Dir.glob("#{BUILD}/iiif/images/*")
+      expect(image_dirs.length).not_to be_zero
+      expect(File).to exist("#{image_dirs.first}/info.json")
+    end
+
+    it 'builds manifests in expected directories' do
+      manifest_dirs = %w[docc pdfc imgc-0 imgc-1 imgc-2]
+      manifest_dirs.each do |m|
+        expect(Dir).to exist("#{BUILD}/iiif/#{m}")
+        expect(File).to exist("#{BUILD}/iiif/#{m}/manifest.json")
+      end
+    end
+
+    #
+    # it 'generates manifest json' do
+    #   expect(File.exist?("#{BUILD}/#{images_collection.target_dir}/0/manifest.json")).to be true
     # end
     #
     # it 'generates derivatives' do
-    #   iiif_collection = WaxTasks::IiifCollection.new(args.first, default_site)
-    #   first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
-    #   expect(File).to exist("#{first_image}/info.json")
+    #   expect(Dir.exist?("#{BUILD}/#{images_collection.target_dir}/images")).to be true
     # end
-  # end
+    #
+    # it 'generates custom image variants' do
+    #   [100, 900].each do |size|
+    #     expect(File.exist?("#{BUILD}/#{images_collection.target_dir}/images/1-1/full/#{size},/0/default.jpg")).to be true
+    #   end
+    # end
+    # it 'generates collection json' do
+    #   expect(File.exist?("#{BUILD}/#{document_collection.target_dir}/collection/top.json")).to be true
+    # end
+    #
+    # it 'generates manifest json' do
+    #   expect(File.exist?("#{BUILD}/#{document_collection.target_dir}/0/manifest.json")).to be true
+    # end
+    #
+    # it 'generates derivatives' do
+    #   expect(Dir.exist?("#{BUILD}/#{document_collection.target_dir}/images")).to be true
+    # end
+    #
+    # it 'generates custom image variants' do
+    #   [100, 900].each do |size|
+    #     expect(File.exist?("#{BUILD}/#{document_collection.target_dir}/images/1-1/full/#{size},/0/default.jpg")).to be true
+    #   end
+    # end
+    # it 'generates collection json' do
+    #   expect(File.exist?("#{BUILD}/#{pdf_collection.target_dir}/collection/top.json")).to be true
+    # end
+    #
+    # it 'adds manifest metadata fields from config + source' do
+    #   manifest = JSON.parse(File.read("#{BUILD}/#{pdf_collection.target_dir}/0/manifest.json"))
+    #   expect(manifest).to have_key('label')
+    # end
+    #
+    # it 'generates derivatives' do
+    #   expect(Dir.exist?("#{BUILD}/#{pdf_collection.target_dir}/images")).to be true
+    # end
+  end
 
   describe '.js_package' do
     it 'creates a package.json file' do

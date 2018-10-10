@@ -24,10 +24,11 @@ module WaxTasks
 
     # @param site   [Hash]    the site config from (TaskRunner.site)
     # @param target [String]  the name of the Git branch to deploy to
+    # @param time   [String]  message with the time of deployment
     def initialize(site, target)
       @site   = site
       @target = target
-      @time   = Time.now.strftime("Updated at %H:%M on %Y-%m-%d")
+      @time   = Time.now.strftime('Updated at %H:%M on %Y-%m-%d')
     end
 
     # Rebuild the Jekyll site with branch @baseurl
