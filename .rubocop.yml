@@ -17,3 +17,5 @@ Style/GuardClause:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+Lint/NonLocalExitFromIterator:
+  Enabled: false

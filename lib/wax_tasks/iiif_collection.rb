@@ -94,6 +94,7 @@ module WaxTasks
         path: img,
         page_number: self.pdf? ? bname.split('_pdf_page').last : idx + 1,
         label: @name,
+        section: "#{@name}-#{idx + 1}",
         is_document: true
       }
     end
@@ -104,6 +105,7 @@ module WaxTasks
       {
         id: name,
         path: img,
+        section: name,
         label: name
       }
     end
