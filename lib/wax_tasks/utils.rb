@@ -104,7 +104,7 @@ module WaxTasks
       front_matter = "---\nlayout: none\n---\n"
       iiif_json_files.each do |file|
         string = File.read(file)
-        return if string.start_with?(front_matter)
+        next if string.start_with?(front_matter)
         json = JSON.parse(string)
         File.open(file, 'w') do |f|
           f.puts(front_matter)

@@ -44,12 +44,6 @@ context '$ bundle exec rake' do
       passes = quiet_stdout { system("bundle exec rake wax:iiif #{args.join(' ')}") }
       expect(passes).to eq(true)
     end
-
-    it 'builds iiif info.json' do
-      iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
-      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
-      expect(File).to exist("#{first_image}/info.json")
-    end
   end
 
   describe 'wax:jspackage' do

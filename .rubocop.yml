@@ -9,6 +9,8 @@ Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
   Max: 20
+Metrics/CyclomaticComplexity:
+  Max: 8
 Metrics/MethodLength:
   Max: 15
 Style/DoubleNegation:
@@ -16,6 +18,4 @@ Style/DoubleNegation:
 Style/GuardClause:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-Lint/NonLocalExitFromIterator:
   Enabled: false

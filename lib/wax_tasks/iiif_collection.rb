@@ -34,6 +34,11 @@ module WaxTasks
       File.exist? @src_pdf
     end
 
+    # @return [Boolean]
+    def sort?
+      !!@iiif_config.fetch('sort', false)
+    end
+
     # Splits the @src_pdf into jpegs with WaxIiif and Ghostscript
     # @return [Nil]
     def split_pdf
@@ -71,15 +76,16 @@ module WaxTasks
     #
     # @return [Array]
     def records
-      split_pdf if self.pdf?
+      split_pdf if self.pdf? && !Dir.exist?(@src_dir)
 
       raise Error::MissingIiifSrc, "Cannot find IIIF source directory #{@src_dir}" unless Dir.exist?(@src_dir)
-      images = Dir["#{@src_dir}/*"].sort
+      images = Dir["#{@src_dir}/*"]
+      images.sort! if self.sort?
       raise Error::MissingIiifSrc "IIIF source directory #{@src_dir} is empty" unless images.length
 
       # construct records
-      records = images.map.with_index do |img, idx|
-        opts = self.document? ? doc_opts(img, idx) : img_opts(img)
+      records = images.map do |img|
+        opts = self.document? ? doc_opts(img) : img_opts(img)
         WaxIiif::ImageRecord.new(opts)
       end
 
@@ -87,26 +93,27 @@ module WaxTasks
     end
 
     # @return [Hash]
-    def doc_opts(img, idx)
+    def doc_opts(img)
       bname = File.basename(img, '.*').to_s
       {
-        id: @name,
+        parent_id: @name,
         path: img,
-        page_number: self.pdf? ? bname.split('_pdf_page').last : idx + 1,
+        id: self.pdf? ? bname.split('_pdf_page').last : bname,
         label: @name,
-        section: "#{@name}-#{idx + 1}",
+        section_label: bname,
         is_document: true
       }
     end
 
     # @return [Hash]
     def img_opts(img)
-      name = "#{@name}-#{File.basename(img, '.*')}"
+      bname = File.basename(img, '.*').to_s
       {
-        id: name,
+        parent_id: @name,
+        id: bname,
         path: img,
-        section: name,
-        label: name
+        section_label: bname,
+        label: bname
       }
     end
 
