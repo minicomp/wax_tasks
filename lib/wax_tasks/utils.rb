@@ -113,6 +113,21 @@ module WaxTasks
       end
     end
 
+    def self.output_iiif_list(site, manifests, records)
+      iiif_info = {
+        'collections' => ['/iiif/collection/top.json'],
+        'manifests' => manifests.map { |m| m.id.gsub(/{{.*}}/, '/iiif') },
+        'image_records' => records.map do |r|
+          "#{r.variants['full'].id}/info.json".gsub(/{{.*}}/, '/iiif')
+        end
+      }
+      file = make_path(site[:source_dir], '_data', 'iiif_info.yaml')
+      puts "Writing IIIF path log to #{file}.".cyan
+      File.open(file, 'w') do |f|
+        f.write(iiif_info.to_yaml)
+      end
+    end
+
     # Cleans YAML front matter + markdown pages for lunr indexing
     # @return [String]
     def self.html_strip(str)

@@ -101,15 +101,16 @@ module WaxTasks
         verbose: true
       }
       builder = WaxIiif::Builder.new(build_opts)
+
       image_records = args.map do |name|
         IiifCollection.new(name, @site).records
-      end
-      image_records.flatten!
+      end.flatten
+
       builder.load(image_records)
       builder.process_data
 
-      json_files = Dir["#{output_dir}/**/*.json"]
-      Utils.add_yaml_front_matter(json_files)
+      Utils.add_yaml_front_matter(Dir["#{output_dir}/**/*.json"])
+      Utils.output_iiif_list(@site, builder.manifests, image_records)
     end
 
     # Finds the JS dependencies listed in site config and

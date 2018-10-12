@@ -95,13 +95,14 @@ module WaxTasks
     # @return [Hash]
     def doc_opts(img)
       bname = File.basename(img, '.*').to_s
+      id    = self.pdf? ? bname.split('_pdf_page').last : bname
       {
         parent_id: @name,
         is_document: true,
         path: img,
-        id: self.pdf? ? bname.split('_pdf_page').last : bname,
+        id: id,
         label: @name,
-        section_label: bname
+        section_label: id
       }
     end
 
