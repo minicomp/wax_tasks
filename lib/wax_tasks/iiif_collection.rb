@@ -36,7 +36,7 @@ module WaxTasks
 
     # @return [Boolean]
     def sort?
-      !!@iiif_config.fetch('sort', false)
+      self.pdf? || !!@iiif_config.fetch('sort', false)
     end
 
     # Splits the @src_pdf into jpegs with WaxIiif and Ghostscript
