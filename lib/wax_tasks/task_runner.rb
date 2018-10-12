@@ -97,6 +97,7 @@ module WaxTasks
       build_opts = {
         base_url: "{{ 'iiif' | absolute_url }}",
         output_dir: output_dir,
+        variants: DEFAULT_IMAGE_VARIANTS,
         verbose: true
       }
       builder = WaxIiif::Builder.new(build_opts)

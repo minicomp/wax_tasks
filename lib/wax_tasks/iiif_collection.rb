@@ -97,11 +97,11 @@ module WaxTasks
       bname = File.basename(img, '.*').to_s
       {
         parent_id: @name,
+        is_document: true,
         path: img,
         id: self.pdf? ? bname.split('_pdf_page').last : bname,
         label: @name,
-        section_label: bname,
-        is_document: true
+        section_label: bname
       }
     end
 
