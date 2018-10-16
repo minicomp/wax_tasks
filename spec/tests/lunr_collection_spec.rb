@@ -5,10 +5,10 @@ describe WaxTasks::LunrCollection do
 
   let(:valid_collection) { WaxTasks::LunrCollection.new(args.first, default_site) }
   let(:invalid_collection) { WaxTasks::LunrCollection.new('not_a_collection', default_site) }
-  let(:missing_fields) do
-    no_fields = { collections: { 'test_collection' => { 'lunr_index' => {} } } }
+  let(:missing_fields_collection) do
+    no_fields = { collections: { 'missing_fields_collection' => { 'lunr_index' => {} } } }
     runner = WaxTasks::TaskRunner.new.override(no_fields)
-    WaxTasks::LunrCollection.new('test_collection', runner.site)
+    WaxTasks::LunrCollection.new('missing_fields_collection', runner.site)
   end
 
   describe '.new' do
@@ -28,7 +28,7 @@ describe WaxTasks::LunrCollection do
 
     context 'when given a collection without fields to index' do
       it 'throws WaxTasks::Error::MissingFields' do
-        expect{ quiet_stdout { missing_fields  } }.to raise_error(WaxTasks::Error::MissingFields)
+        expect{ quiet_stdout { missing_fields_collection  } }.to raise_error(WaxTasks::Error::MissingFields)
       end
     end
   end

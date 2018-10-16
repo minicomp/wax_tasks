@@ -2,7 +2,13 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude: ['spec/**/*']
 Metrics/LineLength:
-  IgnoredPatterns: ['raise', 'puts', 'ÈÉÊË', 'EEEE', 'make_path']
+  IgnoredPatterns:
+    - 'raise'
+    - 'puts'
+    - 'ÈÉÊË'
+    - 'EEEE'
+    - 'make_path'
+    - 'gem'
 Style/FrozenStringLiteralComment:
   Enabled: false
 Style/RedundantSelf:

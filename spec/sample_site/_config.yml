@@ -8,7 +8,7 @@ js:
     cdn: link
     version: version
 collections:
-  imgc:
+  test_collection:
     source: valid.csv
     layout: default.html
     keep_order: true
@@ -21,9 +21,3 @@ collections:
         - furtive
     iiif:
       variants: [100, 900]
-  pdfc:
-    output: true
-  docc:
-    output: true
-    iiif:
-      is_document: true
