@@ -71,19 +71,35 @@ module WaxTasks
     end
 
     def process_documents
-      documents = Dir["#{@src_dir}/*.pdf"]
-      documents.map do |d|
-        pid         = File.basename(d, '.pdf')
-        split_opts  = { output_dir: @src_dir, verbose: true }
-        doc_images  = WaxIiif::Utilities::PdfSplitter.split(d, split_opts)
-        { pid => doc_images }
+      documents = []
+      # process documents from sub directories of images
+      Dir["#{@src_dir}/*/"].each do |d|
+        pid     = File.basename(d)
+        images  = Dir["#{d}/*.{jpg, jpeg, tiff, png}"].sort
+        documents << { pid => images }
       end
+      # process documents from pdf files
+      Dir["#{@src_dir}/*.pdf"].each do |d|
+        pid = File.basename(d, '.pdf')
+        if Dir.exist?("#{@src_dir}/#{pid}")
+          puts "#{d} has already been split into images. Continuing."
+        else
+          documents << { pid => split_pdf(d) }
+        end
+      end
+
+      documents
     end
 
     def process_images
       images = Dir["#{@src_dir}/*.{jpg, jpeg, tiff, png}"]
       images.sort! if self.sort?
       images
+    end
+
+    def split_pdf(pdf)
+      split_opts = { output_dir: @src_dir, verbose: true }
+      WaxIiif::Utilities::PdfSplitter.split(pdf, split_opts).sort
     end
 
     def construct_iiif_records(images, documents)
