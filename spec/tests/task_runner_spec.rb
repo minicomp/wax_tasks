@@ -123,16 +123,11 @@ describe WaxTasks::TaskRunner do
       expect(Dir).to exist("#{BUILD}/iiif/images")
       image_dirs = Dir.glob("#{BUILD}/iiif/images/*")
       expect(image_dirs.length).not_to be_zero
-      expect(File).to exist("#{image_dirs.first}/0/info.json")
+      expect(File).to exist("#{image_dirs.first}/info.json")
     end
 
     it 'builds manifests in expected directories' do
-      document_dirs =
-      %w[docc pdfc].each do |m|
-        expect(Dir).to exist("#{BUILD}/iiif/#{m}")
-        expect(File).to exist("#{BUILD}/iiif/#{m}/manifest.json")
-      end
-      %w[imgc/0 imgc/1 imgc/2].each do |m|
+      %w[0 1 2].each do |m|
         expect(Dir).to exist("#{BUILD}/iiif/#{m}")
         expect(File).to exist("#{BUILD}/iiif/#{m}/manifest.json")
       end
@@ -145,7 +140,7 @@ describe WaxTasks::TaskRunner do
 
     it 'generates info.json' do
       infos = Dir.glob("#{BUILD}/iiif/images/*/**/info.json")
-      expect(infos.length).to eq 10
+      expect(infos.length).to eq 6
     end
 
     it 'generates collection top.json' do

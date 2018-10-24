@@ -17,41 +17,14 @@ module WaxTasks
       super(name, site)
 
       @iiif_config  = @config.fetch('iiif', {})
-      @is_document  = @iiif_config.fetch('is_document', false)
-      @src_pdf      = Utils.make_path(@site[:source_dir], '_data/iiif', "#{@name}.pdf")
       @src_dir      = Utils.make_path(@site[:source_dir], '_data/iiif', @name)
-      @target_dir   = make_target_dir
+      @target_dir   = Utils.make_path(@site[:source_dir], 'iiif')
       @variants     = validate_variants
     end
 
     # @return [Boolean]
-    def document?
-      !!@is_document || self.pdf?
-    end
-
-    # @return [Boolean]
-    def pdf?
-      File.exist? @src_pdf
-    end
-
-    # @return [Boolean]
     def sort?
-      self.pdf? || !!@iiif_config.fetch('sort', false)
-    end
-
-    # Splits the @src_pdf into jpegs with WaxIiif and Ghostscript
-    # @return [Nil]
-    def split_pdf
-      pdf_opts = { output_dir: @src_dir, verbose: true }
-      WaxIiif::Utilities::PdfSplitter.split(@src_pdf, pdf_opts)
-    end
-
-    # Constructs the target directory for output iiif derivatives/json
-    # @return [String]
-    def make_target_dir
-      dir = Utils.make_path(@site[:source_dir], 'iiif')
-      dir += "/#{@name}" unless self.document?
-      dir
+      !!@iiif_config.fetch('sort', false)
     end
 
     # Gets custom image variants from collection config if available
@@ -76,34 +49,12 @@ module WaxTasks
     #
     # @return [Array]
     def records
-      split_pdf if self.pdf? && !Dir.exist?(@src_dir)
-
       raise Error::MissingIiifSrc, "Cannot find IIIF source directory #{@src_dir}" unless Dir.exist?(@src_dir)
-      images = Dir["#{@src_dir}/*"]
-      images.sort! if self.sort?
-      raise Error::MissingIiifSrc "IIIF source directory #{@src_dir} is empty" unless images.length
 
-      # construct records
-      records = images.map do |img|
-        opts = self.document? ? doc_opts(img) : img_opts(img)
-        WaxIiif::ImageRecord.new(opts)
-      end
+      images    = process_images
+      documents = process_documents
 
-      configure_primary_images(records)
-    end
-
-    # @return [Hash]
-    def doc_opts(img)
-      bname = File.basename(img, '.*').to_s
-      id    = self.pdf? ? bname.split('_pdf_page').last : bname
-      {
-        parent_id: @name,
-        is_document: true,
-        path: img,
-        id: id,
-        label: @name,
-        section_label: id
-      }
+      construct_iiif_records(images, documents).flatten
     end
 
     # @return [Hash]
@@ -111,6 +62,7 @@ module WaxTasks
       bname = File.basename(img, '.*').to_s
       {
         parent_id: @name,
+        is_primary: true,
         id: bname,
         path: img,
         section_label: bname,
@@ -118,20 +70,68 @@ module WaxTasks
       }
     end
 
-    # Set one primary image per document/object and return
-    # updated array of records
-    #
-    # @return [Array]
-    def configure_primary_images(records)
-      if self.document?
-        # set only the first image as primary to the record
-        records.first.is_primary = true
-        records[1..-1].each { |r| r.is_primary = false }
-      else
-        # set each image as primary to the record
-        records.each { |r| r.is_primary = true }
+    def process_documents
+      documents = []
+      # process documents from sub directories of images
+      Dir["#{@src_dir}/*/"].each do |d|
+        pid     = File.basename(d)
+        images  = Dir["#{d}/*.{jpg, jpeg, tiff, png}"].sort
+        documents << { pid => images }
       end
+      # process documents from pdf files
+      Dir["#{@src_dir}/*.pdf"].each do |d|
+        pid = File.basename(d, '.pdf')
+        if Dir.exist?("#{@src_dir}/#{pid}")
+          puts "#{d} has already been split into images. Continuing."
+        else
+          documents << { pid => split_pdf(d) }
+        end
+      end
+
+      documents
+    end
+
+    def process_images
+      images = Dir["#{@src_dir}/*.{jpg, jpeg, tiff, png}"]
+      images.sort! if self.sort?
+      images
+    end
+
+    def split_pdf(pdf)
+      split_opts = { output_dir: @src_dir, verbose: true }
+      WaxIiif::Utilities::PdfSplitter.split(pdf, split_opts).sort
+    end
+
+    def construct_iiif_records(images, documents)
+      records = images.map do |img|
+        WaxIiif::ImageRecord.new(img_opts(img))
+      end
+
+      doc_records = documents.each do |doc|
+        manifest_id = doc.keys.first
+        doc_images  = doc.values.first
+        doc_records = doc_images.map do |img|
+          WaxIiif::ImageRecord.new(doc_opts(manifest_id, img))
+        end
+        doc_records.first.is_primary = true
+        records << doc_records
+      end.flatten
+
       records
+    end
+
+    # @return [Hash]
+    def doc_opts(manifest_id, img)
+      id = File.basename(img, '.*').to_s
+      {
+        id: "#{manifest_id}_#{id}",
+        manifest_id: manifest_id,
+        is_primary: false,
+        is_document: true,
+        path: img,
+        label: manifest_id,
+        section_label: id
+      }
     end
   end
 end
