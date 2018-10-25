@@ -3,13 +3,8 @@ module WaxTasks
   # that cannot be created directly. Only child classes
   # (IiifCollection, LunrCollection, PagemasterCollection)
   # can be initialized.
-  #
-  # @attr config    [Hash]    the collection config within site config
-  # @attr name      [String]  the name of the collection in site:collections
-  # @attr page_dir  [String]  the directory path for generated collection pages
-  # @attr site      [Hash]    the site config
   class Collection
-    attr_accessor :name, :page_dir
+    attr_accessor :name, :site
     private_class_method :new
 
     # This method ensures child classes can be instantiated though
@@ -18,27 +13,39 @@ module WaxTasks
       public_class_method :new
     end
 
-    # Creates a new collection with name @name given site config @site
+    # Creates a new collection with name @name given site configuration @site
     #
-    # @param name     [String]  the name of the collection in site:collections
-    # @param site     [Hash]    the site config
+    # @param  name      [String]  name of the collection in site:collections
+    # @param  site      [Hash]    site config
     def initialize(name, site)
       @name     = name
       @site     = site
-      @config   = collection_config
-      @page_dir = Utils.make_path(@site[:source_dir],
-                                  @site[:collections_dir],
-                                  "_#{@name}")
     end
 
     # Finds the collection config within the site config
     #
     # @return [Hash] the config for the collection
-    def collection_config
+    def config
       @site[:collections].fetch(@name)
     rescue StandardError => e
       raise Error::InvalidCollection, "Cannot load collection config for #{@name}.\n#{e}"
     end
+
+    # Returns the target directory for generated collection pages
+    #
+    # @return [String] path
+    def page_dir
+      Utils.make_path(@site[:source_dir], @site[:collections_dir], "_#{@name}")
+    end
+
+    # Constructs the path to the data source file
+    #
+    # @return [String] the path to the data source file
+    def source_path
+      raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" unless self.config.key? 'source'
+      WaxTasks::Utils.make_path(@site[:source_dir], '_data', self.config['source'])
+    end
+
 
     # Ingests the collection source data as an Array of Hashes
     #

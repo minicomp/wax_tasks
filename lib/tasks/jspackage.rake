@@ -6,8 +6,8 @@ namespace :wax do
     task_runner = WaxTasks::TaskRunner.new
     package = task_runner.js_package
     unless package.empty?
-      path = WaxTasks::Utils.make_path(task_runner.site[:source_dir],
-                                       'package.json')
+      src  = task_runner.site[:source_dir]
+      path = WaxTasks::Utils.make_path(src, 'package.json')
       File.open(path, 'w') { |f| f.write(package.to_json) }
     end
   end

@@ -5,14 +5,16 @@ module WaxTasks
   # @attr index_config  [Hash]    the collection's lunr_index config
   # @attr content       [Boolean] whether/not page content should be indexed
   # @attr fields        [Array]   the fields (i.e., keys) that should be indexed
-  # @attr data          [Array]   hash array of data from the ingested pages
+  # @attr data          [Array]   hash array of data from the ingested md pages
   class LunrCollection < Collection
-    attr_accessor :fields, :data
+
+    attr_accessor :fields, :data, :source
 
     # Creates a new LunrCollection with name @name given site config @site
     def initialize(name, site)
       super(name, site)
 
+      @config       = self.config
       @index_config = @config['lunr_index']
       @content      = @index_config.fetch('content', false)
       @fields       = @index_config.fetch('fields', [])
@@ -21,14 +23,14 @@ module WaxTasks
       raise Error::MissingFields, "There are no fields for #{@name}.".magenta if @fields.empty?
     end
 
-    # Finds the @page_dir of markdown pages for the collection and ingests
+    # Finds the page_dir of markdown pages for the collection and ingests
     # them as an array of hashes
     #
     # @return [Array] array of the loaded markdown pages loaded as hashes
     def ingest_pages
       data  = []
-      pages = Dir.glob("#{@page_dir}/*.md")
-      puts "There are no pages in #{@page_dir} to index.".cyan if pages.empty?
+      pages = Dir.glob("#{self.page_dir}/*.md")
+      puts "There are no pages in #{self.page_dir} to index.".cyan if pages.empty?
       pages.each do |p|
         begin
           data << load_page(p)

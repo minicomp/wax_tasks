@@ -19,10 +19,10 @@ module WaxTasks
       total_fields.uniq
     end
 
-    # @return [String] writes index data as pretty JSON with YAML front-matter
+    # @return [String] writes index as pretty JSON with YAML front-matter
     def to_s
       data = @collections.map(&:data).flatten
-      data.each_with_index.map { |d, id| d['lunr_index'] = id }
+      data.each_with_index.map { |m, id| m['lunr_index'] = id }
       "---\nlayout: none\n---\n#{JSON.pretty_generate(data)}"
     end
 

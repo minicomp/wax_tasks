@@ -140,7 +140,7 @@ describe WaxTasks::TaskRunner do
 
     it 'generates info.json' do
       infos = Dir.glob("#{BUILD}/iiif/images/*/**/info.json")
-      expect(infos.length).to eq 6
+      expect(infos.length).to eq 8
     end
 
     it 'generates collection top.json' do

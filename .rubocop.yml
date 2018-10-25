@@ -18,7 +18,7 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Max: 8
 Metrics/MethodLength:
-  Max: 15
+  Max: 20
 Style/DoubleNegation:
   Enabled: false
 Style/GuardClause:

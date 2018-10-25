@@ -113,18 +113,25 @@ module WaxTasks
       end
     end
 
-    def self.output_iiif_list(site, manifests, records)
-      iiif_info = {
-        'collections' => ['/iiif/collection/top.json'],
-        'manifests' => manifests.map { |m| m.id.gsub(/{{.*}}/, '/iiif') },
-        'image_records' => records.map do |r|
-          "#{r.variants['full'].id}/info.json".gsub(/{{.*}}/, '/iiif')
-        end
-      }
-      file = make_path(site[:source_dir], '_data', 'iiif_info.yaml')
+    def self.rm_liquid_iiif(str)
+      str.gsub(/{{.*}}/, '/iiif')
+    end
+
+    def self.post_process(site, iiif_info)
+      file = make_path(site[:source_dir], IIIF_INFO_FILE)
       puts "Writing IIIF path log to #{file}.".cyan
-      File.open(file, 'w') do |f|
-        f.write(iiif_info.to_yaml)
+      File.open(file, 'w') { |f| f.write(iiif_info.to_yaml) }
+    end
+
+    def self.iiif_info(manifests)
+      manifests.map do |m|
+        json = JSON.parse(m.to_json)
+        {
+          'pid'       => m.base_id,
+          'manifest'  => rm_liquid_iiif(json['@id']),
+          'label'     => rm_liquid_iiif(json['label']),
+          'thumb'     => rm_liquid_iiif(json['thumbnail'])
+        }
       end
     end
 
