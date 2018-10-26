@@ -46,7 +46,6 @@ module WaxTasks
       WaxTasks::Utils.make_path(@site[:source_dir], '_data', self.config['source'])
     end
 
-
     # Ingests the collection source data as an Array of Hashes
     #
     # @param source [String] the path to the CSV, JSON, or YAML source file

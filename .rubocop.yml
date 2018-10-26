@@ -14,7 +14,7 @@ Style/FrozenStringLiteralComment:
 Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
-  Max: 20
+  Max: 22
 Metrics/CyclomaticComplexity:
   Max: 8
 Metrics/MethodLength:

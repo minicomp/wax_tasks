@@ -7,7 +7,6 @@ module WaxTasks
   # @attr fields        [Array]   the fields (i.e., keys) that should be indexed
   # @attr data          [Array]   hash array of data from the ingested md pages
   class LunrCollection < Collection
-
     attr_accessor :fields, :data, :source
 
     # Creates a new LunrCollection with name @name given site config @site
