@@ -3,39 +3,43 @@ describe WaxTasks::IiifCollection do
 
   before(:all) { WaxTasks::Test.reset }
   let(:iiif_collection) { WaxTasks::IiifCollection.new(args.first, default_site) }
-  let(:no_variants_collection) do
-    opts = {
-      collections: {
-        args.first => { 'source' => 'valid.csv', 'iiif' => { 'meta' => [{ 'label' => 'gambrel' }] } }
-      }
-    }
-    runner = WaxTasks::TaskRunner.new.override(opts)
-    WaxTasks::IiifCollection.new(args.first, runner.site)
-  end
-
+  let(:pdf) { '_data/iiif/test_collection/2.pdf' }
+  let(:pdf_image_dir) { '_data/iiif/test_collection/2' }
   describe '.new' do
     it 'initializes a collection' do
       expect(iiif_collection.name).to eq(args.first)
     end
 
-    context 'with custom variants' do
-      it 'gets them as a Hash' do
-        expect(iiif_collection.variants).to be_a(Hash)
-      end
+    it 'gets the label key' do
+      expect(iiif_collection.label).to eq('gambrel')
     end
 
-    context 'without custom variants' do
-      it 'uses WaxTasks::DEFAULT_IMAGE_VARIANTS' do
-        expect(no_variants_collection.variants).to eq(WaxTasks::DEFAULT_IMAGE_VARIANTS)
-      end
+    it 'gets the description key' do
+      expect(iiif_collection.description).to eq('indescribable')
+    end
+
+    it 'gets the attribution key' do
+      expect(iiif_collection.attribution).to eq('blasphemous')
+    end
+
+    it 'gets the logo path' do
+      expect(iiif_collection.logo).to eq('/path/to/logo')
     end
   end
 
-  describe '.records' do
+  describe '.split_pdf' do
+    it 'splits the pdf' do
+      images = quiet_stdout { iiif_collection.split_pdf(pdf) }
+      expect(images.length).to eq(4)
+      FileUtils.rm_r(pdf_image_dir)
+    end
+  end
+
+  describe '.data' do
     it 'returns an array of valid image records' do
-      records = quiet_stdout { iiif_collection.records }
-      expect(records).to be_an(Array)
-      expect(records.first).to be_a(WaxIiif::ImageRecord)
+      data = quiet_stdout { iiif_collection.data }
+      expect(data).to be_an(Array)
+      expect(data.first).to be_a(WaxIiif::ImageRecord)
     end
   end
 end

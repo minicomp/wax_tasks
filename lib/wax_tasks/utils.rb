@@ -96,36 +96,8 @@ module WaxTasks
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
     end
 
-    # Opens IIIF JSON files and prepends yaml front matter
-    # So that liquid vars can be read by Jekyll
-    #
-    # @return [Nil]
-    def self.add_yaml_front_matter(iiif_json_files)
-      front_matter = "---\nlayout: none\n---\n"
-      iiif_json_files.each do |file|
-        string = File.read(file)
-        next if string.start_with?(front_matter)
-        json = JSON.parse(string)
-        File.open(file, 'w') do |f|
-          f.puts(front_matter)
-          f.puts(JSON.pretty_generate(json))
-        end
-      end
-    end
-
-    def self.output_iiif_list(site, manifests, records)
-      iiif_info = {
-        'collections' => ['/iiif/collection/top.json'],
-        'manifests' => manifests.map { |m| m.id.gsub(/{{.*}}/, '/iiif') },
-        'image_records' => records.map do |r|
-          "#{r.variants['full'].id}/info.json".gsub(/{{.*}}/, '/iiif')
-        end
-      }
-      file = make_path(site[:source_dir], '_data', 'iiif_info.yaml')
-      puts "Writing IIIF path log to #{file}.".cyan
-      File.open(file, 'w') do |f|
-        f.write(iiif_info.to_yaml)
-      end
+    def self.rm_liquid_iiif(str)
+      str.gsub(/{{.*}}/, '/iiif')
     end
 
     # Cleans YAML front matter + markdown pages for lunr indexing

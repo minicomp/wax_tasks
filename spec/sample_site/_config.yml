@@ -20,4 +20,7 @@ collections:
         - blasphemous
         - furtive
     iiif:
-      variants: [100, 900]
+      label: gambrel
+      description: indescribable
+      attribution: blasphemous
+      logo: '/path/to/logo'

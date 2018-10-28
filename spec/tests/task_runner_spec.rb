@@ -116,7 +116,7 @@ describe WaxTasks::TaskRunner do
     end
 
     it 'generates collection json' do
-      expect(File).to exist("#{BUILD}/iiif/collection/top.json")
+      expect(File).to exist("#{BUILD}/iiif/collection/#{args.first}.json")
     end
 
     it 'builds image directories' do
@@ -140,11 +140,7 @@ describe WaxTasks::TaskRunner do
 
     it 'generates info.json' do
       infos = Dir.glob("#{BUILD}/iiif/images/*/**/info.json")
-      expect(infos.length).to eq 6
-    end
-
-    it 'generates collection top.json' do
-      expect(File).to exist("#{BUILD}/iiif/collection/top.json")
+      expect(infos.length).to eq 8
     end
   end
 

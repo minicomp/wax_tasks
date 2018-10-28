@@ -40,7 +40,7 @@ describe WaxTasks::PagemasterCollection do
       end
 
       it 'gets the source path' do
-        expect(valid_collection.source).to be_a(String)
+        expect(valid_collection.source_path).to be_a(String)
       end
 
       it 'keeps the results ordered' do
@@ -48,7 +48,7 @@ describe WaxTasks::PagemasterCollection do
       end
 
       it 'ingests the data source file' do
-        expect(valid_collection.data.first).to have_key('pid')
+        expect(valid_collection.metadata.first).to have_key('pid')
       end
 
       it 'generates pages' do
