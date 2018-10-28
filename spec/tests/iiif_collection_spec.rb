@@ -35,11 +35,11 @@ describe WaxTasks::IiifCollection do
     end
   end
 
-  describe '.records' do
+  describe '.data' do
     it 'returns an array of valid image records' do
-      records = quiet_stdout { iiif_collection.records }
-      expect(records).to be_an(Array)
-      expect(records.first).to be_a(WaxIiif::ImageRecord)
+      data = quiet_stdout { iiif_collection.data }
+      expect(data).to be_an(Array)
+      expect(data.first).to be_a(WaxIiif::ImageRecord)
     end
   end
 end

@@ -93,28 +93,10 @@ module WaxTasks
     # @param args [Array] the arguments/collection names from wax:pagemaster
     # @return [Nil]
     def iiif(args)
-      output_dir = Utils.make_path(@site[:source_dir], 'iiif')
-      build_opts = {
-        base_url: "{{ 'iiif' | absolute_url }}",
-        output_dir: output_dir,
-        variants: DEFAULT_IMAGE_VARIANTS,
-        verbose: true
-      }
-      iiif_info = {}
       args.each do |name|
-        records         = IiifCollection.new(name, @site).records.flatten
-        builder         = WaxIiif::Builder.new(build_opts)
-
-        builder.load(records)
-        builder.process_data
-
-        iiif_info[name] = {
-          'collection' => "/iiif/collection#{name}.json",
-          'items'      => Utils.iiif_info(builder.manifests)
-        }
+        iiif_collection = IiifCollection.new(name, @site)
+        iiif_collection.build
       end
-      Utils.post_process(@site, iiif_info)
-      Utils.add_yaml_front_matter(Dir["#{output_dir}/**/*.json"])
     end
 
     # Finds the JS dependencies listed in site config and

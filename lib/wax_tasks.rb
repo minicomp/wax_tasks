@@ -40,7 +40,4 @@ module WaxTasks
 
   # @return [String] Default image variants for IIIF task to generate
   DEFAULT_IMAGE_VARIANTS  = { med: 600, lg: 1140 }.freeze
-
-  # @return [String] File path for list of local IIIF resources
-  IIIF_INFO_FILE          = '_data/iiif_info.yaml'.freeze
 end
