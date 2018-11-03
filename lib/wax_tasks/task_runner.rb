@@ -21,19 +21,19 @@ module WaxTasks
     # @example use default config from file
     #   WaxTasks::TaskRunner.new
     def initialize(config = {}, env = 'prod')
-      config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
+      @config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
       @site = {
         env:              env,
-        title:            config.dig(:title),
-        url:              config.dig(:url),
-        baseurl:          config.dig(:baseurl),
-        repo_name:        config.dig(:repo_name),
-        source_dir:       config.dig(:source),
-        collections_dir:  config.dig(:collections_dir),
-        collections:      config.dig(:collections),
-        lunr:             config.dig(:lunr),
-        js:               config.dig(:js),
-        permalink:        Utils.construct_permalink(config)
+        title:            @config.dig(:title),
+        url:              @config.dig(:url),
+        baseurl:          @config.dig(:baseurl),
+        repo_name:        @config.dig(:repo_name),
+        source_dir:       @config.dig(:source),
+        collections_dir:  @config.dig(:collections_dir),
+        collections:      @config.dig(:collections),
+        lunr:             @config.dig(:lunr),
+        js:               @config.dig(:js),
+        permalink:        Utils.construct_permalink(@config)
       }
     rescue StandardError => e
       raise Error::InvalidSiteConfig, "Could not load _config.yml. => #{e}"
@@ -109,7 +109,7 @@ module WaxTasks
       names = []
       package = {
         'name'          => site[:title],
-        'version'       => '1.0.0',
+        'version'       => @config.fetch(:version, ''),
         'dependencies'  => {}
       }
       site[:js].each do |dependency|
