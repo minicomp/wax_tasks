@@ -145,8 +145,9 @@ module WaxTasks
         item = @metadata.find { |i| i['pid'] == pid }
         next puts "Cannot find item with pid #{pid}".yellow if item.nil?
         item.tap do |hash|
-          hash['manifest'] = Utils.rm_liquid_iiif(json['@id'])
-          hash['thumbnail'] = Utils.rm_liquid_iiif(json['thumbnail'])
+          hash['manifest']    = Utils.rm_liquid_iiif(json['@id'])
+          hash['thumbnail']   = Utils.rm_liquid_iiif(json['thumbnail'])
+          hash['full_image']  = hash['thumbnail'].sub('250,/0', '1140,/0')
         end
       end
       overwrite_metadata
