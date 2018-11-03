@@ -122,6 +122,7 @@ module WaxTasks
       puts "Writing IIIF image info #{source}.".cyan
       case File.extname(source)
       when '.csv'
+        keys = @metadata.map(&:keys).inject(&:|)
         CSV.open(source, 'w') do |csv|
           csv << keys
           @metadata.each { |hash| csv << hash.values_at(*keys) }
@@ -141,7 +142,9 @@ module WaxTasks
       manifests.map do |m|
         json = JSON.parse(m.to_json)
         pid = m.base_id
-        @metadata.find { |i| i['pid'] == pid }.tap do |hash|
+        item = @metadata.find { |i| i['pid'] == pid }
+        next puts "Cannot find item with pid #{pid}".yellow if item.nil?
+        item.tap do |hash|
           hash['manifest'] = Utils.rm_liquid_iiif(json['@id'])
           hash['thumbnail'] = Utils.rm_liquid_iiif(json['thumbnail'])
         end
