@@ -53,9 +53,9 @@ module WaxTasks
     # @return [Hash] base WaxIiif::ImageRecord opts from item
     def base_opts(item)
       opts = { is_primary: false }
-      opts[:description] = item.fetch(description, '')        if description
-      opts[:attribution] = item.fetch(attribution, '')        if attribution
-      opts[:logo]        = "{{ '#{logo}' | absolute_url }}"   if logo
+      opts[:description] = item.dig(description).to_s unless description.nil?
+      opts[:attribution] = item.dig(attribution).to_s unless attribution.nil?
+      opts[:logo]        = "{{ '#{logo}' | absolute_url }}" unless logo.nil?
       opts
     end
 
@@ -70,7 +70,7 @@ module WaxTasks
         if d[:images].length == 1
           opts[:id]         = d[:pid]
           opts[:path]       = d[:images].first
-          opts[:label]      = item.fetch(label.to_s, d[:pid]).to_s
+          opts[:label]      = item.fetch(label.to_s, d[:pid])
           opts[:is_primary] = true
 
           records << WaxIiif::ImageRecord.new(opts)
@@ -82,7 +82,7 @@ module WaxTasks
             opts[:id]             = "#{d[:pid]}_#{img_id}"
             opts[:manifest_id]    = d[:pid]
             opts[:path]           = i
-            opts[:label]          = item.fetch(label.to_s, d[:pid]).to_s
+            opts[:label]          = item.fetch(label.to_s, d[:pid])
             opts[:section_label]  = img_id
 
             item_records << WaxIiif::ImageRecord.new(opts)

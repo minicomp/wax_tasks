@@ -20,6 +20,7 @@ module WaxTasks
     def initialize(name, site)
       @name     = name
       @site     = site
+      @config   = self.config
     end
 
     # Finds the collection config within the site config
@@ -42,8 +43,9 @@ module WaxTasks
     #
     # @return [String] the path to the data source file
     def source_path
-      raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" unless self.config.key? 'source'
-      WaxTasks::Utils.make_path(@site[:source_dir], '_data', self.config['source'])
+      source = @config.dig('metadata', 'source')
+      raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" if source.nil?
+      WaxTasks::Utils.make_path(@site[:source_dir], '_data', source)
     end
 
     # Ingests the collection source data as an Array of Hashes

@@ -24,14 +24,15 @@ module WaxTasks
       config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
       @site = {
         env:              env,
-        title:            config.fetch(:title, ''),
-        url:              config.fetch(:url, ''),
-        baseurl:          config.fetch(:baseurl, ''),
-        repo_name:        config.fetch(:repo_name, ''),
-        source_dir:       config.fetch(:source, nil),
-        collections_dir:  config.fetch(:collections_dir, nil),
-        collections:      config.fetch(:collections, {}),
-        js:               config.fetch(:js, false),
+        title:            config.dig(:title),
+        url:              config.dig(:url),
+        baseurl:          config.dig(:baseurl),
+        repo_name:        config.dig(:repo_name),
+        source_dir:       config.dig(:source),
+        collections_dir:  config.dig(:collections_dir),
+        collections:      config.dig(:collections),
+        lunr:             config.dig(:lunr),
+        js:               config.dig(:js),
         permalink:        Utils.construct_permalink(config)
       }
     rescue StandardError => e
@@ -69,12 +70,12 @@ module WaxTasks
     # @param generate_ui [Boolean] whether/not to generate a default lunr UI
     # @return [Nil]
     def lunr(generate_ui: false)
-      lunr_collections = Utils.get_lunr_collections(@site)
-      lunr_collections.map! { |name| LunrCollection.new(name, @site) }
+      lunr_collections = @site[:lunr]&.dig('collections_to_index')
+      raise Error::NoLunrCollections, 'No collections to index were specified in _config.yml' if lunr_collections.nil?
 
+      lunr_collections.map! { |name| LunrCollection.new(name, @site) }
       index = LunrIndex.new(lunr_collections)
       index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
-
       FileUtils.mkdir_p(File.dirname(index_path))
       File.open(index_path, 'w') { |f| f.write(index) }
       puts "Writing lunr search index to #{index_path}.".cyan

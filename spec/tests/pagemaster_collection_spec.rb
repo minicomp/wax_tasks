@@ -4,27 +4,27 @@ describe WaxTasks::PagemasterCollection do
   before(:all) { WaxTasks::Test.reset }
   let(:valid_collection) { WaxTasks::PagemasterCollection.new(args.first, default_site) }
   let(:valid_yaml) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => 'valid.yml'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'metadata' => { 'source' => 'valid.yml' } } } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_yaml) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.yml'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'metadata' => { 'source' => '.invalid.yml' } } } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:valid_json) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => 'valid.json'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'metadata' => { 'source' => 'valid.json' } } } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_json) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.json'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'metadata' => { 'source' => '.invalid.json' } } } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end
   let(:invalid_type) do
-    opts    = { collections: { args.first => { 'layout' => 'default.html', 'source' => '.invalid.xls'} } }
+    opts    = { collections: { args.first => { 'layout' => 'default.html', 'metadata' => { 'source' => '.invalid.xls' } } } }
     runner  = WaxTasks::TaskRunner.new.override(opts)
     WaxTasks::PagemasterCollection.new(args.first, runner.site)
   end

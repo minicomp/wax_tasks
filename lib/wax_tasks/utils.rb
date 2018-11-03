@@ -79,17 +79,6 @@ module WaxTasks
       args.insert(0, '.').compact.reject(&:empty?).join('/')
     end
 
-    # Finds collections in site config where `lunr_index` is enabled
-    #
-    # @param  site [Hash] the site config
-    # @return [Array] a list of collection names
-    # @raise WaxTasks::Error::NoLunrCollections
-    def self.get_lunr_collections(site)
-      to_index = site[:collections].find_all { |c| c[1].key?('lunr_index') }
-      raise Error::NoLunrCollections, 'There are no lunr collections to index.' if to_index.nil?
-      to_index.map { |c| c[0] }
-    end
-
     # Removes YAML front matter from a string
     # @return [String]
     def self.remove_yaml(str)

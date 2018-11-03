@@ -15,8 +15,8 @@ module WaxTasks
     def initialize(name, site)
       super(name, site)
 
-      @iiif_config  = config.fetch('iiif', {})
-      @src_dir      = Utils.make_path(@site[:source_dir], '_data/iiif', @name)
+      @image_config = @config.dig('images')
+      @src_dir      = self.image_source
       @target_dir   = Utils.make_path(@site[:source_dir], 'iiif')
 
       raise Error::MissingIiifSrc, "Cannot find IIIF source directory #{@src_dir}" unless Dir.exist?(@src_dir)
@@ -28,23 +28,30 @@ module WaxTasks
     end
 
     # @return [String]
+    def image_source
+      source = @image_config.dig('source')
+      raise WaxIiif::Error::InvalidImageData, 'No image source directory specified.' if source.nil?
+      Utils.make_path(@site[:source_dir], '_data/', source)
+    end
+
+    # @return [String]
     def label
-      @iiif_config.fetch('label', false)
+      @image_config.dig('iiif', 'label')
     end
 
     # @return [String]
     def description
-      @iiif_config.fetch('description', false)
+      @image_config.dig('iiif', 'description')
     end
 
     # @return [String]
     def attribution
-      @iiif_config.fetch('attribution', false)
+      @image_config.dig('iiif', 'attribution')
     end
 
     # @return [String]
     def logo
-      @iiif_config.fetch('logo', false)
+      @image_config.dig('iiif', 'logo')
     end
 
     # Creates a WaxIiif::Builder object,

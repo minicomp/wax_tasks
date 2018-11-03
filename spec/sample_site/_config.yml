@@ -9,18 +9,18 @@ js:
     version: version
 collections:
   test_collection:
-    source: valid.csv
     layout: default.html
-    keep_order: true
-    lunr_index:
-      content: true
-      fields:
-        - gambrel
-        - indescribable
-        - blasphemous
-        - furtive
-    iiif:
-      label: gambrel
-      description: indescribable
-      attribution: blasphemous
-      logo: '/path/to/logo'
+    metadata:
+      source: valid.csv
+      labels: labels.csv
+    images:
+      source: 'images/test_collection'
+      iiif:
+        label: gambrel
+        description: indescribable
+        attribution: blasphemous
+        logo: '/path/to/logo'
+
+
+lunr:
+  collections_to_index: ['test_collection']

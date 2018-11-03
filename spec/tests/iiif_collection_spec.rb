@@ -3,8 +3,8 @@ describe WaxTasks::IiifCollection do
 
   before(:all) { WaxTasks::Test.reset }
   let(:iiif_collection) { WaxTasks::IiifCollection.new(args.first, default_site) }
-  let(:pdf) { '_data/iiif/test_collection/2.pdf' }
-  let(:pdf_image_dir) { '_data/iiif/test_collection/2' }
+  let(:pdf) { '_data/images/test_collection/2.pdf' }
+  let(:pdf_image_dir) { '_data/images/test_collection/2' }
   describe '.new' do
     it 'initializes a collection' do
       expect(iiif_collection.name).to eq(args.first)

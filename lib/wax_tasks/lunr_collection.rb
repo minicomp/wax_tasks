@@ -14,12 +14,19 @@ module WaxTasks
       super(name, site)
 
       @config       = self.config
-      @index_config = @config['lunr_index']
-      @content      = @index_config.fetch('content', false)
-      @fields       = @index_config.fetch('fields', [])
-      @data         = ingest_pages
+      @fields       = self.process_fields
+      @data         = self.ingest_pages
 
       raise Error::MissingFields, "There are no fields for #{@name}.".magenta if @fields.empty?
+    end
+
+    def process_fields
+      label_file = @config.dig('metadata', 'labels')
+      raise WaxTasks::WaxTasksError, "No labels file was found for collection #{@name}" if label_file.nil?
+      label_path = Utils.make_path(@site[:source_dir], '_data', label_file)
+      Utils.validate_csv(label_path).map { |i| i['key'] }
+    rescue StandardError => e
+      raise Error::WaxTasksError, "Label file #{label_path} could not be loaded. Make sure it is a valid CSV.\n#{e}"
     end
 
     # Finds the page_dir of markdown pages for the collection and ingests
@@ -51,10 +58,8 @@ module WaxTasks
         'link' => "{{'#{yaml.fetch('permalink')}' | relative_url }}",
         'collection' => @name
       }
-      if @content
-        content = WaxTasks::Utils.html_strip(File.read(page))
-        hash['content'] = WaxTasks::Utils.remove_diacritics(content)
-      end
+      content = WaxTasks::Utils.html_strip(File.read(page))
+      hash['content'] = WaxTasks::Utils.remove_diacritics(content)
       fields = @fields.push('pid').uniq
       fields.each { |f| hash[f] = yaml[f].lunr_normalize }
       hash
