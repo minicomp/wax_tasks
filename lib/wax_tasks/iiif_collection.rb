@@ -71,7 +71,7 @@ module WaxTasks
       builder = WaxIiif::Builder.new(build_opts)
       builder.load(@data)
       builder.process_data
-      create_info_file(builder.manifests)
+      add_info_to_metadata(builder.manifests)
       add_yaml_front_matter(output_dir)
     end
   end

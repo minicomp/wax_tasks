@@ -19,6 +19,8 @@ Metrics/CyclomaticComplexity:
   Max: 8
 Metrics/MethodLength:
   Max: 30
+Metrics/ModuleLength:
+  Max: 110
 Style/DoubleNegation:
   Enabled: false
 Style/GuardClause:

@@ -116,26 +116,37 @@ module WaxTasks
       end
     end
 
-    #
-    #
     # @return [Nil]
-    def create_info_file(manifests)
-      items = manifests.map do |m|
-        json = JSON.parse(m.to_json)
-        {
-          'pid'       => m.base_id,
-          'manifest'  => Utils.rm_liquid_iiif(json['@id']),
-          'label'     => Utils.rm_liquid_iiif(json['label']),
-          'thumb'     => Utils.rm_liquid_iiif(json['thumbnail'])
-        }
+    def overwrite_metadata
+      source = self.source_path
+      puts "Writing IIIF image info #{source}.".cyan
+      case File.extname(source)
+      when '.csv'
+        CSV.open(source, 'w') do |csv|
+          csv << keys
+          @metadata.each { |hash| csv << hash.values_at(*keys) }
+        end
+      when '.json'
+        json = JSON.pretty_generate(@metadata)
+        File.open(source, 'w') { |f| f.write(json) }
+      when /\.ya?ml/
+        File.open(source, 'w') { |f| f.write(@metadata.to_yaml) }
+      else
+        raise Error::InvalidSource
       end
-      iiif_info = {
-        'collection' => "/iiif/collection/#{@name}.json",
-        'items' => items
-      }
-      file = Utils.make_path(@site[:source_dir], "_data/#{@name}_iiif_info.yml")
-      puts "Writing IIIF path log to #{file}.".cyan
-      File.open(file, 'w') { |f| f.write(iiif_info.to_yaml) }
+    end
+
+    # @return [Nil]
+    def add_info_to_metadata(manifests)
+      manifests.map do |m|
+        json = JSON.parse(m.to_json)
+        pid = m.base_id
+        @metadata.find { |i| i['pid'] == pid }.tap do |hash|
+          hash['manifest'] = Utils.rm_liquid_iiif(json['@id'])
+          hash['thumbnail'] = Utils.rm_liquid_iiif(json['thumbnail'])
+        end
+      end
+      overwrite_metadata
     end
   end
 end
