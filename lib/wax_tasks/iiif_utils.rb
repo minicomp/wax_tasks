@@ -128,8 +128,7 @@ module WaxTasks
           @metadata.each { |hash| csv << hash.values_at(*keys) }
         end
       when '.json'
-        json = JSON.pretty_generate(@metadata)
-        File.open(source, 'w') { |f| f.write(json) }
+        File.open(source, 'w') { |f| f.write(JSON.pretty_generate(@metadata)) }
       when /\.ya?ml/
         File.open(source, 'w') { |f| f.write(@metadata.to_yaml) }
       else
