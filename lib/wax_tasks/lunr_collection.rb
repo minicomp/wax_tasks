@@ -23,7 +23,7 @@ module WaxTasks
     def process_fields
       label_file = @config.dig('metadata', 'labels')
       raise WaxTasks::WaxTasksError, "No labels file was found for collection #{@name}" if label_file.nil?
-      label_path = Utils.make_path(@site[:source_dir], '_data', label_file)
+      label_path = Utils.root_path(@site[:source_dir], '_data', label_file)
       Utils.validate_csv(label_path).map { |i| i['key'] }
     rescue StandardError => e
       raise Error::WaxTasksError, "Label file #{label_path} could not be loaded. Make sure it is a valid CSV.\n#{e}"
@@ -61,6 +61,7 @@ module WaxTasks
       content = WaxTasks::Utils.html_strip(File.read(page))
       hash['content'] = WaxTasks::Utils.remove_diacritics(content)
       fields = @fields.push('pid').uniq
+      fields.push('thumbnail') if yaml.key?('thumbnail')
       fields.each { |f| hash[f] = yaml[f].lunr_normalize }
       hash
     end

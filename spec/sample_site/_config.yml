@@ -23,4 +23,5 @@ collections:
 
 
 lunr:
-  collections_to_index: ['test_collection']
+  index:
+    - collections: ['test_collection']

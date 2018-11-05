@@ -70,20 +70,26 @@ module WaxTasks
     # @param generate_ui [Boolean] whether/not to generate a default lunr UI
     # @return [Nil]
     def lunr(generate_ui: false)
-      lunr_collections = @site[:lunr]&.dig('collections_to_index')
-      raise Error::NoLunrCollections, 'No collections to index were specified in _config.yml' if lunr_collections.nil?
+      indexes = @site[:lunr]&.dig('index')
+      indexes.each do |index|
+        file = index.fetch('file', LUNR_INDEX_PATH)
+        lunr_collections = index.dig('collections')
 
-      lunr_collections.map! { |name| LunrCollection.new(name, @site) }
-      index = LunrIndex.new(lunr_collections)
-      index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
-      FileUtils.mkdir_p(File.dirname(index_path))
-      File.open(index_path, 'w') { |f| f.write(index) }
-      puts "Writing lunr search index to #{index_path}.".cyan
+        raise Error::NoLunrCollections, 'No collections to index were specified in _config.yml' if lunr_collections.nil?
 
-      if generate_ui
-        ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
-        puts "Writing default lunr UI to #{ui_path}.".cyan
-        File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
+        lunr_collections.map! { |name| LunrCollection.new(name, @site) }
+
+        index_path = Utils.root_path(@site[:source_dir], file)
+        index = LunrIndex.new(lunr_collections, index_path)
+        FileUtils.mkdir_p(File.dirname(index_path))
+        File.open(index_path, 'w') { |f| f.write(index) }
+        puts "Writing lunr search index to #{index_path}.".cyan
+
+        if generate_ui
+          ui_path = Utils.root_path(@site[:source_dir], LUNR_UI_PATH)
+          puts "Writing default lunr UI to #{ui_path}.".cyan
+          File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
+        end
       end
     end
 

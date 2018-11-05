@@ -17,7 +17,7 @@ module WaxTasks
 
       @image_config = @config.dig('images')
       @src_dir      = self.image_source
-      @target_dir   = Utils.make_path(@site[:source_dir], 'iiif')
+      @target_dir   = Utils.root_path(@site[:source_dir], 'iiif')
 
       raise Error::MissingIiifSrc, "Cannot find IIIF source directory #{@src_dir}" unless Dir.exist?(@src_dir)
       raise Error::MissingIiifSrc, "No IIIF source data was found in #{@src_dir}" if Dir["#{@src_dir}/*"].empty?
@@ -31,7 +31,7 @@ module WaxTasks
     def image_source
       source = @image_config.dig('source')
       raise WaxIiif::Error::InvalidImageData, 'No image source directory specified.' if source.nil?
-      Utils.make_path(@site[:source_dir], '_data/', source)
+      Utils.root_path(@site[:source_dir], '_data/', source)
     end
 
     # @return [String]
@@ -60,7 +60,7 @@ module WaxTasks
     #
     # @return [Nil]
     def build
-      output_dir = Utils.make_path(@site[:source_dir], 'iiif')
+      output_dir = Utils.root_path(@site[:source_dir], 'iiif')
       build_opts = {
         base_url: "{{ 'iiif' | absolute_url }}",
         output_dir: output_dir,

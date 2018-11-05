@@ -27,3 +27,5 @@ Style/GuardClause:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+Style/Next:
+  Enabled: false

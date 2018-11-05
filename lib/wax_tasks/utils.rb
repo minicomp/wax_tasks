@@ -75,8 +75,8 @@ module WaxTasks
     #
     # @param  args [Array] items to concatenate in path
     # @return [String] file path
-    def self.make_path(*args)
-      args.insert(0, '.').compact.reject(&:empty?).join('/')
+    def self.root_path(*args)
+      ['.'].concat(args).compact.reject(&:empty?).join('/').gsub(%r{/+}, '/')
     end
 
     # Removes YAML front matter from a string
@@ -155,6 +155,10 @@ class Array
     else
       WaxTasks::Utils.remove_diacritics(self.join(', '))
     end
+  end
+
+  def except(value)
+    self - value
   end
 end
 

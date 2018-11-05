@@ -8,7 +8,7 @@ namespace :wax do
     package = task_runner.js_package
     unless package.empty?
       src_dir = task_runner.site[:source_dir]
-      path = WaxTasks::Utils.make_path(src_dir, 'package.json')
+      path = WaxTasks::Utils.root_path(src_dir, 'package.json')
       puts "Writing javascript dependencies to #{path}".cyan
       File.open(path, 'w') { |f| f.write(JSON.pretty_generate(package)) }
     end
