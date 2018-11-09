@@ -27,16 +27,16 @@ module WaxTasks
   # ----------
 
   # @return [String] The path to load Jekyll site config
-  DEFAULT_CONFIG          = './_config.yml'.freeze
+  DEFAULT_CONFIG          = '_config.yml'.freeze
 
   # @return [String] The path to write WaxTasks::LunrIndex
-  LUNR_INDEX_PATH         = './js/lunr-index.json'.freeze
+  LUNR_INDEX_PATH         = 'js/lunr-index.json'.freeze
 
   # @return [String] The path to write default LunrUI
-  LUNR_UI_PATH            = './js/lunr-ui.js'.freeze
+  LUNR_UI_PATH            = 'js/lunr-ui.js'.freeze
 
   # @return [String] The path to the compiled Jekyll site
-  SITE_DIR                = './_site'.freeze
+  SITE_DIR                = '_site'.freeze
 
   # @return [String] Default image variants for IIIF task to generate
   DEFAULT_IMAGE_VARIANTS  = { med: 600, lg: 1140 }.freeze

@@ -8,9 +8,10 @@ module WaxTasks
     attr_accessor :collections, :fields
 
     # Creates a new LunrIndex object
-    def initialize(collections)
+    def initialize(collections, index_path)
       @collections  = collections
-      @fields       = total_fields
+      @index_path   = index_path
+      @fields       = self.total_fields
     end
 
     # @return [Array] shared list of fields to index among LunrCollections
@@ -34,12 +35,12 @@ module WaxTasks
         ---
         layout: none
         ---
-        $.getJSON({{ site.baseurl }}/js/lunr-index.json, function(index_json) {
+        $.getJSON("{{ '#{@index_path}' | absolute_url }}", function(index_json) {
           window.index = new elasticlunr.Index;
           window.store = index_json;
           index.saveDocument(false);
-          index.setRef('lunr_id');
-          #{@fields.map { |f| "index.addField('#{f}');" }.join("\n")}
+          index.setRef('lunr_index');
+          #{@fields.map { |f| "index.addField('#{f}');" }.join("\n\t")}
           // add docs
           for (i in store){
             index.addDoc(store[i]);
@@ -49,14 +50,19 @@ module WaxTasks
             var query = $(this).val();
             var results = index.search(query, { boolean: 'AND', expand: true });
             results_div.empty();
-            if (results.length > 10) {
-              results_div.prepend("<p><small>Displaying 10 of " + results.length + " results.</small></p>");
-            }
-            for (var r in results.slice(0, 9)) {
+            for (var r in results) {
               var ref = results[r].ref;
               var item = store[ref];
-              #{@fields.map { |f| "var #{f} = item.#{f};" }.join("\n")}
-              var result = '<div class="result"><b><a href="' + item.link + '">' + title + '</a></b></p></div>';
+              var pid = item.pid;
+              var label = item.label;
+              var meta = `#{@fields.except(%w[pid label]).take(3).map { |f| "${item.#{f}}" }.join(' | ')}`;
+              if ('thumbnail' in item) {
+                var thumb = `<img class='sq-thumb-sm' src='{{ "" | absolute_url }}${item.thumbnail}'/>&nbsp;&nbsp;&nbsp;`
+              }
+              else {
+                var thumb = '';
+              }
+              var result = `<div class="result"><a href="${item.link}">${thumb}<p><span class="title">${item.label}</span><br>${meta}</p></a></p></div>`;
               results_div.append(result);
             }
           });

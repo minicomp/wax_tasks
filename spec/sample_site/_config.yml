@@ -12,7 +12,7 @@ collections:
     layout: default.html
     metadata:
       source: valid.csv
-      labels: labels.csv
+      labels: labels.yaml
     images:
       source: 'images/test_collection'
       iiif:
@@ -21,6 +21,6 @@ collections:
         attribution: blasphemous
         logo: '/path/to/logo'
 
-
 lunr:
-  collections_to_index: ['test_collection']
+  index:
+    - collections: ['test_collection']

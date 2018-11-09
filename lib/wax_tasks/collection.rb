@@ -36,7 +36,7 @@ module WaxTasks
     #
     # @return [String] path
     def page_dir
-      Utils.make_path(@site[:source_dir], @site[:collections_dir], "_#{@name}")
+      Utils.root_path(@site[:source_dir], @site[:collections_dir], "_#{@name}")
     end
 
     # Constructs the path to the data source file
@@ -45,7 +45,7 @@ module WaxTasks
     def source_path
       source = @config.dig('metadata', 'source')
       raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" if source.nil?
-      WaxTasks::Utils.make_path(@site[:source_dir], '_data', source)
+      WaxTasks::Utils.root_path(@site[:source_dir], '_data', source)
     end
 
     # Ingests the collection source data as an Array of Hashes
