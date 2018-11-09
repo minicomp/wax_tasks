@@ -22,11 +22,12 @@ module WaxTasks
 
     def process_fields
       label_file = @config.dig('metadata', 'labels')
-      raise WaxTasks::WaxTasksError, "No labels file was found for collection #{@name}" if label_file.nil?
+      raise Error::WaxTasksError, "No labels file was found for collection '#{@name}'" if label_file.nil?
+      raise Error::WaxTasksError, "Labels file for collection '#{@name}' must be in YAML format" unless File.extname(label_file) =~ /\.ya?ml/
       label_path = Utils.root_path(@site[:source_dir], '_data', label_file)
-      Utils.validate_csv(label_path).map { |i| i['key'] }
+      Utils.validate_yaml(label_path).map { |i| i['key'] }
     rescue StandardError => e
-      raise Error::WaxTasksError, "Label file #{label_path} could not be loaded. Make sure it is a valid CSV.\n#{e}"
+      raise Error::WaxTasksError, "Label file #{label_path} could not be loaded. Make sure it is a valid YAML file.\n#{e}"
     end
 
     # Finds the page_dir of markdown pages for the collection and ingests
