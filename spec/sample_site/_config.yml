@@ -12,7 +12,7 @@ collections:
     layout: default.html
     metadata:
       source: valid.csv
-      labels: labels.csv
+      labels: labels.yaml
     images:
       source: 'images/test_collection'
       iiif:
@@ -20,7 +20,6 @@ collections:
         description: indescribable
         attribution: blasphemous
         logo: '/path/to/logo'
-
 
 lunr:
   index:
