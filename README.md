@@ -3,18 +3,14 @@
 
 [![Build Status](https://travis-ci.org/mnyrop/wax_tasks.svg?branch=rubocop)](https://travis-ci.org/mnyrop/wax_tasks) [![](https://img.shields.io/librariesio/github/mnyrop/wax_tasks.svg)](https://libraries.io/github/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/maintainability)](https://codeclimate.com/github/mnyrop/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5974d49e115dadf9f8df/test_coverage)](https://codeclimate.com/github/mnyrop/wax_tasks/test_coverage)
 
-__wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Jekyll](https://jekyllrb.com/), [IIIF](http://iiif.io), and [ElasticLunr.js](http://elasticlunr.com/).
+__wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Jekyll](https://jekyllrb.com/).
 
-It can be used to generate collection markdown pages from a data file ([wax:pagemaster](#waxpagemaster)), generate a client-side search index ([wax:lunr](#waxlunr)), generate IIIF-compliant derivatives (both Image + Presentation API) from local image files ([wax:iiif](#waxiiif)), and more.
+It can be used to:
+- generate collection markdown pages from a metadata file ([wax:pagemaster](#waxpagemaster))
+- generate a client-side search index ([wax:lunr](#waxlunr))
+- generate either IIIF-compliant derivatives ([wax:derivatives:iiif](#waxderivativesiiif)) or simple image derivatives ([wax:derivatives:simple](#waxderivativessimple)) from local image and pdf files
 
-Looking for a Jekyll theme that works with [wax_tasks]()? Check out [minicomp/wax](https://minicomp.github.io/wax/).
-
-```sh
---------------------------------------------------------------------
-NOTE >> wax_tasks is being developed rapidly. it will be relatively
-        volatile leading up to the beta release (v0.5.0).
---------------------------------------------------------------------
-```
+.. and more.
 
 <br>
 <img src="https://raw.githubusercontent.com/minicomp/wiki/master/docs/assets/wax_screen.gif"/>
@@ -94,39 +90,34 @@ url: ''
 baseurl: '/wax'
 
 # build settings
-permalink: pretty # optional, creates `/page/` link instead of `page.html` link
-collections_dir: '' # optional, allows you to tidy up and keep collections
-                       # (see below) inside a directory (as of jekyll 3.7)
+permalink: pretty # optional, creates `/page/` link instead of `page.html` links
 
 # wax collection settings
 collections:
-  objects: # << the collection name, which will be the directory pagemaster makes
-    source: objects.csv # ^^ it will also be used in creating permalinks for the pages
-    layout: iiif-image-page
+  objects: # the collection name
+    layout: 'iiif-image-page'
     output: true # this must be true for your .md pages to be built to html!
-    lunr_index:
-      content: false # whether or not to index the markdown page content (below the YAML)
-      fields: # the metadata fields to index
-        - title
-        - artist
-        - location
-        - _date
-        - object_type
-        - current_location
-    iiif:
-      meta:
-        label: title
-        location: current_location
-        # in this example, `label` will be the metadata field in the IIIF manifest,
-        # and it will be populated by the `title` column from objects.csv;
-        # likewise, `location` will pull from the `current_location` field.
+    metadata:
+      source: 'objects.csv' # path to the metadata file, must be within '_data'
+    images:
+      source 'source_images/objects' # path to the directory of source images, must be within '_data'
+
+# wax search index settings
+lunr_index:
+  - file: 'js/lunr-index.json' # where the index will be generated
+    collections: # the collections to index
+      objects:
+        content: false # whether or not to index the markdown page content (below the YAML)
+        fields: # the metadata fields to index
+          - 'label'
+          - 'artist'
+          - 'location'
+          - 'object_type'
 ```
 
 The above example includes a single collection `objects` that comprises:
-1. a CSV `source` file (`objects.csv`), and
-2. a directory of images files.
-
-__wax_tasks__ will expect to find the `source` file in the `_data` directory, i.e., at `_data/objects.csv`. It will also expect to find the source images in a directory named after the collection within `_data/iiif`, i.e., `_data/iiif/objects/*.jpg`. Some tasks will require you to invoke the collection by name, e.g., `$ bundle exec rake wax:pagemaster objects` and `$ bundle exec rake wax:iiif objects`.
+1. a CSV `metadata:source` file (`objects.csv`), and
+2. a `images:source` directory of image and pdf files.
 
 For more information on configuring Jekyll collections for __wax_tasks__, check out the [minicomp/wax wiki](https://minicomp.github.io/wiki/#/wax/) and <https://jekyllrb.com/docs/collections/>.
 
@@ -146,16 +137,25 @@ Generates a client-side JSON search index of your site for use with [ElasticLunr
 
 ```sh
 ------------------------------------------------------------------------
-NOTE >> wax_lunr will also generate a default lunr UI to use if you run:
+NOTE >> wax:lunr will also generate a default lunr UI to use
+        if you add a ui path to your lunr index configuration
+        with `ui: 'example/path-to-ui.js'` and run:
+
         $ bundle exec rake wax:lunr UI=true
 ------------------------------------------------------------------------
 ```
 
-### wax:iiif
+### wax:derivatives:simple
 
-Takes a local directory of images and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/iiif?id=top).
+Takes a local directory of images and pdf files and generates a few image derivatives (i.e., 'thumbnail' 250w and 'full' 1140w) for Jekyll layouts and includes to use. [Read More]().
 
-`$ bundle exec rake wax:iiif collection-name`
+`$ bundle exec rake wax:derivatives:iiif collection-name`
+
+### wax:derivatives:iiif
+
+Takes a local directory of images and pdf files and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/iiif?id=top).
+
+`$ bundle exec rake wax:derivatives:iiif collection-name`
 
 ### wax:test
 
