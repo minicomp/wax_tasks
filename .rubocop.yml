@@ -4,8 +4,8 @@ AllCops:
 Metrics/LineLength:
   IgnoredPatterns:
     - 'raise'
-    - '\A#'
     - 'puts'
+    - '\A#'
     - 'root_path'
     - 'ÈÉÊË'
     - 'EEEE'

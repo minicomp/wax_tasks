@@ -40,7 +40,7 @@ describe WaxTasks::TaskRunner do
   describe '.pagemaster' do
     context "with valid collection 'my_collection'" do
       it 'runs without errors' do
-        expect { quiet_stdout { task_runner.pagemaster([args.first]) } }.not_to raise_error
+        expect { quiet_stdout { task_runner.pagemaster(args) } }.not_to raise_error
       end
       it 'generates pages' do
         expect(Dir.glob("_#{args.first}/*.md")).not_to be_empty

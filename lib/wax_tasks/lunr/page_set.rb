@@ -1,8 +1,10 @@
 module WaxTasks
   module Lunr
+    # Class representing a directory of markdown pages
+    # to be indexed by a Lunr::Index
     class PageSet
       attr_reader :data
-      
+
       def initialize(name, config, site)
         @name     = name
         @fields   = config.dig('fields')
@@ -21,7 +23,7 @@ module WaxTasks
       def ingest_pages
         data  = []
         pages = Dir.glob("#{@page_dir}/*.md")
-        puts "There are no pages in #{@page_dir} to index.".cyan if pages.empty?
+        puts "There are no pages in #{@page_dir} to index.".orange if pages.empty?
         pages.each do |p|
           begin
             data << load_page(p)

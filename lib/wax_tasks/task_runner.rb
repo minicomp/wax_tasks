@@ -82,7 +82,7 @@ module WaxTasks
         puts "Writing lunr search index to #{index_path}.".cyan
 
         next unless generate_ui
-        raise Error::WaxTasksError, "Cannot generate default UI because no path was given" if ui.nil?
+        raise Error::WaxTasksError, 'Cannot generate default UI because no path was given' if ui.nil?
         ui_path = Utils.root_path(@site[:source_dir], ui)
         puts "Writing default lunr UI to #{ui_path}.".cyan
         File.open(ui_path, 'w') { |f| f.write(index.default_ui) }

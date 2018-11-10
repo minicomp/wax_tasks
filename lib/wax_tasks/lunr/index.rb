@@ -12,15 +12,15 @@ module WaxTasks
 
       # Creates a new LunrIndex object
       def initialize(site, index_path, collections)
-        raise Error::NoLunrCollections, "No collections were configured to index" if collections.nil?
-        raise Error::NoLunrCollections, "No path was given for index file" if index_path.nil?
+        raise Error::NoLunrCollections, 'No collections were configured to index' if collections.nil?
+        raise Error::NoLunrCollections, 'No path was given for index file' if index_path.nil?
 
-        @site         = site
-        @index_path   = index_path
-        @collections  = collections.keys.map! do |c|
-          Lunr::PageSet.new(c, collections[c], @site)
+        @collections = collections.keys.map! do |c|
+          Lunr::PageSet.new(c, collections[c], site)
         end
-        @fields       = self.total_fields
+
+        @index_path = index_path
+        @fields     = self.total_fields
       end
 
       # @return [Array] shared list of fields to index among indexed collections
