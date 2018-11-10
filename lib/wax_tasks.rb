@@ -3,8 +3,7 @@ require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/image_collection'
 require_relative 'wax_tasks/local_branch'
-require_relative 'wax_tasks/lunr_collection'
-require_relative 'wax_tasks/lunr_index'
+require_relative 'wax_tasks/lunr/index'
 require_relative 'wax_tasks/pagemaster_collection'
 require_relative 'wax_tasks/task_runner'
 require_relative 'wax_tasks/travis_branch'
@@ -29,9 +28,6 @@ module WaxTasks
 
   # @return [String] The path to load Jekyll site config
   DEFAULT_CONFIG          = '_config.yml'.freeze
-
-  # @return [String] The path to write WaxTasks::LunrIndex
-  LUNR_INDEX_PATH         = 'js/lunr-index.json'.freeze
 
   # @return [String] The path to write default LunrUI
   LUNR_UI_PATH            = 'js/lunr-ui.js'.freeze
