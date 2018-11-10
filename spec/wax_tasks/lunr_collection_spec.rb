@@ -9,7 +9,7 @@ describe WaxTasks::LunrCollection do
   describe '.new' do
     context 'when given valid configuration info' do
       it 'initializes a collection' do
-        quiet_stdout { task_runner.pagemaster([args.first]) }
+        quiet_stdout { task_runner.pagemaster(args) }
         expect(valid_collection.fields).to be_an(Array)
         expect(valid_collection.fields).not_to be_empty
       end

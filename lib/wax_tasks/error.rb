@@ -9,6 +9,10 @@ module WaxTasks
     end
 
     # Custom Error:
+    # Rake task expects arguments, found none
+    class MissingArguments < WaxTasksError; end
+
+    # Custom Error:
     # Site config cannot be found / parsed
     class InvalidSiteConfig < WaxTasksError; end
 

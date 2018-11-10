@@ -39,9 +39,16 @@ context '$ bundle exec rake' do
     end
   end
 
-  describe 'wax:iiif' do
+  describe 'wax:derivatives:iiif' do
     it 'runs without errors' do
-      passes = quiet_stdout { system("bundle exec rake wax:iiif #{args.join(' ')}") }
+      passes = quiet_stdout { system("bundle exec rake wax:derivatives:iiif csv_collection") }
+      expect(passes).to eq(true)
+    end
+  end
+
+  describe 'wax:derivatives:simple' do
+    it 'runs without errors' do
+      passes = quiet_stdout { system("bundle exec rake wax:derivatives:simple json_collection") }
       expect(passes).to eq(true)
     end
   end

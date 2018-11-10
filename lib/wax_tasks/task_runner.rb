@@ -85,11 +85,10 @@ module WaxTasks
         File.open(index_path, 'w') { |f| f.write(index) }
         puts "Writing lunr search index to #{index_path}.".cyan
 
-        if generate_ui
-          ui_path = Utils.root_path(@site[:source_dir], LUNR_UI_PATH)
-          puts "Writing default lunr UI to #{ui_path}.".cyan
-          File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
-        end
+        next unless generate_ui
+        ui_path = Utils.root_path(@site[:source_dir], LUNR_UI_PATH)
+        puts "Writing default lunr UI to #{ui_path}.".cyan
+        File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
       end
     end
 
@@ -99,10 +98,18 @@ module WaxTasks
     #
     # @param args [Array] the arguments/collection names from wax:pagemaster
     # @return [Nil]
-    def iiif(args)
+    def derivatives_iiif(args)
       args.each do |name|
-        iiif_collection = IiifCollection.new(name, @site)
-        iiif_collection.build
+        iiif_collection = ImageCollection.new(name, @site)
+        iiif_collection.build_iiif_derivatives
+      end
+    end
+
+    # @return [Nil]
+    def derivatives_simple(args)
+      args.each do |name|
+        image_collection = ImageCollection.new(name, @site)
+        image_collection.build_simple_derivatives
       end
     end
 

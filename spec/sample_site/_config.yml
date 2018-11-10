@@ -8,7 +8,7 @@ js:
     cdn: link
     version: version
 collections:
-  test_collection:
+  csv_collection:
     layout: default.html
     metadata:
       source: valid.csv
@@ -20,7 +20,22 @@ collections:
         description: indescribable
         attribution: blasphemous
         logo: '/path/to/logo'
+  json_collection:
+    layout: default.html
+    metadata:
+      source: valid.json
+      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+  yaml_collection:
+    layout: default.html
+    metadata:
+      source: valid.yaml
+      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+
 
 lunr:
   index:
-    - collections: ['test_collection']
+    - collections: ['csv_collection', 'json_collection', 'yaml_collection']

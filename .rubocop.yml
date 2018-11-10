@@ -4,28 +4,20 @@ AllCops:
 Metrics/LineLength:
   IgnoredPatterns:
     - 'raise'
+    - '\A#'
     - 'puts'
+    - 'root_path'
     - 'ÈÉÊË'
     - 'EEEE'
-    - 'make_path'
-    - 'gem'
 Style/FrozenStringLiteralComment:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
   Max: 40
-Metrics/CyclomaticComplexity:
-  Max: 8
 Metrics/MethodLength:
   Max: 30
-Metrics/ModuleLength:
-  Max: 110
 Style/DoubleNegation:
   Enabled: false
-Style/GuardClause:
-  Enabled: false
 Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-Style/Next:
   Enabled: false

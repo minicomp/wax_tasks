@@ -36,13 +36,13 @@ module WaxTasks
     #
     # @return [String] path
     def page_dir
-      Utils.root_path(@site[:source_dir], @site[:collections_dir], "_#{@name}")
+      WaxTasks::Utils.root_path(@site[:source_dir], @site[:collections_dir], "_#{@name}")
     end
 
     # Constructs the path to the data source file
     #
     # @return [String] the path to the data source file
-    def source_path
+    def metadata_source_path
       source = @config.dig('metadata', 'source')
       raise WaxTasks::Error::MissingSource, "Missing collection source in _config.yml for #{@name}" if source.nil?
       WaxTasks::Utils.root_path(@site[:source_dir], '_data', source)
@@ -68,6 +68,25 @@ module WaxTasks
 
       WaxTasks::Utils.assert_pids(data)
       WaxTasks::Utils.assert_unique(data)
+    end
+
+    # @return [Nil]
+    def overwrite_metadata
+      src = self.metadata_source_path
+      puts "Writing image derivative info #{src}.".cyan
+      case File.extname(src)
+      when '.csv'
+        keys = @metadata.map(&:keys).inject(&:|)
+        csv_string = keys.to_csv
+        @metadata.each { |h| csv_string += h.values_at(*keys).to_csv }
+        File.open(src, 'w') { |f| f.write(csv_string) }
+      when '.json'
+        File.open(src, 'w') { |f| f.write(JSON.pretty_generate(@metadata)) }
+      when /\.ya?ml/
+        File.open(src, 'w') { |f| f.write(@metadata.to_yaml) }
+      else
+        raise Error::InvalidSource
+      end
     end
   end
 end
