@@ -54,7 +54,7 @@ describe WaxTasks::ImageCollection do
 
   describe '.build_simple_derivatives' do
     it 'runs without errors' do
-      simple_derivatives_collection.build_simple_derivatives
+      expect { quiet_stdout { simple_derivatives_collection.build_simple_derivatives } }.not_to raise_error
     end
 
     it 'adds derivative paths to metadata' do
@@ -70,36 +70,36 @@ describe WaxTasks::ImageCollection do
 
     context 'for items with one image asset' do
       it 'generates the thumbnail derivative' do
-        thumb = "#{iiif_derivatives_collection.output_dir}/simple/#{img_item}/thumbnail.jpg"
+        thumb = "#{simple_derivatives_collection.output_dir}/simple/#{img_item}/thumbnail.jpg"
         expect(File).to exist(thumb)
       end
 
       it 'generates the full width derivative' do
-        full = "#{iiif_derivatives_collection.output_dir}/simple/#{img_item}/full.jpg"
+        full = "#{simple_derivatives_collection.output_dir}/simple/#{img_item}/full.jpg"
         expect(File).to exist(full)
       end
     end
 
     context 'for items with multiple image assets from a directory' do
       it 'generates the thumbnail derivative' do
-        thumb = "#{iiif_derivatives_collection.output_dir}/simple/#{dir_img_item}_0/thumbnail.jpg"
+        thumb = "#{simple_derivatives_collection.output_dir}/simple/#{dir_img_item}_0/thumbnail.jpg"
         expect(File).to exist(thumb)
       end
 
       it 'generates the full width derivative' do
-        full = "#{iiif_derivatives_collection.output_dir}/simple/#{dir_img_item}_0/full.jpg"
+        full = "#{simple_derivatives_collection.output_dir}/simple/#{dir_img_item}_0/full.jpg"
         expect(File).to exist(full)
       end
     end
 
     context 'for items with multiple image assets from a pdf document' do
       it 'generates the thumbnail derivative' do
-        thumb = "#{iiif_derivatives_collection.output_dir}/simple/#{pdf_item}_0/thumbnail.jpg"
+        thumb = "#{simple_derivatives_collection.output_dir}/simple/#{pdf_item}_0/thumbnail.jpg"
         expect(File).to exist(thumb)
       end
 
       it 'generates the full width derivative' do
-        full = "#{iiif_derivatives_collection.output_dir}/simple/#{pdf_item}_0/full.jpg"
+        full = "#{simple_derivatives_collection.output_dir}/simple/#{pdf_item}_0/full.jpg"
         expect(File).to exist(full)
       end
     end
@@ -107,7 +107,7 @@ describe WaxTasks::ImageCollection do
 
   describe '.build_iiif_derivatives' do
     it 'runs without errors' do
-      iiif_derivatives_collection.build_iiif_derivatives
+      expect { quiet_stdout { iiif_derivatives_collection.build_iiif_derivatives } }.not_to raise_error
     end
 
     it 'adds derivative paths to metadata' do
