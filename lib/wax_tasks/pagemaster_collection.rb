@@ -16,7 +16,7 @@ module WaxTasks
       @config   = self.config
       @layout   = assert_layout
       @ordered  = @config.fetch('keep_order', false)
-      @metadata = ingest_file(source_path)
+      @metadata = ingest_file(self.metadata_source_path)
     end
 
     # Confirms + requires `layout` value in the collection @config

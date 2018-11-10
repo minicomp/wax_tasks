@@ -32,7 +32,7 @@ module WaxTasks::Test
   def self.reset
     Dir.chdir(ROOT)
     FileUtils.rm_r(BUILD) if File.directory?(BUILD)
-    FileUtils.copy_entry SAMPLE, BUILD
+    FileUtils.copy_entry(SAMPLE, BUILD)
     Dir.chdir(BUILD)
   end
 end

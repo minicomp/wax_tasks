@@ -2,8 +2,8 @@ describe WaxTasks::Utils do
   include_context 'shared'
 
   let(:valid_data) { WaxTasks::Utils.validate_csv('_data/valid.csv') }
-  let(:missing_pid_data) { WaxTasks::Utils.validate_json('_data/missing_pid.json') }
-  let(:nonunique_data) { WaxTasks::Utils.validate_csv('_data/duplicate_pid.csv') }
+  let(:missing_pid_data) { WaxTasks::Utils.validate_json('_data/invalid/missing_pid.json') }
+  let(:nonunique_data) { WaxTasks::Utils.validate_csv('_data/invalid/duplicate_pid.csv') }
 
   describe '.construct_permalink' do
     context 'when pretty' do
@@ -74,7 +74,7 @@ describe WaxTasks::Utils do
     context 'with an invalid json file' do
       it 'thows WaxTasks::Error::InvalidJSON' do
         path = '../spec/fake/data/invalid.json'
-        expect { WaxTasks::Utils.validate_json('_data/invalid.json') }.to raise_error(WaxTasks::Error::InvalidJSON)
+        expect { WaxTasks::Utils.validate_json('_data/invalid/.invalid.json') }.to raise_error(WaxTasks::Error::InvalidJSON)
       end
     end
   end
@@ -82,13 +82,13 @@ describe WaxTasks::Utils do
   describe '.validate_yaml' do
     context 'with a valid yaml file' do
       it 'loads data as a hash array' do
-        expect(WaxTasks::Utils.validate_yaml('_data/valid.yml').length).not_to be_zero
+        expect(WaxTasks::Utils.validate_yaml('_data/valid.yaml').length).not_to be_zero
       end
     end
 
     context 'with an invalid yaml file' do
       it 'thows WaxTasks::Error::InvalidYAML' do
-        expect { WaxTasks::Utils.validate_yaml('_data/invalid.yml') }.to raise_error(WaxTasks::Error::InvalidYAML)
+        expect { WaxTasks::Utils.validate_yaml('_data/invalid/.invalid.yml') }.to raise_error(WaxTasks::Error::InvalidYAML)
       end
     end
   end

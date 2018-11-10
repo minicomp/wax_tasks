@@ -49,8 +49,20 @@ describe WaxTasks::TaskRunner do
 
     context 'without a non-existent collection specified' do
       it 'throws Error::InvalidCollection' do
-        expect { task_runner.pagemaster(['not_a_collection']) }.to raise_error(WaxTasks::Error::InvalidCollection)
+        expect { quiet_stdout { task_runner.pagemaster(['not_a_collection']) } }.to raise_error(WaxTasks::Error::InvalidCollection)
       end
+    end
+  end
+
+  describe '.derivatives_iiif' do
+    it 'runs without errors' do
+      expect { quiet_stdout { task_runner.derivatives_iiif([args.first]) } }.not_to raise_error
+    end
+  end
+
+  describe '.derivatives_simple' do
+    it 'runs without errors' do
+      expect { quiet_stdout { task_runner.derivatives_simple([args.first]) } }.not_to raise_error
     end
   end
 
@@ -75,40 +87,6 @@ describe WaxTasks::TaskRunner do
         quiet_stdout { task_runner.lunr(generate_ui: true) }
         expect(File).to exist(ui_path)
       end
-    end
-  end
-
-  describe '.iiif' do
-    it 'runs without errors' do
-      expect { quiet_stdout { task_runner.iiif(args) } }.not_to raise_error
-    end
-
-    it 'generates collection json' do
-      expect(File).to exist("#{BUILD}/iiif/collection/#{args.first}.json")
-    end
-
-    it 'builds image directories' do
-      expect(Dir).to exist("#{BUILD}/iiif/images")
-      image_dirs = Dir.glob("#{BUILD}/iiif/images/*")
-      expect(image_dirs.length).not_to be_zero
-      expect(File).to exist("#{image_dirs.first}/info.json")
-    end
-
-    it 'builds manifests in expected directories' do
-      %w[0 1 2].each do |m|
-        expect(Dir).to exist("#{BUILD}/iiif/#{m}")
-        expect(File).to exist("#{BUILD}/iiif/#{m}/manifest.json")
-      end
-    end
-
-    it 'generates derivatives' do
-      expect(Dir).to exist("#{BUILD}/iiif/images")
-      expect(Dir.glob("#{BUILD}/iiif/images/*/**/default.jpg").length).to be > 300
-    end
-
-    it 'generates info.json' do
-      infos = Dir.glob("#{BUILD}/iiif/images/*/**/info.json")
-      expect(infos.length).to eq 8
     end
   end
 
