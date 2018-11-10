@@ -85,8 +85,8 @@ module WaxTasks
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
     end
 
-    def self.rm_liquid_iiif(str)
-      str.gsub(/{{.*}}/, '/iiif')
+    def self.rm_liquid(str)
+      str.gsub(/{{.*}}/, '')
     end
 
     # Cleans YAML front matter + markdown pages for lunr indexing

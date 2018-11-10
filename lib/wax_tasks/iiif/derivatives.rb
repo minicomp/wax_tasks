@@ -74,8 +74,8 @@ module WaxTasks
           json = JSON.parse(m.to_json)
           pid = m.base_id
           @metadata.find { |i| i['pid'] == pid }.tap do |hash|
-            hash['manifest']  = Utils.rm_liquid_iiif(json['@id'])
-            hash['thumbnail'] = Utils.rm_liquid_iiif(json['thumbnail'])
+            hash['manifest']  = Utils.rm_liquid(json['@id'])
+            hash['thumbnail'] = Utils.rm_liquid(json['thumbnail'])
             hash['full']      = hash['thumbnail'].sub('250,/0', '1140,/0')
           end
         end
