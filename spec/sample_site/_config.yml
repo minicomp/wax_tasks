@@ -36,6 +36,13 @@ collections:
       source: 'images/test_collection'
 
 
-lunr:
-  index:
-    - collections: ['csv_collection', 'json_collection', 'yaml_collection']
+lunr_index:
+  - file: 'js/lunr-index.json'
+    ui:   'js/lunr-ui.js'
+    collections:
+      csv_collection:
+        fields: ['gambrel', 'blasphemous']
+      json_collection:
+        fields: ['gambrel', 'blasphemous']
+      yaml_collection:
+        fields: ['gambrel', 'blasphemous']

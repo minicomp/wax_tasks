@@ -5,10 +5,7 @@ require_relative 'iiif/derivatives'
 require_relative 'iiif/manifest'
 
 module WaxTasks
-  # A Jekyll collection with IIIF configuration + data
-
-  # @attr iiif_config [Hash]    the iiif configuration for the collection
-  # @attr target_dir  [String]  target path for iiif derivatives
+  # A Jekyll collection with image configuration + data
   class ImageCollection < Collection
     attr_reader :output_dir, :metadata, :data
 
