@@ -122,8 +122,9 @@ module WaxTasks
     # @return [Nil]
     def build_iiif_derivatives
       iiif_output_dir = "#{@output_dir}/iiif"
+      jekyll_prefix = "{{ '/#{DEFAULT_DERIVATIVE_DIR}/iiif' | absolute_url }}"
       build_opts = {
-        base_url: "{{ 'iiif' | absolute_url }}",
+        base_url: jekyll_prefix,
         output_dir: iiif_output_dir,
         variants: DEFAULT_IMAGE_VARIANTS,
         verbose: true,
