@@ -75,25 +75,18 @@ module WaxTasks
     #
     # @param  args [Array] items to concatenate in path
     # @return [String] file path
-    def self.make_path(*args)
-      args.compact.reject(&:empty?).join('/')
-    end
-
-    # Finds collections in site config where `lunr_index` is enabled
-    #
-    # @param  site [Hash] the site config
-    # @return [Array] a list of collection names
-    # @raise WaxTasks::Error::NoLunrCollections
-    def self.get_lunr_collections(site)
-      to_index = site[:collections].find_all { |c| c[1].key?('lunr_index') }
-      raise Error::NoLunrCollections, 'There are no lunr collections to index.' if to_index.nil?
-      to_index.map { |c| c[0] }
+    def self.root_path(*args)
+      ['.'].concat(args).compact.reject(&:empty?).join('/').gsub(%r{/+}, '/')
     end
 
     # Removes YAML front matter from a string
     # @return [String]
     def self.remove_yaml(str)
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
+    end
+
+    def self.rm_liquid(str)
+      str.gsub(/{{.*}}/, '')
     end
 
     # Cleans YAML front matter + markdown pages for lunr indexing
@@ -162,6 +155,10 @@ class Array
     else
       WaxTasks::Utils.remove_diacritics(self.join(', '))
     end
+  end
+
+  def except(value)
+    self - value
   end
 end
 

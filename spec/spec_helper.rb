@@ -18,6 +18,6 @@ shared_context 'shared', :shared_context => :metadata do
   let(:task_runner) { WaxTasks::TaskRunner.new }
   let(:default_site) { task_runner.site }
   let(:args) { default_site[:collections].map{ |c| c[0] } }
-  let(:index_path) { WaxTasks::LUNR_INDEX_PATH }
-  let(:ui_path) { WaxTasks::LUNR_UI_PATH }
+  let(:index_path) { "#{BUILD}/js/lunr-index.json" }
+  let(:ui_path) { "#{BUILD }/js/lunr-ui.js" }
 end
