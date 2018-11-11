@@ -7,12 +7,12 @@ context '$ bundle exec rake' do
 
   describe 'wax:pagemaster' do
     it 'runs without errors' do
-      passes = quiet_stdout{ system("bundle exec rake wax:pagemaster #{args.join(' ')}") }
+      passes = quiet_stdout{ system("bundle exec rake wax:pagemaster #{args.first}") }
       expect(passes).to eq(true)
     end
 
     it 'generates pages' do
-      pages = Dir.glob('_my_collection/*.md')
+      pages = Dir.glob("_#{args.first}/*.md")
       expect(pages.length).not_to be_zero
     end
   end
@@ -39,16 +39,17 @@ context '$ bundle exec rake' do
     end
   end
 
-  describe 'wax:iiif' do
+  describe 'wax:derivatives:iiif' do
     it 'runs without errors' do
-      passes = quiet_stdout { system("bundle exec rake wax:iiif #{args.last}") }
+      passes = quiet_stdout { system("bundle exec rake wax:derivatives:iiif csv_collection") }
       expect(passes).to eq(true)
     end
+  end
 
-    it 'builds iiif info.json' do
-      iiif_collection = WaxTasks::IiifCollection.new(args.last, task_runner.site)
-      first_image = Dir.glob("#{iiif_collection.target_dir}/images/*").first
-      expect(File).to exist("#{first_image}/info.json")
+  describe 'wax:derivatives:simple' do
+    it 'runs without errors' do
+      passes = quiet_stdout { system("bundle exec rake wax:derivatives:simple json_collection") }
+      expect(passes).to eq(true)
     end
   end
 

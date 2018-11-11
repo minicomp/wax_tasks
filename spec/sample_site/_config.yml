@@ -8,18 +8,41 @@ js:
     cdn: link
     version: version
 collections:
-  my_collection:
-    source: valid.csv
+  csv_collection:
     layout: default.html
-    keep_order: true
-    lunr_index:
-      content: true
-      fields:
-        - gambrel
-        - indescribable
-        - blasphemous
-        - furtive
-    iiif:
-      variants: [100, 900]
-      meta:
-        - label: gambrel
+    metadata:
+      source: valid.csv
+      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+      iiif:
+        label: gambrel
+        description: indescribable
+        attribution: blasphemous
+        logo: '/path/to/logo'
+  json_collection:
+    layout: default.html
+    metadata:
+      source: valid.json
+      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+  yaml_collection:
+    layout: default.html
+    metadata:
+      source: valid.yaml
+      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+
+
+lunr_index:
+  - file: 'js/lunr-index.json'
+    ui:   'js/lunr-ui.js'
+    collections:
+      csv_collection:
+        fields: ['gambrel', 'blasphemous']
+      json_collection:
+        fields: ['gambrel', 'blasphemous']
+      yaml_collection:
+        fields: ['gambrel', 'blasphemous']

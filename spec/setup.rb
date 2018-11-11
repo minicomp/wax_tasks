@@ -3,7 +3,7 @@ require 'fileutils'
 #constants
 ROOT    = `pwd`.strip.freeze
 SAMPLE  = "#{ROOT}/spec/sample_site".freeze
-BUILD   = "#{ROOT}/build".freeze
+BUILD   = "#{ROOT}/test_build".freeze
 
 # helper methods
 def quiet_stdout
@@ -32,7 +32,7 @@ module WaxTasks::Test
   def self.reset
     Dir.chdir(ROOT)
     FileUtils.rm_r(BUILD) if File.directory?(BUILD)
-    FileUtils.copy_entry SAMPLE, BUILD
+    FileUtils.copy_entry(SAMPLE, BUILD)
     Dir.chdir(BUILD)
   end
 end

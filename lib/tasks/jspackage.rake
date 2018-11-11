@@ -1,3 +1,4 @@
+require 'json'
 require 'wax_tasks'
 
 namespace :wax do
@@ -6,9 +7,11 @@ namespace :wax do
     task_runner = WaxTasks::TaskRunner.new
     package = task_runner.js_package
     unless package.empty?
-      path = WaxTasks::Utils.make_path(task_runner.site[:source_dir],
-                                       'package.json')
-      File.open(path, 'w') { |f| f.write(package.to_json) }
+      src_dir = task_runner.site[:source_dir]
+      path    = WaxTasks::Utils.root_path(src_dir, 'package.json')
+
+      puts "Writing javascript dependencies to #{path}".cyan
+      File.open(path, 'w') { |f| f.write(JSON.pretty_generate(package)) }
     end
   end
 end

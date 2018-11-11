@@ -9,6 +9,10 @@ module WaxTasks
     end
 
     # Custom Error:
+    # Rake task expects arguments, found none
+    class MissingArguments < WaxTasksError; end
+
+    # Custom Error:
     # Site config cannot be found / parsed
     class InvalidSiteConfig < WaxTasksError; end
 
@@ -67,5 +71,9 @@ module WaxTasks
     # Custom Error:
     # Cannot find _site directory to push to GitHub
     class MissingSite < WaxTasksError; end
+
+    # Custom Error:
+    # Cannot find IIIF source image files
+    class MissingIiifSrc < WaxTasksError; end
   end
 end

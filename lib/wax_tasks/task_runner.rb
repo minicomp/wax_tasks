@@ -21,18 +21,19 @@ module WaxTasks
     # @example use default config from file
     #   WaxTasks::TaskRunner.new
     def initialize(config = {}, env = 'prod')
-      config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
+      @config = YAML.load_file(DEFAULT_CONFIG).symbolize_keys if config.empty?
       @site = {
         env:              env,
-        title:            config.fetch(:title, ''),
-        url:              config.fetch(:url, ''),
-        baseurl:          config.fetch(:baseurl, ''),
-        repo_name:        config.fetch(:repo_name, ''),
-        source_dir:       config.fetch(:source, nil),
-        collections_dir:  config.fetch(:collections_dir, nil),
-        collections:      config.fetch(:collections, {}),
-        js:               config.fetch(:js, false),
-        permalink:        Utils.construct_permalink(config)
+        title:            @config.dig(:title),
+        url:              @config.dig(:url),
+        baseurl:          @config.dig(:baseurl),
+        repo_name:        @config.dig(:repo_name),
+        source_dir:       @config.dig(:source),
+        collections_dir:  @config.dig(:collections_dir),
+        collections:      @config.dig(:collections),
+        lunr_index:       @config.dig(:lunr_index),
+        js:               @config.dig(:js),
+        permalink:        Utils.construct_permalink(@config)
       }
     rescue StandardError => e
       raise Error::InvalidSiteConfig, "Could not load _config.yml. => #{e}"
@@ -69,18 +70,20 @@ module WaxTasks
     # @param generate_ui [Boolean] whether/not to generate a default lunr UI
     # @return [Nil]
     def lunr(generate_ui: false)
-      lunr_collections = Utils.get_lunr_collections(@site)
-      lunr_collections.map! { |name| LunrCollection.new(name, @site) }
+      @site[:lunr_index].each do |i|
+        file        = i.dig('file')
+        ui          = i.dig('ui')
+        collections = i.dig('collections')
+        index       = Lunr::Index.new(@site, file, collections)
 
-      index = LunrIndex.new(lunr_collections)
-      index_path = Utils.make_path(@site[:source_dir], LUNR_INDEX_PATH)
+        index_path = Utils.root_path(@site[:source_dir], file)
+        FileUtils.mkdir_p(File.dirname(index_path))
+        File.open(index_path, 'w') { |f| f.write(index.to_s) }
+        puts "Writing lunr search index to #{index_path}.".cyan
 
-      FileUtils.mkdir_p(File.dirname(index_path))
-      File.open(index_path, 'w') { |f| f.write(index) }
-      puts "Writing lunr search index to #{index_path}.".cyan
-
-      if generate_ui
-        ui_path = Utils.make_path(@site[:source_dir], LUNR_UI_PATH)
+        next unless generate_ui
+        raise Error::WaxTasksError, 'Cannot generate default UI because no path was given' if ui.nil?
+        ui_path = Utils.root_path(@site[:source_dir], ui)
         puts "Writing default lunr UI to #{ui_path}.".cyan
         File.open(ui_path, 'w') { |f| f.write(index.default_ui) }
       end
@@ -92,9 +95,18 @@ module WaxTasks
     #
     # @param args [Array] the arguments/collection names from wax:pagemaster
     # @return [Nil]
-    def iiif(args)
+    def derivatives_iiif(args)
       args.each do |name|
-        IiifCollection.new(name, @site).process
+        iiif_collection = ImageCollection.new(name, @site)
+        iiif_collection.build_iiif_derivatives
+      end
+    end
+
+    # @return [Nil]
+    def derivatives_simple(args)
+      args.each do |name|
+        image_collection = ImageCollection.new(name, @site)
+        image_collection.build_simple_derivatives
       end
     end
 
@@ -107,7 +119,7 @@ module WaxTasks
       names = []
       package = {
         'name'          => site[:title],
-        'version'       => '1.0.0',
+        'version'       => @config.fetch(:version, ''),
         'dependencies'  => {}
       }
       site[:js].each do |dependency|
