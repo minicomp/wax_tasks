@@ -112,7 +112,7 @@ module WaxTasks
     # Converts string to snake case and swaps out special chars
     # @return [String]
     def self.slug(str)
-      str.to_s.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
+      Utils.remove_diacritics(str).to_s.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
     end
   end
 end
