@@ -36,13 +36,16 @@ module WaxTasks
       FileUtils.mkdir_p(page_dir)
       pages = []
       @metadata.each_with_index do |item, idx|
-        page_slug         = Utils.slug(item.fetch('pid'))
-        path              = "#{page_dir}/#{page_slug}.md"
-        item['permalink'] = "/#{@name}/#{page_slug}#{@site[:permalink]}"
+        # construct page item
+        item['pid']       = Utils.slug(item.fetch('pid'))
+        item['permalink'] = "/#{@name}/#{item['pid']}#{@site[:permalink]}"
         item['layout']    = @layout
         item['order']     = padded_int(idx, @metadata.length) if @ordered
+        # add page item to array
         pages << item
-        next "#{page_slug}.md already exits. Skipping." if File.exist?(path)
+        # write page item
+        path = "#{page_dir}/#{item['pid']}.md"
+        next "#{item['pid']}.md already exits. Skipping." if File.exist?(path)
         File.open(path, 'w') { |f| f.write("#{item.to_yaml}---") }
       end
       puts "#{@metadata.length} pages were generated to #{page_dir} directory.".cyan
