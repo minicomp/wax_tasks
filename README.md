@@ -13,7 +13,7 @@ It can be used to:
 .. and more.
 
 <br>
-<img src="https://raw.githubusercontent.com/minicomp/wiki/master/docs/assets/wax_screen.gif"/>
+<img src="https://raw.githubusercontent.com/minicomp/wiki/master/assets/wax_screen.gif"/>
 
 
 # Getting Started

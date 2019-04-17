@@ -73,10 +73,17 @@ module WaxTasks
         manifests.map do |m|
           json = JSON.parse(m.to_json)
           pid = m.base_id
-          @metadata.find { |i| i['pid'] == pid }.tap do |hash|
-            hash['manifest']  = Utils.rm_liquid(json['@id'])
-            hash['thumbnail'] = Utils.rm_liquid(json['thumbnail'])
-            hash['full']      = hash['thumbnail'].sub('250,/0', '1140,/0')
+
+          match = @metadata.find { |i| i['pid'] == pid }
+
+          if match.nil?
+            puts "Could not find pid '#{pid}' in the metadata file. Skipping".cyan
+          else
+            match.tap do |hash|
+              hash['manifest']  = Utils.rm_liquid(json['@id'])
+              hash['thumbnail'] = Utils.rm_liquid(json['thumbnail'])
+              hash['full']      = hash['thumbnail'].sub('250,/0', '1140,/0')
+            end
           end
         end
         overwrite_metadata
