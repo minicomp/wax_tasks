@@ -11,6 +11,9 @@ addons:
 env:
   global:
     - CC_TEST_REPORTER_ID=7cc25dc2f2d47c6517e8c728037dda261e3f4492af34431ad2a5ddaeae510b33
+before_install:
+  - gem update --system
+  - gem install bundler
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
