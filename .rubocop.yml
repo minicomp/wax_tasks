@@ -9,8 +9,6 @@ Metrics/LineLength:
     - 'root_path'
     - 'ÈÉÊË'
     - 'EEEE'
-Style/FrozenStringLiteralComment:
-  Enabled: false
 Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
@@ -20,4 +18,6 @@ Metrics/MethodLength:
 Style/DoubleNegation:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+Layout/AlignHash:
   Enabled: false

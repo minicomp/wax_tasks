@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # Utility helper methods
   module Utils

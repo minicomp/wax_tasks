@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'wax_iiif'
 require 'mini_magick'
 

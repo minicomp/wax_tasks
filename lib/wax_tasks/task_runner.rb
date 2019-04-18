@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # Class for running the Rake tasks in ./tasks
   # TaskRunner is responsible for loading and parsing the site config
@@ -31,8 +33,7 @@ module WaxTasks
         source_dir:       @config.dig(:source),
         collections_dir:  @config.dig(:collections_dir),
         collections:      @config.dig(:collections),
-        lunr_index:       @config.dig(:lunr_index),
-        js:               @config.dig(:js),
+        lunr_index:       @config.dig(:lunr_index)
         permalink:        Utils.construct_permalink(@config)
       }
     rescue StandardError => e
@@ -108,27 +109,6 @@ module WaxTasks
         image_collection = ImageCollection.new(name, @site)
         image_collection.build_simple_derivatives
       end
-    end
-
-    # Finds the JS dependencies listed in site config and
-    # writes them to a package.json file
-    # in orderto easily track / monitor / update them
-    #
-    # @return [Nil]
-    def js_package
-      names = []
-      package = {
-        'name'          => site[:title],
-        'version'       => @config.fetch(:version, ''),
-        'dependencies'  => {}
-      }
-      site[:js].each do |dependency|
-        name = dependency[0]
-        names << name
-        version = dependency[1]['version']
-        package['dependencies'][name] = '^' + version
-      end
-      package
     end
 
     # Constructs a TravisBranch or LocalBranch object

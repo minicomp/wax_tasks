@@ -167,17 +167,6 @@ Runs [`htmlproofer`](https://github.com/gjtorikian/html-proofer) on your compile
 
 Fork/clone the repository. After making code changes, run the tests (`$ bundle exec rubocop` and `$ bundle exec rspec`) before submitting a pull request. You can enable verbose tests with `$ DEBUG=true bundle exec rspec`.
 
-> __Note:__ The cannonical repository is [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/). Please submit all issues and pull requests to the [minicomp/wax_tasks](https://github.com/minicomp/wax_tasks/) repo.
-
-
-```sh
----------------------------------------------------------------------------
-NOTE >> The cannonical repository is minicomp/wax_tasks.
-        Please submit all issues and pull requests to the cannonical repo.
----------------------------------------------------------------------------
-```
-<p align="right"><a href='https://github.com/minicomp/wax_tasks/'>minicomp/wax_tasks ~></a></p>
-
 # License
 
 The gem is available as open source under the terms of the [MIT License](LICENSE).

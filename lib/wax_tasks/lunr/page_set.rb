@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   module Lunr
     # Class representing a directory of markdown pages

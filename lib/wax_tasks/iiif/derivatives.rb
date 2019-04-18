@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # Module of helper functions for WaxTasks::IiiifCollection class
   module Iiif

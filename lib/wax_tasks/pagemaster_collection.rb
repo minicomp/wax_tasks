@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # A Jekyll collection with a data source file that
   # can generate markdown pages from that data.

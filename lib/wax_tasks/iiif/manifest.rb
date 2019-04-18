@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   module Iiif
     # Module for handling metadata in IIIF manifests

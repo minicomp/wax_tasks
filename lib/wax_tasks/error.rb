@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # Custom WaxTasks Errors module
   module Error

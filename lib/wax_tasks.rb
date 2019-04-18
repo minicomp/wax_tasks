@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'wax_tasks/branch'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
@@ -27,17 +29,17 @@ module WaxTasks
   # ----------
 
   # @return [String] The path to load Jekyll site config
-  DEFAULT_CONFIG          = '_config.yml'.freeze
+  DEFAULT_CONFIG          = '_config.yml'
 
   # @return [String] The path to write default LunrUI
-  LUNR_UI_PATH            = 'js/lunr-ui.js'.freeze
+  LUNR_UI_PATH            = 'js/lunr-ui.js'
 
   # @return [String] The path to the compiled Jekyll site
-  SITE_DIR                = '_site'.freeze
+  SITE_DIR                = '_site'
 
   # @return [String] Default image variant/derivative widths to generate
   DEFAULT_IMAGE_VARIANTS  = { thumbnail: 250, full: 1140 }.freeze
 
   # @return [String] The path where image derivatives should be generated
-  DEFAULT_DERIVATIVE_DIR  = 'img/derivatives'.freeze
+  DEFAULT_DERIVATIVE_DIR  = 'img/derivatives'
 end

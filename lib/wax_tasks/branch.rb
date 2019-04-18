@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jekyll'
 require 'logger'
 require 'tmpdir'
@@ -43,7 +45,7 @@ module WaxTasks
         source: @site[:source_dir] || '.',
         destination: WaxTasks::SITE_DIR,
         config: WaxTasks::DEFAULT_CONFIG,
-        baseurl:  @baseurl,
+        baseurl: @baseurl,
         verbose: true
       }
       Jekyll::Site.new(Jekyll.configuration(opts)).process

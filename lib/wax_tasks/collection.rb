@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WaxTasks
   # Parent class representing a Jekyll collection
   # that cannot be created directly. Only child classes
