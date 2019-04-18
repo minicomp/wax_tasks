@@ -1,7 +1,7 @@
 # wax_tasks
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks) ![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](https://www.rubydoc.info/github/minicomp/wax_tasks/)
 
-[![Build Status](https://travis-ci.org/minicomp/wax_tasks.svg)](https://travis-ci.org/minicomp/wax_tasks) [![](https://img.shields.io/librariesio/github/minicomp/wax_tasks.svg)](https://libraries.io/github/mnyrop/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/maintainability)](https://codeclimate.com/github/minicomp/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/test_coverage)](https://codeclimate.com/github/minicomp/wax_tasks/test_coverage)
+[![Build Status](https://travis-ci.org/minicomp/wax_tasks.svg)](https://travis-ci.org/minicomp/wax_tasks) [![](https://img.shields.io/librariesio/github/minicomp/wax_tasks.svg)](https://libraries.io/github/minicomp/wax_tasks) [![Maintainability](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/maintainability)](https://codeclimate.com/github/minicomp/wax_tasks/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/test_coverage)](https://codeclimate.com/github/minicomp/wax_tasks/test_coverage)
 
 __wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Jekyll](https://jekyllrb.com/).
 
