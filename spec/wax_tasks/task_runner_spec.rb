@@ -90,12 +90,6 @@ describe WaxTasks::TaskRunner do
     end
   end
 
-  describe '.js_package' do
-    it 'creates a package.json file' do
-      package = task_runner.js_package
-    end
-  end
-
   describe '.push_branch' do
     context 'when given branch `test-branch` locally' do
       it 'runs without errors' do

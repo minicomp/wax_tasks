@@ -33,7 +33,7 @@ module WaxTasks
         source_dir:       @config.dig(:source),
         collections_dir:  @config.dig(:collections_dir),
         collections:      @config.dig(:collections),
-        lunr_index:       @config.dig(:lunr_index)
+        lunr_index:       @config.dig(:lunr_index),
         permalink:        Utils.construct_permalink(@config)
       }
     rescue StandardError => e

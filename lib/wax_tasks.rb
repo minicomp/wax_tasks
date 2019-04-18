@@ -17,7 +17,6 @@ require_relative 'wax_tasks/utils'
 # wax:lunr                :: build lunr search index (with default UI if UI=true)
 # wax:derivatives:simple  :: generate simple image derivatives from local image files
 # wax:derivatves:iiif     :: generate iiif derivatives from local image files
-# wax:jspackage           :: write a simple package.json for monitoring js dependencies
 # wax:push                :: push compiled Jekyll site to git branch
 # wax:test                :: run htmlproofer, rspec if .rspec file exists
 #

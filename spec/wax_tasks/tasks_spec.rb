@@ -52,15 +52,4 @@ context '$ bundle exec rake' do
       expect(passes).to eq(true)
     end
   end
-
-  describe 'wax:jspackage' do
-    it 'passes' do
-      passes = quiet_stdout { system('bundle exec rake wax:jspackage') }
-      expect(passes).to eq(true)
-    end
-    it 'writes a package.json file' do
-      package = File.open('package.json', 'r').read
-      expect(package.length > 90)
-    end
-  end
 end
