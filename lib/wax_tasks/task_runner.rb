@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 module WaxTasks
   # Class for running the Rake tasks in ./tasks
   # TaskRunner is responsible for loading and parsing the site config
@@ -108,20 +110,6 @@ module WaxTasks
       args.each do |name|
         image_collection = ImageCollection.new(name, @site)
         image_collection.build_simple_derivatives
-      end
-    end
-
-    # Constructs a TravisBranch or LocalBranch object
-    # with appropriate Git credentials and pushes
-    # the compiled Jekyll site to the target GitHub branch
-    #
-    # @param target [String] the name of the Git branch to deploy to
-    # @return [Nil]
-    def push_branch(target)
-      if ENV.fetch('CI', false)
-        TravisBranch.new(self.site, target).push
-      else
-        LocalBranch.new(self.site, target).push
       end
     end
   end

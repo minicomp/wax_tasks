@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'wax_tasks/branch'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/image_collection'
-require_relative 'wax_tasks/local_branch'
 require_relative 'wax_tasks/lunr/index'
 require_relative 'wax_tasks/pagemaster_collection'
 require_relative 'wax_tasks/task_runner'
-require_relative 'wax_tasks/travis_branch'
 require_relative 'wax_tasks/utils'
 
 # The WaxTasks module powers the Rake tasks in `./tasks`, including:

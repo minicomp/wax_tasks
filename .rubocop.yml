@@ -1,14 +1,8 @@
 AllCops:
   TargetRubyVersion: 2.4
-  Exclude: ['spec/**/*']
+  Exclude: ['spec/**/*', 'test_build/**/*']
 Metrics/LineLength:
-  IgnoredPatterns:
-    - 'raise'
-    - 'puts'
-    - '\A#'
-    - 'root_path'
-    - 'ÈÉÊË'
-    - 'EEEE'
+  IgnoredPatterns: ['raise', 'puts', '\A#', 'root_path', 'ÈÉÊË', 'EEEE']
 Style/RedundantSelf:
   Enabled: false
 Metrics/AbcSize:
