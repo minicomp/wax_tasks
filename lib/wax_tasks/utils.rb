@@ -72,15 +72,6 @@ module WaxTasks
       raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
 
-    # Creates a file path valid file path with empty strings and
-    # null values dropped
-    #
-    # @param  args [Array] items to concatenate in path
-    # @return [String] file path
-    def self.root_path(*args)
-      ['.'].concat(args).compact.reject(&:empty?).join('/').gsub(%r{/+}, '/')
-    end
-
     # Removes YAML front matter from a string
     # @return [String]
     def self.remove_yaml(str)
@@ -115,6 +106,20 @@ module WaxTasks
     # @return [String]
     def self.slug(str)
       Utils.remove_diacritics(str).to_s.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
+    end
+
+    #
+    #
+    def self.safe_join(*args)
+      File.join(args.compact)
+    end
+
+    # Constructs the order variable for each page (if the collection
+    # needs to preserve the order of items from the file)
+    #
+    # @return [Integer] the order if the item padded with '0's for sorting
+    def self.padded_int(idx, max_idx)
+      idx.to_s.rjust(Math.log10(max_idx).to_i + 1, '0')
     end
   end
 end
@@ -170,16 +175,6 @@ class Hash
   # @return [Hash]
   def lunr_normalize
     self
-  end
-
-  # Converts hash keys to symbols
-  # @return [Hash]
-  def symbolize_keys
-    hash = self
-    hash.clone.each_key do |key|
-      hash[key.to_sym || key] = hash.delete(key)
-    end
-    hash
   end
 end
 

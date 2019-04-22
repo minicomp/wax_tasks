@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'html-proofer'
-
 namespace :wax do
   desc 'run htmlproofer, rspec if .rspec file exists'
   task :test do

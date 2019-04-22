@@ -1,41 +1,36 @@
 # frozen_string_literal: true
 
+# rubygems
+require 'rubygems'
+
+# stdlib
+require 'csv'
+require 'fileutils'
+require 'json'
+require 'pathname'
+require 'yaml'
+
+# 3rd party
+require 'html-proofer'
+require 'mini_magick'
+require 'wax_iiif'
+
+# relative
 require_relative 'wax_tasks/collection'
+require_relative 'wax_tasks/site'
 require_relative 'wax_tasks/error'
-require_relative 'wax_tasks/image_collection'
-require_relative 'wax_tasks/lunr/index'
-require_relative 'wax_tasks/pagemaster_collection'
-require_relative 'wax_tasks/task_runner'
 require_relative 'wax_tasks/utils'
 
-# The WaxTasks module powers the Rake tasks in `./tasks`, including:
-#
-# wax:pagemaster          :: generate collection md pages from csv, json, or yaml file
-# wax:lunr                :: build lunr search index (with default UI if UI=true)
-# wax:derivatives:simple  :: generate simple image derivatives from local image files
-# wax:derivatves:iiif     :: generate iiif derivatives from local image files
-# wax:push                :: push compiled Jekyll site to git branch
-# wax:test                :: run htmlproofer, rspec if .rspec file exists
-#
-# Tasks are run by a WaxTasks::TaskRunner object which is resposible
-# for reading in site config from `_config.yml`
 module WaxTasks
-  # ----------
-  # CONSTANTS
-  # ----------
 
   # @return [String] The path to load Jekyll site config
   DEFAULT_CONFIG          = '_config.yml'
 
-  # @return [String] The path to write default LunrUI
-  LUNR_UI_PATH            = 'js/lunr-ui.js'
-
   # @return [String] The path to the compiled Jekyll site
   SITE_DIR                = '_site'
 
-  # @return [String] Default image variant/derivative widths to generate
-  DEFAULT_IMAGE_VARIANTS  = { thumbnail: 250, full: 1140 }.freeze
-
-  # @return [String] The path where image derivatives should be generated
-  DEFAULT_DERIVATIVE_DIR  = 'img/derivatives'
+  def self.pagemaster(site, collection_name)
+    collection  = Collection.new(site, collection_name)
+    collection.generate_pages
+  end
 end
