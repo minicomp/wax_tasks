@@ -7,7 +7,6 @@ require 'rubygems'
 require 'csv'
 require 'fileutils'
 require 'json'
-require 'pathname'
 require 'yaml'
 
 # 3rd party
@@ -23,8 +22,8 @@ require_relative 'wax_tasks/index'
 require_relative 'wax_tasks/site'
 require_relative 'wax_tasks/utils'
 
+#
 module WaxTasks
-
   # @return [String] The path to load Jekyll site config
   DEFAULT_CONFIG          = '_config.yml'
 
@@ -47,9 +46,9 @@ module WaxTasks
       if File.exist?(path)
         skipped += 1
         puts "#{item['pid']}.md already exits. Skipping."
-        next
+      else
+        File.open(path, 'w') { |f| f.write("#{YAML.dump(item)}---") }
       end
-      File.open(path, 'w') { |f| f.write("#{YAML.dump(item)}---") }
     end
     puts "#{metadata.length - skipped} pages were generated to #{page_dir} directory.".cyan
   end
@@ -59,7 +58,7 @@ module WaxTasks
   #
   def self.generate_search(site)
     site.search.each do |config|
-      collections = config.dig('collections')&.keys.map do |name|
+      collections = config.dig('collections').keys.map do |name|
         WaxTasks::Collection.new(site, name)
       end
 

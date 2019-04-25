@@ -1,6 +1,8 @@
-module WaxTasks
-  class Site
+# frozen_string_literal: true
 
+module WaxTasks
+  #
+  class Site
     def initialize(config = nil)
       @config           = config || YAML.load_file(DEFAULT_CONFIG)
       @title            = title

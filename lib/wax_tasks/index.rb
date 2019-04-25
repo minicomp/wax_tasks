@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 module WaxTasks
+  #
   class Index
-
-    DEFAULT_FIELDS = %w(pid label thumbnail).freeze
-
+    DEFAULT_FIELDS = %w[pid label thumbnail].freeze
 
     # Creates a new Index object
     def initialize(config, collections)
@@ -33,7 +32,6 @@ module WaxTasks
 
     # @return [String] writes index as pretty JSON with YAML front-matter
     def to_s
-      # @data.each_with_index.map { |d, i| d['lunr_id'] = id }
       @data.each_with_index.map { |d, i| d['lunr_id'] = i }
       "---\nlayout: none\n---\n#{JSON.pretty_generate(@data)}"
     end

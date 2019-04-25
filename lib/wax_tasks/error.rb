@@ -32,7 +32,7 @@ module WaxTasks
 
     # Custom Error:
     # Could not load collection page(s)
-    class PageLoad      < WaxTasksError; end
+    class PageLoad          < WaxTasksError; end
 
     # Custom Error:
     # Lunr collection does not have fields specified to index

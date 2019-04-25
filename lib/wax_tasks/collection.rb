@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module WaxTasks
+  #
   class Collection
     attr_reader :name
     # Creates a new collection with name @name given site configuration @site
@@ -17,7 +18,6 @@ module WaxTasks
       @imagedata_source = imagedata_source
     end
 
-
     # Finds the collection config within the site config
     #
     # @return [Hash] the config for the collection
@@ -31,21 +31,21 @@ module WaxTasks
     #
     #
     def imageable?
-      (!@imagedata_source.empty?) && (Dir.exists? @imagedata_source)
+      !@imagedata_source.empty? && Dir.exist?(@imagedata_source)
     end
 
     #
     #
     #
     def pageable?
-      (!@metadata_source.empty?) && (File.exists? @metadata_source)
+      !@metadata_source.empty? && File.exist?(@metadata_source)
     end
 
     #
     #
     #
     def indexable?
-      (!@page_dir.empty?) && (Dir.exists? @page_dir)
+      !@page_dir.empty? && Dir.exist?(@page_dir)
     end
 
     #
@@ -127,8 +127,6 @@ module WaxTasks
     #
     #
     #
-    def imagedata
-
-    end
+    def imagedata; end
   end
 end

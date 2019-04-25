@@ -5,13 +5,11 @@ Metrics/LineLength:
   IgnoredPatterns: ['raise', 'puts', '\A#', 'root_path', 'ÈÉÊË', 'EEEE']
 Style/RedundantSelf:
   Enabled: false
-# Metrics/AbcSize:
-#   Max: 40
-# Metrics/MethodLength:
-#   Max: 30
-Style/DoubleNegation:
-  Enabled: false
+Metrics/AbcSize:
+  Max: 25
+Metrics/MethodLength:
+  Max: 17
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
-Layout/AlignHash:
+Layout/EmptyComment:
   Enabled: false

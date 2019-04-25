@@ -10,5 +10,5 @@ namespace :wax do
   end
 
   # alias lunr to search for backwards compatibility
-  task :lunr => :search
+  task lunr: :search
 end
