@@ -9,7 +9,11 @@ namespace :wax do
     raise WaxTasks::Error::MissingArguments, 'You must specify a collection after wax:pagemaster' if args.empty?
 
     site = WaxTasks::Site.new
-    args.each { |a| WaxTasks.generate_pages(site, a) }
+
+    args.each do |a|
+      collection = WaxTasks::Collection.new(site, a)
+      WaxTasks.generate_pages(collection)
+    end
   end
 
   # alias :pagemaster to wax:pages for backwards compatibility

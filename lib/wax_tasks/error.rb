@@ -31,8 +31,8 @@ module WaxTasks
     class MissingSource     < WaxTasksError; end
 
     # Custom Error:
-    # While loading markdown pages to index, one could not be read
-    class LunrPageLoad      < WaxTasksError; end
+    # Could not load collection page(s)
+    class PageLoad      < WaxTasksError; end
 
     # Custom Error:
     # Lunr collection does not have fields specified to index
@@ -67,8 +67,8 @@ module WaxTasks
     class InvalidYAML       < WaxTasksError; end
 
     # Custom Error:
-    # No collections in site config have lunr_index parameters
-    class NoLunrCollections < WaxTasksError; end
+    # Search index in site config has no valid collections to index
+    class NoSearchCollections < WaxTasksError; end
 
     # Custom Error:
     # Cannot find _site directory to push to GitHub

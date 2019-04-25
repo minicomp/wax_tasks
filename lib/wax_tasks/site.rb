@@ -9,7 +9,7 @@ module WaxTasks
       @source           = source
       @collections_dir  = collections_dir
       @collections      = collections
-      @lunr_index       = lunr_index
+      @search           = search
     rescue StandardError => e
       raise Error::InvalidSiteConfig, "Could not load _config.yml. => #{e}"
     end
@@ -38,8 +38,8 @@ module WaxTasks
       @collections || @config.fetch('collections', {})
     end
 
-    def lunr_index
-      @lunr_index || @config.fetch('lunr_index', {})
+    def search
+      @search || @config.fetch('search', [])
     end
   end
 end

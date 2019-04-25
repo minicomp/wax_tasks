@@ -6,7 +6,7 @@ namespace :wax do
   desc 'build lunr search index (with default UI if UI=true)'
   task :search do
     site = WaxTasks::Site.new
-    WaxTasks.generate_search_index(site, !!ENV['UI'])
+    WaxTasks.generate_search(site)
   end
 
   # alias lunr to search for backwards compatibility
