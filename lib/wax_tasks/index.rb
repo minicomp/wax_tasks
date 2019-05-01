@@ -3,13 +3,13 @@
 module WaxTasks
   #
   class Index
-    DEFAULT_FIELDS = %w[pid label thumbnail].freeze
+    DEFAULT_FIELDS = %w[pid label thumbnail permalink].freeze
 
     # Creates a new Index object
     def initialize(config, collections)
       @config      = config
       @collections = collections
-      @data        = data
+      @data        = populate(data)
     end
 
     def path
@@ -28,6 +28,17 @@ module WaxTasks
           item.keep_if { |k,| fields.include? k }
         end
       end.flatten
+    end
+
+    def total_fields(data)
+      data.map(&:keys).flatten.uniq
+    end
+
+    def populate(data)
+      fields = total_fields(data)
+      data.each do |d|
+        fields.each { |f| d[f] = d.fetch(f, '').lunr_normalize }
+      end
     end
 
     # @return [String] writes index as pretty JSON with YAML front-matter

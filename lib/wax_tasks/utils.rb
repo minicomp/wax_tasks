@@ -3,19 +3,6 @@
 module WaxTasks
   # Utility helper methods
   module Utils
-    # Contructs permalink extension from site `permalink` variable
-    #
-    # @param site [Hash] the site config
-    # @return [String] the end of the permalink, either '/' or '.html'
-    def self.construct_permalink(site)
-      case site.fetch(:permalink, false)
-      when 'pretty' || '/'
-        '/'
-      else
-        '.html'
-      end
-    end
-
     # Checks and asserts presence of `pid` value for each item
     #
     # @param  data [Array] array of hashes each representing a collection item

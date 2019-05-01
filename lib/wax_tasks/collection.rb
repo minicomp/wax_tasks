@@ -82,6 +82,8 @@ module WaxTasks
                                        @config.dig('images', 'source'))
     end
 
+
+
     #
     #
     #
@@ -96,9 +98,10 @@ module WaxTasks
         begin
           hash = SafeYAML.load_file(page)
           hash['content'] = WaxTasks::Utils.html_strip(File.read(page))
+          hash['permalink'] = "/#{@name}/#{hash.fetch('pid')}#{@site.ext}"
           data << hash
         rescue StandardError => e
-          raise Error::PageLoad, "Cannot load page #{p}\n#{e}"
+          raise Error::PageLoad, "Cannot load page #{page}\n#{e}"
         end
       end
       data

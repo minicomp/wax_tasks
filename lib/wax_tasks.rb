@@ -57,7 +57,8 @@ module WaxTasks
   #
   #
   def self.generate_search(site)
-    site.search.each do |config|
+    site.search.each do |c|
+      config      = c[1]
       collections = config.dig('collections').keys.map do |name|
         WaxTasks::Collection.new(site, name)
       end
