@@ -22,10 +22,13 @@ module WaxTasks
         collection = @collections.find { |i| i.name == name }
         fields     = DEFAULT_FIELDS + c[1].fetch('fields', [])
 
-        fields.push('content') if c[1].fetch('content')
+        fields.push('content') if c[1].dig('content')
 
         collection.pagedata.map do |item|
-          item.keep_if { |k,| fields.include? k }
+          i = item.keep_if { |k,| fields.include? k }
+          i['collection'] = name
+          i['permalink']  = item.fetch('permalink', "/#{name}/#{item['pid']}/")
+          i
         end
       end.flatten
     end

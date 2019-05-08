@@ -4,10 +4,10 @@ module WaxTasks
   #
   class Collection
     attr_reader :name
-    # Creates a new collection with name @name given site configuration @site
+
     #
-    # @param  name      [String]  name of the collection in site:collections
-    # @param  site      [Hash]    site config
+    #
+    #
     def initialize(site, name)
       @site             = site
       @name             = name
@@ -18,9 +18,9 @@ module WaxTasks
       @imagedata_source = imagedata_source
     end
 
-    # Finds the collection config within the site config
     #
-    # @return [Hash] the config for the collection
+    #
+    #
     def config
       @site.collections.fetch(@name)
     rescue StandardError => e
@@ -108,25 +108,27 @@ module WaxTasks
     #
     #
     def metadata
-      raise Error::MissingSource, "Cannot find #{@metadata_source}" unless File.exist? @metadata_source
+      raise Error::MissingSource, "Cannot find metadata source '#{@metadata_source}'" unless File.exist? @metadata_source
 
-      data = case File.extname(@metadata_source)
-             when '.csv'
-               WaxTasks::Utils.validate_csv(@metadata_source)
-             when '.json'
-               WaxTasks::Utils.validate_json(@metadata_source)
-             when /\.ya?ml/
-               WaxTasks::Utils.validate_yaml(@metadata_source)
-             else
-               raise Error::InvalidSource, "Can't load #{File.extname(@metadata_source)} files. Culprit: #{@metadata_source}"
-             end
-      WaxTasks::Utils.assert_pids(data)
-      WaxTasks::Utils.assert_unique(data)
+      meta = WaxTasks::Utils.ingest(@metadata_source)
+
+      WaxTasks::Utils.assert_pids(meta)
+      WaxTasks::Utils.assert_unique(meta)
+
+      meta.map { |m| Record.new(m) }
     end
 
     #
     #
     #
-    def imagedata; end
+    def imagedata
+      raise Error::MissingSource, "Cannot find image data source '#{@imagedata_source}'" unless Dir.exist? @imagedata_source
+
+      paths = Dir.glob(Utils.safe_join(@imagedata_source, '*'))
+      paths.each do |path|
+        item = WaxTasks::Item.new(path)
+        item.record = metadata.find { |m| m['pid'] == item.pid }
+      end
+    end
   end
 end

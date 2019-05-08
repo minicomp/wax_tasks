@@ -19,6 +19,8 @@ require 'safe_yaml/load'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/index'
+require_relative 'wax_tasks/item'
+require_relative 'wax_tasks/record'
 require_relative 'wax_tasks/site'
 require_relative 'wax_tasks/utils'
 
@@ -34,32 +36,29 @@ module WaxTasks
   #
   #
   def self.generate_pages(collection)
-    metadata = collection.metadata
-    page_dir = collection.page_dir
-    skipped  = 0
-    FileUtils.mkdir_p(page_dir)
-    metadata.each_with_index do |item, idx|
-      item['pid']       = Utils.slug(item.fetch('pid'))
-      item['layout']    = collection.layout unless collection.layout.nil?
-      item['order']     = Utils.padded_int(idx, metadata.length)
-      path              = "#{page_dir}/#{item['pid']}.md"
-      if File.exist?(path)
-        skipped += 1
-        puts "#{item['pid']}.md already exits. Skipping."
-      else
-        File.open(path, 'w') { |f| f.write("#{YAML.dump(item)}---") }
-      end
+    total      = 0
+    metadata   = collection.metadata
+    target_dir = collection.page_dir
+
+    FileUtils.mkdir_p(target_dir)
+    metadata.each_with_index do |record, i|
+      record.order  = Utils.padded_int(i, metadata.length)
+      record.layout = collection.layout unless collection.layout.nil?
+      total += record.write_to_page(target_dir)
     end
-    puts "#{metadata.length - skipped} pages were generated to #{page_dir} directory.".cyan
+
+    puts "\n#{total} pages were generated to #{target_dir}.\n#{collection.metadata.length - total} pages were skipped.".cyan
   end
 
   #
   #
   #
-  def self.generate_search(site)
+  def self.generate_static_search(site)
     site.search.each do |config|
-      collections = config.dig('collections').keys.map do |name|
-        WaxTasks::Collection.new(site, name)
+      name = config[0]
+      config = config[1]
+      collections = config.dig('collections').keys.map do |n|
+        WaxTasks::Collection.new(site, n)
       end
 
       raise WaxTasks::Error::NoSearchCollections unless collections&.first.is_a? Collection
@@ -70,15 +69,21 @@ module WaxTasks
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') { |f| f.write(index.to_s) }
 
-      puts "Generated search index to #{path}".cyan
+      puts "Generated #{name} search index to #{path}".cyan
     end
   end
 
-  # def self.derivatives_simple(site, collection_name)
   #
-  # end
   #
-  # def self.derivatives_iiif(site, collection_name)
   #
-  # end
+  def self.generate_simple_derivatives(collection)
+    collection.imagedata
+  end
+
+  #
+  #
+  #
+  def self.generate_iiif_derivatives(collection)
+    collection.imagedata
+  end
 end

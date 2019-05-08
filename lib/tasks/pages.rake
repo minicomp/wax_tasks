@@ -18,7 +18,7 @@ namespace :wax do
 
   # alias :pagemaster to wax:pages for backwards compatibility
   task :pagemaster do
-    t = Rake::Task['wax:pagemaster']
+    t = Rake::Task['wax:pages']
     desc t.full_comment if t.full_comment
     arguments = ARGV.drop(1).each { |a| task a.to_sym }
     t.invoke(*arguments)

@@ -16,6 +16,22 @@ module WaxTasks
       end
     end
 
+    #
+    #
+    #
+    def self.ingest(source)
+      case File.extname(source)
+      when '.csv'
+        WaxTasks::Utils.validate_csv(source)
+      when '.json'
+        WaxTasks::Utils.validate_json(source)
+      when /\.ya?ml/
+        WaxTasks::Utils.validate_yaml(source)
+      else
+        raise Error::InvalidSource, "Can't load #{File.extname(source)} files. Culprit: #{source}"
+      end
+    end
+
     # Checks and asserts presence of `pid` value for each item
     #
     # @param  data [Array] array of hashes each representing a collection item

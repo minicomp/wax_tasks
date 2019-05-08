@@ -6,10 +6,13 @@ namespace :wax do
   namespace :derivatives do
     desc 'generate iiif derivatives from local image files'
     task :iiif do
-      arguments = ARGV.drop(1).each { |a| task a.to_sym }
-      raise WaxTasks::Error::MissingArguments, "You must specify a collection after 'wax:derivatives:iiif'" if arguments.empty?
-      task_runner = WaxTasks::TaskRunner.new
-      task_runner.derivatives_iiif(arguments)
+      args = ARGV.drop(1).each { |a| task a.to_sym }
+      raise WaxTasks::Error::MissingArguments, "You must specify a collection after 'wax:derivatives:iiif'" if args.empty?
+
+      args.each do |a|
+        collection = WaxTasks::Collection.new(site, a)
+        WaxTasks.generate_iiif_derivatives(collection)
+      end
     end
   end
 
