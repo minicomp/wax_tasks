@@ -34,7 +34,6 @@ module WaxTasks
 
   #
   #
-  #
   def self.generate_pages(collection)
     total      = 0
     metadata   = collection.metadata
