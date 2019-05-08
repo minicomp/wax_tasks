@@ -41,7 +41,19 @@ module WaxTasks
     end
 
     def search
-      @search || @config.fetch('search', [])
+      @search || @config.fetch('search', {})
+    end
+
+    # Contructs permalink extension from site `permalink` variable
+    #
+    # @return [String] the end of the permalink, either '/' or '.html'
+    def ext
+      case @config.dig('permalink')
+      when 'pretty' || '/'
+        '/'
+      else
+        '.html'
+      end
     end
   end
 end
