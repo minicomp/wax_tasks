@@ -10,10 +10,11 @@ require 'json'
 require 'yaml'
 
 # 3rd party
-require 'html-proofer'
 require 'mini_magick'
-require 'wax_iiif'
+require 'rainbow'
 require 'safe_yaml/load'
+require 'wax_iiif'
+
 
 # relative
 require_relative 'wax_tasks/collection'
@@ -26,57 +27,21 @@ require_relative 'wax_tasks/utils'
 
 #
 module WaxTasks
-  # @return [String] The path to load Jekyll site config
-  DEFAULT_CONFIG          = '_config.yml'
-
-  # @return [String] The path to the compiled Jekyll site
-  SITE_DIR                = '_site'
-
-  #
-  #
-  def self.generate_pages(collection)
-    total      = 0
-    metadata   = collection.metadata
-    target_dir = collection.page_dir
-
-    FileUtils.mkdir_p(target_dir)
-    metadata.each_with_index do |record, i|
-      record.order  = Utils.padded_int(i, metadata.length)
-      record.layout = collection.layout unless collection.layout.nil?
-      total += record.write_to_page(target_dir)
-    end
-
-    puts "\n#{total} pages were generated to #{target_dir}.\n#{collection.metadata.length - total} pages were skipped.".cyan
-  end
-
-  #
-  #
-  #
-  def self.generate_static_search(site)
-    site.search.each do |config|
-      name = config[0]
-      config = config[1]
-      collections = config.dig('collections').keys.map do |n|
-        WaxTasks::Collection.new(site, n)
-      end
-
-      raise WaxTasks::Error::NoSearchCollections unless collections&.first.is_a? Collection
-
-      index = Index.new(config, collections)
-      path  = Utils.safe_join(site.source, index.path)
-
-      FileUtils.mkdir_p(File.dirname(path))
-      File.open(path, 'w') { |f| f.write(index.to_s) }
-
-      puts "Generated #{name} search index to #{path}".cyan
-    end
-  end
+  DEFAULT_CONFIG             = '_config.yml'
+  ACCEPTED_IMAGE_FORMATS     = %w[.png .jpg .jpeg .tiff].freeze
+  DEFAULT_IMAGE_VARIANTS     = { thumbnail: 250, full: 1140 }.freeze
+  IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
+  DEFAULT_SEARCH_FIELDS      = %w[pid label thumbnail permalink].freeze
 
   #
   #
   #
   def self.generate_simple_derivatives(collection)
-    collection.imagedata
+    result = collection.imagedata.map do |i|
+      i.build_simple_derivatives
+    end
+
+    puts Rainbow("\nDone ✔").green
   end
 
   #

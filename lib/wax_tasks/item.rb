@@ -1,67 +1,59 @@
 # frozen_string_literal: true
 
 module WaxTasks
-  ACCEPTED_IMAGE_ITEM_FORMATS = %w[.jpeg .jpg .tiff .png].freeze
-  ACCEPTED_PAGED_ITEM_FORMATS = %w[dir .pdf].freeze
   #
   class Item
-    attr_writer :record
-    #
-    #
-    #
-    def initialize(path)
-      @path       = path
-      @pid        = pid
-      @assets     = assets
-    end
+    attr_accessor :record
+    attr_reader :type, :pid, :assets
 
     #
     #
     #
+    def initialize(path, type, variants = {})
+      @path       = path
+      @type       = type
+      @pid        = File.basename(@path, '.*')
+      @assets     = assets
+      @variants   = variants.merge(DEFAULT_IMAGE_VARIANTS)
+    end
+
+    #
+    #
     def assets
-      ext = Dir.exist?(@path) ? 'dir' : File.extname(@path)
-      if ACCEPTED_IMAGE_ITEM_FORMATS.include? ext
+      if ACCEPTED_IMAGE_FORMATS.include? @type
         [@path]
-      elsif ext == '.pdf'
-        split_pdf(@path)
-      elsif ACCEPTED_PAGED_ITEM_FORMATS.include? ext
-        Dir.glob("#{@path}/*{#{ACCEPTED_IMAGE_ITEM_FORMATS.join(',')}}")
+      elsif @type == 'dir'
+        Dir.glob("#{@path}/*{#{ACCEPTED_IMAGE_FORMATS.join(',')}}")
       else
-        puts 'Error' # raise format Error TO DO
+        []
       end
     end
 
     #
     #
     #
-    def pid
-      @pid || File.basename(@path, '.*')
-    end
+    def build_simple_derivatives(dir =  nil)
+      output_dir = dir || "#{IMAGE_DERIVATIVE_DIRECTORY}/simple"
 
-    #
-    #
-    #
-    # def record
-    #   @record || {}
-    # end
+      @assets.each_with_index do |asset, i|
+        asset_id = File.basename(asset, '.*')
+        asset_id.prepend("#{@pid}_") unless asset_id == @pid
+        asset_dir = "#{output_dir}/#{asset_id}"
 
-    #
-    #
-    #
-    # def record=(record)
-    #   @record = record
-    # end
+        FileUtils.mkdir_p(asset_dir)
 
-    #
-    #
-    # @return [Array] array of image paths generated from pdf split
-    #                 or Nil if pdf has already been split
-    def split_pdf(path)
-      target_dir = path.gsub('.pdf', '')
-      next if Dir.glob("#{target_dir}/*").any?
+        puts Rainbow("Processing #{asset_id}...").cyan
 
-      opts = { output_dir: target_dir, verbose: true }
-      WaxIiif::Utilities::PdfSplitter.split(path, opts).sort
+        @variants.each do |label, width|
+          path = "#{asset_dir}/#{label}.jpg"
+          next if File.exist?(path)
+
+          variant = MiniMagick::Image.open(asset)
+          variant.resize(width)
+          variant.format('jpg')
+          variant.write(path)
+        end
+      end
     end
   end
 end

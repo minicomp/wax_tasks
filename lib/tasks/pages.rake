@@ -6,14 +6,10 @@ namespace :wax do
   desc 'generate collection md pages from yaml or csv data source'
   task :pages do
     args = ARGV.drop(1).each { |a| task a.to_sym }
-    raise WaxTasks::Error::MissingArguments, 'You must specify a collection after wax:pages' if args.empty?
+    raise WaxTasks::Error::MissingArguments, Rainbow('You must specify a collection after wax:pages').magenta if args.empty?
 
     site = WaxTasks::Site.new
-
-    args.each do |a|
-      collection = WaxTasks::Collection.new(site, a)
-      WaxTasks.generate_pages(collection)
-    end
+    args.each { |a| site.generate_pages(a) }
   end
 
   # alias :pagemaster to wax:pages for backwards compatibility
@@ -21,8 +17,6 @@ namespace :wax do
     t = Rake::Task['wax:pages']
     desc t.full_comment if t.full_comment
     args = ARGV.drop(1).each { |a| task a.to_sym }
-    raise WaxTasks::Error::MissingArguments, 'You must specify a collection after wax:pages' if args.empty?
-
     t.invoke(*args)
   end
 end

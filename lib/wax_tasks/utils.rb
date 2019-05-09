@@ -3,19 +3,6 @@
 module WaxTasks
   # Utility helper methods
   module Utils
-    # Contructs permalink extension from site `permalink` variable
-    #
-    # @param site [Hash] the site config
-    # @return [String] the end of the permalink, either '/' or '.html'
-    def self.construct_permalink(site)
-      case site.fetch(:permalink, false)
-      when 'pretty' || '/'
-        '/'
-      else
-        '.html'
-      end
-    end
-
     #
     #
     #
@@ -137,6 +124,17 @@ module WaxTasks
     def self.padded_int(idx, max_idx)
       idx.to_s.rjust(Math.log10(max_idx).to_i + 1, '0')
     end
+
+    #
+    #
+    #
+    def self.process_pdf(path)
+      target_dir = path.gsub('.pdf', '')
+      return unless Dir.glob("#{target_dir}/*").empty?
+
+      puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
+      WaxIiif::Utilities::PdfSplitter.split(path, output_dir: File.dirname(target_dir)).sort
+    end
   end
 end
 
@@ -146,24 +144,6 @@ class String
   # @return [String]
   def lunr_normalize
     WaxTasks::Utils.remove_diacritics(self)
-  end
-
-  # Colorizes console output to magenta (errors)
-  # @return [String]
-  def magenta
-    "\e[35m#{self}\e[0m"
-  end
-
-  # Colorizes console output to cyan (messages)
-  # @return [String]
-  def cyan
-    "\e[36m#{self}\e[0m"
-  end
-
-  # Colorizes console output to orange (warnings)
-  # @return [String]
-  def orange
-    "\e[33m#{self}\e[0m"
   end
 end
 
@@ -178,10 +158,6 @@ class Array
     else
       WaxTasks::Utils.remove_diacritics(self.join(', '))
     end
-  end
-
-  def except(value)
-    self - value
   end
 end
 

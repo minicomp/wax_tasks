@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'html-proofer', '~> 3.10'
   s.add_dependency 'jekyll', '~> 3.8'
+  s.add_dependency 'rainbow', '~> 3.0'
   s.add_dependency 'rake', '~> 12.3'
   s.add_dependency 'safe_yaml', '~> 1.0'
   s.add_dependency 'wax_iiif', '~> 0.1.0'

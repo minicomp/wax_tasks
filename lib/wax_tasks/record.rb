@@ -3,14 +3,11 @@
 module WaxTasks
   #
   class Record
-    attr_reader :meta
+    attr_reader :meta, :pid
 
     def initialize(meta)
       @meta = meta
-    end
-
-    def pid
-      @meta.fetch('pid')
+      @pid = @meta.fetch('pid')
     end
 
     def order=(order)
@@ -21,10 +18,33 @@ module WaxTasks
       @meta['layout'] = layout
     end
 
+    def content=(content)
+      @meta['content'] = content
+    end
+
+    def permalink=(permalink)
+      @meta['permalink'] = permalink
+    end
+
+    def permalink
+      @meta['permalink']
+    end
+
+    def collection=(collection)
+      @meta['collection'] = collection
+    end
+
+    def lunr_id=(lunr_id)
+      @meta['lunr_id'] = lunr_id
+    end
+
+    def keep_only(fields)
+      @meta.reject! { |k, _v| fields.include? k }
+    end
+
     def write_to_page(dir)
       path = "#{dir}/#{pid}.md"
       if File.exist?(path)
-        puts "#{path} already exits. Skipping."
         0
       else
         File.open(path, 'w') { |f| f.write("#{@meta.to_yaml}---") }

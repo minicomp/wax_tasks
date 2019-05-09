@@ -6,7 +6,7 @@ module WaxTasks
     # Custom WaxTasks Error class with magenta console output
     class WaxTasksError < StandardError
       def initialize(msg = '')
-        super(msg.magenta)
+        super(Rainbow(msg).magenta)
       end
     end
 
