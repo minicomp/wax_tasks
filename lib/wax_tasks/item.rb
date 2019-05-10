@@ -13,13 +13,13 @@ module WaxTasks
       @path       = path
       @type       = type
       @pid        = File.basename(@path, '.*')
-      @assets     = assets
+      @assets     = asset_array
       @variants   = variants.merge(DEFAULT_IMAGE_VARIANTS)
     end
 
     #
     #
-    def assets
+    def asset_array
       if ACCEPTED_IMAGE_FORMATS.include? @type
         [@path]
       elsif @type == 'dir'
@@ -32,28 +32,28 @@ module WaxTasks
     #
     #
     #
-    def build_simple_derivatives(dir =  nil)
+    def build_simple_derivatives(dir = nil)
       output_dir = dir || "#{IMAGE_DERIVATIVE_DIRECTORY}/simple"
-
-      @assets.each_with_index do |asset, i|
+      @assets.each do |asset|
         asset_id = File.basename(asset, '.*')
         asset_id.prepend("#{@pid}_") unless asset_id == @pid
         asset_dir = "#{output_dir}/#{asset_id}"
-
         FileUtils.mkdir_p(asset_dir)
-
         puts Rainbow("Processing #{asset_id}...").cyan
-
-        @variants.each do |label, width|
-          path = "#{asset_dir}/#{label}.jpg"
-          next if File.exist?(path)
-
-          variant = MiniMagick::Image.open(asset)
-          variant.resize(width)
-          variant.format('jpg')
-          variant.write(path)
-        end
+        @variants.each { |l, w| generate_variant(asset_dir, l, w) }
       end
+    end
+
+    #
+    #
+    def generate_variant(dir, label, width)
+      path = "#{dir}/#{label}.jpg"
+      return if File.exist?(path)
+
+      variant = MiniMagick::Image.open(asset)
+      variant.resize(width)
+      variant.format('jpg')
+      variant.write(path)
     end
   end
 end

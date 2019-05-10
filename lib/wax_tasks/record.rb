@@ -39,7 +39,7 @@ module WaxTasks
     end
 
     def keep_only(fields)
-      @meta.reject! { |k, _v| fields.include? k }
+      @meta.select! { |k, _v| fields.include? k }
     end
 
     def write_to_page(dir)

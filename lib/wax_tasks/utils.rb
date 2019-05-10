@@ -38,6 +38,7 @@ module WaxTasks
       pids = data.map { |d| d['pid'] }
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
       raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
+
       data
     end
 
@@ -133,7 +134,8 @@ module WaxTasks
       return unless Dir.glob("#{target_dir}/*").empty?
 
       puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
-      WaxIiif::Utilities::PdfSplitter.split(path, output_dir: File.dirname(target_dir)).sort
+      opts = { output_dir: File.dirname(target_dir) }
+      WaxIiif::Utilities::PdfSplitter.split(path, opts).sort
     end
   end
 end

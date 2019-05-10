@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'ostruct'
+
 module WaxTasks
   #
   class Collection
@@ -9,23 +11,25 @@ module WaxTasks
     #
     #
     #
-    def initialize(name, config, site_source, site_collections_dir, site_ext)
-      @name                 = name
-      @config               = config
-      @site_source_dir      = site_source
-      @site_collections_dir = site_collections_dir
-      @site_ext             = site_ext
-      @metadata_source      = metadata_source
-      @imagedata_source     = imagedata_source
+    def initialize(name, config, site)
+      @name   = name
+      @config = OpenStruct.new(config)
+      @site   = site
     end
 
     #
     #
     #
-    def config
-      @site.collections.fetch(@name)
-    rescue StandardError => e
-      raise Error::InvalidCollection, "Cannot load collection config for #{@name}.\n#{e}"
+    def pageable?
+      File.exist?(metadata_source) &&
+        ACCEPTED_METADATA_FORMATS.include?(File.extname(metadata_source))
+    end
+
+    #
+    #
+    #
+    def indexable?
+      Dir.glob("#{page_dir}/*.{md, markdown}").any?
     end
 
     #
@@ -35,46 +39,26 @@ module WaxTasks
       @config.dig('layout')
     end
 
-    #
-    #
-    #
-    def content=(content)
-      @content = !!content
-    end
-
-    #
-    #
-    #
-    def content?
-      @content || false
-    end
-
     # Returns the designated directory for collection pages
     #
     # @return [String] path
     def page_dir
-      Utils.safe_join(@site_source_dir, @site_collections_dir, "_#{@name}")
+      Utils.safe_join(@site.source_dir, @site.collections_dir, "_#{@name}")
     end
 
-    #
-    #
-    #
     def metadata_source
-      Utils.safe_join(@site_source_dir, '_data', @config.dig('metadata', 'source'))
+      Utils.safe_join(@site.source_dir, '_data', @config.dig('metadata', 'source'))
     end
 
-    #
-    #
-    #
     def imagedata_source
-      Utils.safe_join(@site_source_dir, '_data', @config.dig('images', 'source'))
+      Utils.safe_join(@site.source_dir, '_data', @config.dig('images', 'source'))
     end
 
     #
     #
     #
-    def pagedata
-      pages = Dir.glob("#{page_dir}/*.md")
+    def page_records
+      pages = Dir.glob("#{page_dir}/*.{md, markdown}")
       warn Rainbow("There are no pages in #{page_dir} to index.").orange if pages.empty?
 
       pages.map do |page|
@@ -92,10 +76,27 @@ module WaxTasks
     #
     #
     #
-    def metadata
-      raise Error::MissingSource, "Cannot find metadata source '#{@metadata_source}'" unless File.exist? @metadata_source
+    def generate_pages(records)
+      result = 0
+      FileUtils.mkdir_p page_dir
 
-      meta = WaxTasks::Utils.ingest(@metadata_source)
+      records.each_with_index do |record, i|
+        record.order      = Utils.padded_int i, records.length
+        record.layout     = layout unless layout.nil?
+        record.collection = @name
+        result += record.write_to_page(page_dir)
+      end
+
+      result
+    end
+
+    #
+    #
+    #
+    def metadata_records
+      raise Error::MissingSource, "Cannot find metadata source '#{metadata_source}'" unless File.exist? metadata_source
+
+      meta = WaxTasks::Utils.ingest(metadata_source)
 
       WaxTasks::Utils.assert_pids(meta)
       WaxTasks::Utils.assert_unique(meta)
@@ -106,20 +107,19 @@ module WaxTasks
     #
     #
     #
-    def imagedata
-      raise Error::MissingSource, "Cannot find image data source '#{@imagedata_source}'" unless Dir.exist? @imagedata_source
+    def items
+      raise Error::MissingSource, "Cannot find image data source '#{imagedata_source}'" unless Dir.exist? imagedata_source
 
-      pdfs = Dir.glob(Utils.safe_join(@imagedata_source, '*.pdf'))
+      pdfs = Dir.glob(Utils.safe_join(imagedata_source, '*.pdf'))
       pdfs.each { |p| WaxTasks::Utils.process_pdf(p) }
 
-      paths = Dir.glob(Utils.safe_join(@imagedata_source, '*'))
-      paths.map do |path|
+      Dir.glob(Utils.safe_join(imagedata_source, '*')).map do |path|
         type = Dir.exist?(path) ? 'dir' : File.extname(path)
         next unless %w[.png .jpg .jpeg .tiff dir].include? type
 
         item = WaxTasks::Item.new(path, type)
-        item.record = metadata.find { |r| r.pid == item.pid }
-        warn Rainbow("\nWarning:\nCould not find record in #{@metadata_source} for image item #{path}.\n").orange if item.record.nil?
+        item.record = metadata_records.find { |r| r.pid == item.pid }
+        warn Rainbow("\nWarning:\nCould not find record in #{metadata_source} for image item #{path}.\n").orange if item.record.nil?
         item
       end.compact
     end

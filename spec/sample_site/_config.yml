@@ -1,18 +1,13 @@
 title: 'sample site'
 url: ''
 baseurl: ''
-collections_dir: ''
-source: ''
-js:
-  jquery:
-    cdn: link
-    version: version
+test: test
+
 collections:
   csv_collection:
     layout: default.html
     metadata:
       source: valid.csv
-      labels: labels.yaml
     images:
       source: 'images/test_collection'
       iiif:
@@ -24,21 +19,19 @@ collections:
     layout: default.html
     metadata:
       source: valid.json
-      labels: labels.yaml
     images:
       source: 'images/test_collection'
   yaml_collection:
     layout: default.html
     metadata:
       source: valid.yaml
-      labels: labels.yaml
     images:
       source: 'images/test_collection'
 
 
-lunr_index:
-  - file: 'js/lunr-index.json'
-    ui:   'js/lunr-ui.js'
+search:
+  main:
+    index_file: 'js/lunr-index.json'
     collections:
       csv_collection:
         fields: ['gambrel', 'blasphemous']
