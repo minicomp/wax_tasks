@@ -3,23 +3,14 @@
 module WaxTasks
   #
   class Index
-    attr_reader :collections
+    attr_reader :path, :collections
 
     # Creates a new Index object
-    def initialize(name, config)
+    def initialize(name, path, collections)
       @name        = name
-      @config      = config
-      @collections = @config.fetch('collections', [])
+      @path        = path
+      @collections = collections
       @records     = records
-
-      raise WaxTasks::Error::NoSearchCollections unless @collections.first.is_a? WaxTasks::Collection
-    end
-
-    #
-    #
-    #
-    def path
-      @config.fetch('index')
     end
 
     #

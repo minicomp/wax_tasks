@@ -40,13 +40,13 @@ module WaxTasks
         asset_dir = "#{output_dir}/#{asset_id}"
         FileUtils.mkdir_p(asset_dir)
         puts Rainbow("Processing #{asset_id}...").cyan
-        @variants.each { |l, w| generate_variant(asset_dir, l, w) }
+        @variants.each { |l, w| generate_variant(asset, asset_dir, l, w) }
       end
     end
 
     #
     #
-    def generate_variant(dir, label, width)
+    def generate_variant(asset, dir, label, width)
       path = "#{dir}/#{label}.jpg"
       return if File.exist?(path)
 

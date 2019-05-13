@@ -22,15 +22,19 @@ require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/index'
 require_relative 'wax_tasks/item'
 require_relative 'wax_tasks/record'
-require_relative 'wax_tasks/runner'
+require_relative 'wax_tasks/site'
 require_relative 'wax_tasks/utils'
 
 #
 module WaxTasks
-  DEFAULT_CONFIG             = '_config.yml'
+  DEFAULT_CONFIG             = "#{Dir.pwd}/_config.yml"
   ACCEPTED_IMAGE_FORMATS     = %w[.png .jpg .jpeg .tiff].freeze
   ACCEPTED_METADATA_FORMATS  = %w[.yml .yaml .csv .json].freeze
   DEFAULT_IMAGE_VARIANTS     = { thumbnail: 250, full: 1140 }.freeze
   IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
   DEFAULT_SEARCH_FIELDS      = %w[pid label thumbnail permalink].freeze
+
+  def self.config_from_file(file = nil)
+    YAML.safe_load(File.open(file || DEFAULT_CONFIG))
+  end
 end

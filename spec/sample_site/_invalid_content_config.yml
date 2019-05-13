@@ -1,0 +1,34 @@
+title: 'sample site'
+url: ''
+baseurl: ''
+
+collections:
+  invalid_csv_collection:
+    metadata:
+      source: invalid/.invalid.csv
+  invalid_json_collection:
+    metadata:
+      source: invalid/.invalid.json
+  invalid_yaml_collection:
+    metadata:
+      source: invalid/.invalid.yml
+  xls_collection:
+    metadata:
+      source: invalid/.invalid.xls
+  duplicate_pid_collection:
+    metadata:
+      source: invalid/duplicate_pid.csv
+  missing_pid_collection:
+    metadata:
+      source: invalid/missing_pid.json
+  missing_source_collection:
+      source: doesnt-exist.json
+
+
+
+search:
+  missing-collection:
+    index_file: 'js/lunr-index.json'
+    collections:
+      not_a_collection:
+        fields: ['gambrel', 'blasphemous']

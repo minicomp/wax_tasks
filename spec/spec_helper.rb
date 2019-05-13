@@ -14,5 +14,9 @@ require 'setup'
 
 # provide shared context for tests
 shared_context 'shared', :shared_context => :metadata do
-
+   let(:config_from_file) { WaxTasks.config_from_file("#{BUILD}/_config.yml") }
+   let(:invalid_content_config) { WaxTasks.config_from_file("#{BUILD}/_invalid_content_config.yml") }
+   let(:invalid_format_config) { WaxTasks.config_from_file("#{BUILD}/_invalid_format_config.yml") }
+   let(:empty_config) { Hash.new }
+   let(:args_from_file) { %w[csv_collection json_collection yaml_collection]}
 end

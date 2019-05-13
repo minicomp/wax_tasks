@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'ostruct'
-
 module WaxTasks
   #
   class Collection
@@ -13,23 +11,8 @@ module WaxTasks
     #
     def initialize(name, config, site)
       @name   = name
-      @config = OpenStruct.new(config)
+      @config = config
       @site   = site
-    end
-
-    #
-    #
-    #
-    def pageable?
-      File.exist?(metadata_source) &&
-        ACCEPTED_METADATA_FORMATS.include?(File.extname(metadata_source))
-    end
-
-    #
-    #
-    #
-    def indexable?
-      Dir.glob("#{page_dir}/*.{md, markdown}").any?
     end
 
     #
@@ -43,15 +26,15 @@ module WaxTasks
     #
     # @return [String] path
     def page_dir
-      Utils.safe_join(@site.source_dir, @site.collections_dir, "_#{@name}")
+      Utils.safe_join(@site.source, @site.collections_dir, "_#{@name}")
     end
 
     def metadata_source
-      Utils.safe_join(@site.source_dir, '_data', @config.dig('metadata', 'source'))
+      Utils.safe_join(@site.source, '_data', @config.dig('metadata', 'source'))
     end
 
     def imagedata_source
-      Utils.safe_join(@site.source_dir, '_data', @config.dig('images', 'source'))
+      Utils.safe_join(@site.source, '_data', @config.dig('images', 'source'))
     end
 
     #
@@ -76,9 +59,10 @@ module WaxTasks
     #
     #
     #
-    def generate_pages(records)
+    def generate_pages
       result = 0
       FileUtils.mkdir_p page_dir
+      records = metadata_records
 
       records.each_with_index do |record, i|
         record.order      = Utils.padded_int i, records.length

@@ -15,7 +15,7 @@ module WaxTasks
     class MissingArguments < WaxTasksError; end
 
     # Custom Error:
-    # Site config cannot be found / parsed
+    # Site config cannot be found / parsed for the task at hand
     class InvalidSiteConfig < WaxTasksError; end
 
     # Custom Error:
