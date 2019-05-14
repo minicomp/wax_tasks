@@ -124,17 +124,14 @@ module WaxTasks
     end
 
     def self.lunr_normalize(val)
-      puts val.class
       case val.class
-      when String
-        WaxTasks::Utils.remove_diacritics(val)
+      when String || Integer
+        WaxTasks::Utils.remove_diacritics(val.to_s)
       when Array
         return val if val.first.is_a? Hash
         WaxTasks::Utils.remove_diacritics(val.join(', '))
-      when Hash
-        val
       else
-        val.to_s
+        val
       end
     end
   end

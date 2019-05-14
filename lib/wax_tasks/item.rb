@@ -27,7 +27,7 @@ module WaxTasks
     end
 
     def valid?
-      accepted_image_formats.include? @type || @type == 'dir'
+      accepted_image_formats.include?(@type) || @type == 'dir'
     end
 
     #

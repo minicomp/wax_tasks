@@ -2,13 +2,11 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude: ['spec/**/*', 'test_build/**/*']
 Metrics/LineLength:
-  IgnoredPatterns: ['raise', 'puts', 'warn', '\A#', 'root_path', 'ÈÉÊË', 'EEEE', 'safe_join']
-Style/RedundantSelf:
-  Enabled: false
-Metrics/AbcSize:
-  Max: 20
-Metrics/MethodLength:
-  Max: 12
+  IgnoredPatterns: ['raise', 'puts', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join']
+# Metrics/AbcSize:
+#   Max: 20
+# Metrics/MethodLength:
+#   Max: 12
 Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
