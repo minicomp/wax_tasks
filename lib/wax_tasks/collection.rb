@@ -3,9 +3,7 @@
 module WaxTasks
   #
   class Collection
-    attr_reader :name, :page_source, :metadata_source, :imagedata_source, :search_fields
-
-    @@default_variants = Hashie::Mash.new(thumbnail: 250, full: 1140)
+    attr_reader :name, :search_fields
 
     #
     #
@@ -35,8 +33,10 @@ module WaxTasks
     end
 
     def image_variants
-      custom_variants = Hashie::Mash.new(@config.dig('images', 'variants'))
-      @@default_variants.merge(custom_variants)
+      default_variants = Hashie::Mash.new(thumbnail: 250, full: 1140)
+      custom_variants  = Hashie::Mash.new(@config.dig('images', 'variants'))
+
+      default_variants.merge(custom_variants)
     end
 
     def iiif_config
@@ -99,7 +99,7 @@ module WaxTasks
     def pre_process_pdfs
       Dir.glob(Utils.safe_join(@imagedata_source, '*.pdf')).each do |path|
         target_dir = path.gsub('.pdf', '')
-        return unless Dir.glob("#{target_dir}/*").empty?
+        next unless Dir.glob("#{target_dir}/*").empty?
 
         puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
         opts = { output_dir: File.dirname(target_dir) }

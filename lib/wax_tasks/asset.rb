@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module WaxTasks
-
   Derivative = Struct.new(:path, :img)
   #
   class Asset
@@ -30,11 +29,3 @@ module WaxTasks
     end
   end
 end
-
-# variant_path = "#{dir}/#{label}.jpg"
-#
-# puts variant_path
-# return if File.exist?(variant_path)
-
-
-# img.write(variant_path)

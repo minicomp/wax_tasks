@@ -4,10 +4,7 @@ module WaxTasks
   #
   class Item
     attr_accessor :record
-    attr_reader :type, :pid, :assets
-
-    @@accepted_image_formats     = %w[.png .jpg .jpeg .tiff]
-    @@accepted_item_formats      = @@accepted_image_formats + ['dir']
+    attr_reader :pid
 
     #
     #
@@ -21,21 +18,25 @@ module WaxTasks
       @record     = nil
     end
 
+    def accepted_image_formats
+      %w[.png .jpg .jpeg .tiff]
+    end
+
     def type
       Dir.exist?(@path) ? 'dir' : File.extname(@path)
     end
 
     def valid?
-      @@accepted_item_formats.include? @type
+      accepted_image_formats.include? @type || @type == 'dir'
     end
 
     #
     #
     def assets
-      if @@accepted_image_formats.include? @type
+      if accepted_image_formats.include? @type
         [Asset.new(@path, @pid, @variants)]
       elsif @type == 'dir'
-        paths = Dir.glob("#{@path}/*{#{@@accepted_image_formats.join(',')}}")
+        paths = Dir.glob("#{@path}/*{#{accepted_image_formats.join(',')}}")
         paths.map { |p| Asset.new(p, @pid, @variants) }
       else
         []

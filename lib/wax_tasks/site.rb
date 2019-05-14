@@ -6,12 +6,11 @@ module WaxTasks
   class Site
     attr_reader :config
 
-    @@image_derivative_directory = 'img/derivatives'
-    @@default_config = Hashie::Mash.new(
+    DEFAULT_CONFIG = Hashie::Mash.new(
       collections_dir: '',
       collections: {},
       search: {}
-    )
+    ).freeze
 
     #
     #
@@ -24,7 +23,7 @@ module WaxTasks
     #
     def mash(config)
       config = Hashie::Mash.new(config)
-      config.deep_merge!(@@default_config)
+      config.deep_merge!(DEFAULT_CONFIG)
       config.source = Utils.safe_join(Dir.pwd, config.source)
       config.ext = permalink_extension(config)
       config
@@ -79,8 +78,8 @@ module WaxTasks
       @config.search.each do |name, hash|
         raise WaxTasks::NoSearchCollections unless hash.collections
 
-        collections = hash.collections.map do |name, conf|
-          find_collection(name).tap { |c| c.search_fields = conf }
+        collections = hash.collections.map do |n, s|
+          find_collection(n).tap { |c| c.search_fields = s }
         end
 
         index = WaxTasks::Index.new(name, hash, collections)
@@ -90,6 +89,7 @@ module WaxTasks
 
       puts Rainbow("\nDone ✔").green
     end
+
     #
     #
     #
@@ -97,13 +97,15 @@ module WaxTasks
       collection = @collections.find { |c| c.name == collection_name.to_s }
       raise WaxTasks::Error::InvalidCollection if collection.nil?
 
-      output_dir  = Utils.safe_join(config.source, @@image_derivative_directory)
+      output_dir  = Utils.safe_join(config.source, IMAGE_DERIVATIVE_DIRECTORY)
       items       = collection.items_from_imagedata
       derivatives = items.map(&:simple_derivatives).flatten
 
       derivatives.each do |d|
         path = "#{output_dir}/#{d.path}"
         FileUtils.mkdir_p(File.dirname(path))
+        next if File.exist?(path)
+
         d.img.write(path)
       end
 

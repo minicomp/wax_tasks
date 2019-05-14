@@ -29,10 +29,11 @@ require_relative 'wax_tasks/utils'
 #
 module WaxTasks
   DEFAULT_CONFIG_FILE = "#{Dir.pwd}/_config.yml"
+  IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
 
   def self.config_from_file(file = nil)
     YAML.safe_load(File.open(file || DEFAULT_CONFIG))
-  rescue => e
-    raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'."
+  rescue StandardError => e
+    raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'.\n #{e}"
   end
 end

@@ -19,18 +19,18 @@ module WaxTasks
     #
     def records
       lunr_id = 0
-      records = []
-      @collections.each do |collection|
+      result = []
+      @collections.map do |collection|
         collection.records_from_pages.each do |record|
           record.keep_only(collection.search_fields)
           record.lunr_id   = lunr_id
           record.permalink = record.permalink || "/#{@name}/#{record.pid}/"
           record.lunr_normalize_values
           lunr_id += 1
-          records << record
+          result << record
         end
       end
-      records
+      result
     end
 
     #
