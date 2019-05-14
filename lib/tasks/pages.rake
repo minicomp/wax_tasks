@@ -8,7 +8,8 @@ namespace :wax do
     args = ARGV.drop(1).each { |a| task a.to_sym }
     raise WaxTasks::Error::MissingArguments, Rainbow('You must specify a collection after wax:pages').magenta if args.empty?
 
-    site = WaxTasks::Site.new
+    config = WaxTasks::DEFAULT_CONFIG_FILE
+    site = WaxTasks::Site.new(config)
     args.each { |a| site.generate_pages(a) }
   end
 

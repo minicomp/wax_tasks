@@ -6,24 +6,37 @@ module WaxTasks
     attr_accessor :record
     attr_reader :type, :pid, :assets
 
+    @@accepted_image_formats     = %w[.png .jpg .jpeg .tiff]
+    @@accepted_item_formats      = @@accepted_image_formats + ['dir']
+
     #
     #
     #
-    def initialize(path, type, variants = {})
+    def initialize(path, variants)
       @path       = path
+      @variants   = variants
       @type       = type
       @pid        = File.basename(@path, '.*')
-      @assets     = asset_array
-      @variants   = variants.merge(DEFAULT_IMAGE_VARIANTS)
+      @assets     = assets
+      @record     = nil
+    end
+
+    def type
+      Dir.exist?(@path) ? 'dir' : File.extname(@path)
+    end
+
+    def valid?
+      @@accepted_item_formats.include? @type
     end
 
     #
     #
-    def asset_array
-      if ACCEPTED_IMAGE_FORMATS.include? @type
-        [@path]
+    def assets
+      if @@accepted_image_formats.include? @type
+        [Asset.new(@path, @pid, @variants)]
       elsif @type == 'dir'
-        Dir.glob("#{@path}/*{#{ACCEPTED_IMAGE_FORMATS.join(',')}}")
+        paths = Dir.glob("#{@path}/*{#{@@accepted_image_formats.join(',')}}")
+        paths.map { |p| Asset.new(p, @pid, @variants) }
       else
         []
       end
@@ -32,28 +45,8 @@ module WaxTasks
     #
     #
     #
-    def build_simple_derivatives(dir = nil)
-      output_dir = dir || "#{IMAGE_DERIVATIVE_DIRECTORY}/simple"
-      @assets.each do |asset|
-        asset_id = File.basename(asset, '.*')
-        asset_id.prepend("#{@pid}_") unless asset_id == @pid
-        asset_dir = "#{output_dir}/#{asset_id}"
-        FileUtils.mkdir_p(asset_dir)
-        puts Rainbow("Processing #{asset_id}...").cyan
-        @variants.each { |l, w| generate_variant(asset, asset_dir, l, w) }
-      end
-    end
-
-    #
-    #
-    def generate_variant(asset, dir, label, width)
-      path = "#{dir}/#{label}.jpg"
-      return if File.exist?(path)
-
-      variant = MiniMagick::Image.open(asset)
-      variant.resize(width)
-      variant.format('jpg')
-      variant.write(path)
+    def simple_derivatives
+      @assets.map(&:simple_derivatives)
     end
   end
 end

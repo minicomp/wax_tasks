@@ -3,21 +3,12 @@
 describe WaxTasks::Site do
   include_context 'shared'
 
-  let(:site_from_config_file) do
-    site = WaxTasks::Site.new(config_from_file)
-    site.source = BUILD
-    site
-  end
-  let(:site_from_empty_config) do
-    site = WaxTasks::Site.new(empty_config)
-    site.source = BUILD
-    site
-  end
-  let(:site_from_invalid_config) do
-    site = WaxTasks::Site.new(invalid_content_config)
-    site.source = BUILD
-    site
-  end
+  let(:site_from_config_file)    { WaxTasks::Site.new(config_from_file) }
+  let(:site_from_empty_config)   { WaxTasks::Site.new(empty_config) }
+  let(:site_from_invalid_config) { WaxTasks::Site.new(invalid_content_config) }
+  let(:csv)                      { args_from_file.first }
+  let(:json)                     { args_from_file[1] }
+  let(:yaml)                     { args_from_file[2] }
 
   before(:all) do
     WaxTasks::Test.reset
@@ -26,21 +17,27 @@ describe WaxTasks::Site do
   describe '#new' do
     context 'when initialized with valid config hash from file' do
       it 'runs without errors' do
-        expect { site_from_config_file }.not_to raise_error
+        expect { WaxTasks::Site.new(config_from_file) }.not_to raise_error
       end
 
       it 'merges config with defaults as Hashie::Mash' do
-        expect(site_from_config_file.config).to be_a(Hashie::Mash)
+        expect(WaxTasks::Site.new(config_from_file).config).to be_a(Hashie::Mash)
       end
     end
 
     context 'when initialized with empty config hash' do
       it 'runs without errors' do
-        expect { site_from_empty_config }.not_to raise_error
+        expect { WaxTasks::Site.new(empty_config) }.not_to raise_error
       end
 
       it 'merges config with defaults as Hashie::Mash' do
-        expect(site_from_empty_config.config).to be_a(Hashie::Mash)
+        expect(WaxTasks::Site.new(empty_config).config).to be_a(Hashie::Mash)
+      end
+    end
+
+    context 'when initialized with an invalid config file' do
+      it 'raises WaxTasks::Error::InvalidConfig' do
+        expect { WaxTasks::Site.new(invalid_format_config) }.to raise_error(WaxTasks::Error::InvalidConfig)
       end
     end
   end
@@ -66,33 +63,33 @@ describe WaxTasks::Site do
   describe '#generate_pages' do
     context 'when given name of a valid csv collection' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(args_from_file.first) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_pages(csv) } }.not_to raise_error
       end
 
       it 'generates pages' do
-        pages = Dir.glob("#{BUILD}/_csv_collection/*.md")
+        pages = Dir.glob("#{BUILD}/_#{csv}/*.md")
         expect(pages.length).to be 4
       end
     end
 
     context 'when given name of a valid json collection' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(args_from_file[1]) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_pages(json) } }.not_to raise_error
       end
 
       it 'generates correct pages' do
-        pages = Dir.glob("#{BUILD}/_json_collection/*.md")
+        pages = Dir.glob("#{BUILD}/_#{json}/*.md")
         expect(pages.length).to be 4
       end
     end
 
     context 'when given name of a valid yaml collection' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(args_from_file.last) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_pages(yaml) } }.not_to raise_error
       end
 
       it 'generates correct pages' do
-        pages = Dir.glob("#{BUILD}/_yaml_collection/*.md")
+        pages = Dir.glob("#{BUILD}/_#{yaml}/*.md")
         expect(pages.length).to be 4
       end
     end
@@ -110,8 +107,8 @@ describe WaxTasks::Site do
     end
 
     context 'when given path to a metadata file that doesnt exist' do
-      it 'raises WaxTasks::Error::InvalidSource' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_source_collection') } }.to raise_error(WaxTasks::Error::InvalidSource)
+      it 'raises WaxTasks::Error::MissingSource' do
+        expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_source_collection') } }.to raise_error(WaxTasks::Error::MissingSource)
       end
     end
 
@@ -159,7 +156,7 @@ describe WaxTasks::Site do
 
     context 'with empty search config' do
       it 'throws WaxTasks::Error::InvalidSiteConfig' do
-        expect { site_from_empty_config.generate_static_search }.to raise_error(WaxTasks::Error::InvalidSiteConfig)
+        expect { site_from_empty_config.generate_static_search }.to raise_error(WaxTasks::Error::InvalidConfig)
       end
     end
 
@@ -172,16 +169,57 @@ describe WaxTasks::Site do
 
 
   describe '#generate_simple_derivatives' do
+    let(:dir) { "#{BUILD}/img/derivatives/simple" }
+    let(:item) { 'img_item_1' }
+    let(:defaults) { %w[thumbnail full] }
+    let(:custom) { %w[tiny retina] }
+
     context 'when given the name of a valid collection' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(args_from_file.first) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(csv) } }.not_to raise_error
       end
+    end
 
-      context 'with empty collections config' do
-        it 'raises WaxTasks::Error::InvalidCollection' do
-          expect { quiet_stdout { site_from_empty_config.generate_simple_derivatives('test') } }.to raise_error(WaxTasks::Error::InvalidCollection)
+    context 'with given an invalid collection name' do
+      it 'raises WaxTasks::Error::InvalidCollection' do
+        expect { quiet_stdout { site_from_empty_config.generate_simple_derivatives('test') } }.to raise_error(WaxTasks::Error::InvalidCollection)
+      end
+    end
+
+    context 'when not given custom variant widths' do
+      it 'generates the defaults' do
+        defaults.each do |variant|
+          expect(File.exist?("#{dir}/#{item}/#{variant}.jpg"))
         end
       end
     end
+
+    context 'when given valid custom variants widths' do
+      it 'runs without errors' do
+        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(json) } }.not_to raise_error
+      end
+
+      it 'generates the default variants' do
+        defaults.each { |v| expect(File.exist?("#{dir}/#{item}/#{v}.jpg")) }
+      end
+
+      it 'generates the custom variants' do
+        custom.each { |v| expect(File.exist?("#{dir}/#{item}/#{v}.jpg")) }
+      end
+    end
+
+    context 'when given an invalid (too large) custom variant' do
+      it 'raises WaxTasks::Error::InvalidConfig' do
+        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(yaml) } }.to raise_error(WaxTasks::Error::InvalidConfig)
+      end
+    end
   end
+
+  # describe 'generate_iiif_derivatives' do
+  #   context 'when when given the name of a valid collection' do
+  #     it 'runs without errors' do
+  #       site_from_config_file.generate_iiif_derivatives(csv)
+  #     end
+  #   end
+  # end
 end

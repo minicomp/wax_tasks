@@ -7,7 +7,7 @@ module WaxTasks
 
     def initialize(meta)
       @meta = meta
-      @pid = @meta.fetch('pid')
+      @pid  = @meta.fetch('pid')
     end
 
     def order=(order)
@@ -42,11 +42,16 @@ module WaxTasks
       @meta.select! { |k, _v| fields.include? k }
     end
 
+    def lunr_normalize_values
+      @meta.transform_values { |v| Utils.lunr_normalize(v) }
+    end
+
     def write_to_page(dir)
       path = "#{dir}/#{pid}.md"
       if File.exist?(path)
         0
       else
+        FileUtils.mkdir_p(File.dirname(path))
         File.open(path, 'w') { |f| f.write("#{@meta.to_yaml}---") }
         1
       end

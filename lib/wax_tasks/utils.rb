@@ -82,15 +82,12 @@ module WaxTasks
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
     end
 
-    def self.rm_liquid(str)
-      str.gsub(/{{.*}}/, '')
-    end
-
-    # Cleans YAML front matter + markdown pages for lunr indexing
+    # Scrubs yaml, liquid, html, and etc from content strings
     # @return [String]
-    def self.html_strip(str)
+    def self.content_clean(str)
       str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
       str.gsub!(/{%(.*)%}/, '') # remove functional liquid
+      str.gsub!(/{{.*}}/, '') # remove referential liquid
       str.gsub!(%r{<\/?[^>]*>}, '') # remove html
       str.gsub!('\\n', '') # remove newlines
       str.gsub!(/\s+/, ' ') # remove extra space
@@ -126,66 +123,19 @@ module WaxTasks
       idx.to_s.rjust(Math.log10(max_idx).to_i + 1, '0')
     end
 
-    #
-    #
-    #
-    def self.process_pdf(path)
-      target_dir = path.gsub('.pdf', '')
-      return unless Dir.glob("#{target_dir}/*").empty?
-
-      puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
-      opts = { output_dir: File.dirname(target_dir) }
-      WaxIiif::Utilities::PdfSplitter.split(path, opts).sort
+    def self.lunr_normalize(val)
+      puts val.class
+      case val.class
+      when String
+        WaxTasks::Utils.remove_diacritics(val)
+      when Array
+        return val if val.first.is_a? Hash
+        WaxTasks::Utils.remove_diacritics(val.join(', '))
+      when Hash
+        val
+      else
+        val.to_s
+      end
     end
-  end
-end
-
-# Monkey-patched String class
-class String
-  # Normalizes string without diacritics for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    WaxTasks::Utils.remove_diacritics(self)
-  end
-end
-
-# Monkey-patched Array class
-class Array
-  # Normalizes an array as a string or array of hashes
-  # without diacritics for lunr indexing
-  # @return [Hash || String] description
-  def lunr_normalize
-    if self.first.is_a? Hash
-      self
-    else
-      WaxTasks::Utils.remove_diacritics(self.join(', '))
-    end
-  end
-end
-
-# Monkey-patched Hash class
-class Hash
-  # Normalizes hash as itself for lunr indexing
-  # @return [Hash]
-  def lunr_normalize
-    self
-  end
-end
-
-# Monkey-patched Integer class
-class Integer
-  # Normalizes integer as a string for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    self.to_s
-  end
-end
-
-# Monkey-patched Nil class
-class NilClass
-  # Normalizes integer as a string for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    self.to_s
   end
 end

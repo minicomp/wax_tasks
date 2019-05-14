@@ -21,13 +21,19 @@ collections:
       source: valid.json
     images:
       source: 'images/test_collection'
+      variants:
+        retina: 1400
+        tiny: 50
   yaml_collection:
     layout: default.html
     metadata:
       source: valid.yaml
     images:
       source: 'images/test_collection'
-
+      variants:
+        too_large: 200000
+  page_collection:
+    output: true
 
 search:
   main:
@@ -39,3 +45,5 @@ search:
         fields: ['gambrel', 'blasphemous']
       yaml_collection:
         fields: ['gambrel', 'blasphemous']
+      page_collection:
+        content: true

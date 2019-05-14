@@ -17,6 +17,7 @@ require 'safe_yaml/load'
 require 'wax_iiif'
 
 # relative
+require_relative 'wax_tasks/asset'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/index'
@@ -27,14 +28,11 @@ require_relative 'wax_tasks/utils'
 
 #
 module WaxTasks
-  DEFAULT_CONFIG             = "#{Dir.pwd}/_config.yml"
-  ACCEPTED_IMAGE_FORMATS     = %w[.png .jpg .jpeg .tiff].freeze
-  ACCEPTED_METADATA_FORMATS  = %w[.yml .yaml .csv .json].freeze
-  DEFAULT_IMAGE_VARIANTS     = { thumbnail: 250, full: 1140 }.freeze
-  IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
-  DEFAULT_SEARCH_FIELDS      = %w[pid label thumbnail permalink].freeze
+  DEFAULT_CONFIG_FILE = "#{Dir.pwd}/_config.yml"
 
   def self.config_from_file(file = nil)
     YAML.safe_load(File.open(file || DEFAULT_CONFIG))
+  rescue => e
+    raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'."
   end
 end
