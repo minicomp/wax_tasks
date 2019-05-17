@@ -9,8 +9,7 @@ namespace :wax do
       args = ARGV.drop(1).each { |a| task a.to_sym }
       raise WaxTasks::Error::MissingArguments, Rainbow("You must specify a collection after 'wax:derivatives:iiif'").magenta if args.empty?
 
-      config = WaxTasks::DEFAULT_CONFIG_FILE
-      site = WaxTasks::Site.new(config)
+      site = WaxTasks::Site.new
       args.each { |a| site.generate_iiif_derivatives(a) }
     end
   end

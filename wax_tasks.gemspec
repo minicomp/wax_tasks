@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.requirements << 'imagemagick'
   s.requirements << 'ghostscript'
 
-  s.add_dependency 'hashie', '~> 3.6'
   s.add_dependency 'rainbow', '~> 3.0'
   s.add_dependency 'rake', '~> 12.3'
   s.add_dependency 'safe_yaml', '~> 1.0'

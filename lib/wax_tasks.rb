@@ -7,18 +7,16 @@ require 'rubygems'
 require 'csv'
 require 'fileutils'
 require 'json'
-require 'yaml'
+require 'tempfile'
 
 # 3rd party
-require 'hashie'
-require 'mini_magick'
 require 'rainbow'
-require 'safe_yaml/load'
-require 'wax_iiif'
+require 'safe_yaml'
 
 # relative
 require_relative 'wax_tasks/asset'
 require_relative 'wax_tasks/collection'
+require_relative 'wax_tasks/config'
 require_relative 'wax_tasks/error'
 require_relative 'wax_tasks/index'
 require_relative 'wax_tasks/item'
@@ -28,11 +26,11 @@ require_relative 'wax_tasks/utils'
 
 #
 module WaxTasks
-  DEFAULT_CONFIG_FILE = "#{Dir.pwd}/_config.yml"
+  DEFAULT_CONFIG_FILE        = "#{Dir.pwd}/_config.yml"
   IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
 
   def self.config_from_file(file = nil)
-    YAML.safe_load(File.open(file || DEFAULT_CONFIG))
+    Utils.validate_yaml(file || DEFAULT_CONFIG)
   rescue StandardError => e
     raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'.\n #{e}"
   end

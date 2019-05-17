@@ -5,8 +5,7 @@ require 'wax_tasks'
 namespace :wax do
   desc 'build lunr search index (with default UI if UI=true)'
   task :search do
-    config = WaxTasks::DEFAULT_CONFIG_FILE
-    site = WaxTasks::Site.new(config)
+    site = WaxTasks::Site.new
     site.generate_static_search
   end
 

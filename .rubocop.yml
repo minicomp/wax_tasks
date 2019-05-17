@@ -3,11 +3,13 @@ AllCops:
   Exclude: ['spec/**/*', 'test_build/**/*']
 Metrics/LineLength:
   IgnoredPatterns: ['raise', 'puts', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join']
-# Metrics/AbcSize:
-#   Max: 20
-# Metrics/MethodLength:
-#   Max: 12
+Metrics/AbcSize:
+  Max: 20
+Metrics/MethodLength:
+  Max: 13
 Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+# Metrics/ClassLength:
+#   Enabled: false

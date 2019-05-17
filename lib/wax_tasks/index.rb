@@ -6,11 +6,10 @@ module WaxTasks
     attr_reader :path, :collections
 
     # Creates a new Index object
-    def initialize(name, config, collections)
-      @name        = name
+    def initialize(config)
       @config      = config
-      @collections = collections
-      @path        = config.index_file
+      @collections = config.fetch('collections')
+      @path        = config.fetch('index_file')
       @records     = records
     end
 
@@ -19,18 +18,15 @@ module WaxTasks
     #
     def records
       lunr_id = 0
-      result = []
-      @collections.map do |collection|
-        collection.records_from_pages.each do |record|
+      @collections.flat_map do |collection|
+        collection.records_from_pages.each.flat_map do |record|
           record.keep_only(collection.search_fields)
-          record.lunr_id   = lunr_id
-          record.permalink = record.permalink || "/#{@name}/#{record.pid}/"
+          record.set('lunr_id', lunr_id)
           record.lunr_normalize_values
           lunr_id += 1
-          result << record
+          record
         end
       end
-      result
     end
 
     #
@@ -40,8 +36,8 @@ module WaxTasks
       file_path = WaxTasks::Utils.safe_join(dir, path)
       FileUtils.mkdir_p File.dirname(file_path)
       File.open(file_path, 'w') do |f|
-        f.puts("---\nlayout: none\n---\n")
-        f.puts(JSON.pretty_generate(@records.map(&:meta)))
+        f.puts "---\nlayout: none\n---\n"
+        f.puts JSON.pretty_generate(@records.map(&:hash))
       end
     end
   end

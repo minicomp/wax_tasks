@@ -30,6 +30,10 @@ module WaxTasks
       accepted_image_formats.include?(@type) || @type == 'dir'
     end
 
+    def record?
+      @record.is_a? Record
+    end
+
     #
     #
     def assets
@@ -47,7 +51,7 @@ module WaxTasks
     #
     #
     def simple_derivatives
-      @assets.map(&:simple_derivatives)
+      @assets.map(&:simple_derivatives).flatten
     end
   end
 end

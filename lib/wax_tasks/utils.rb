@@ -7,16 +7,19 @@ module WaxTasks
     #
     #
     def self.ingest(source)
-      case File.extname(source)
-      when '.csv'
-        WaxTasks::Utils.validate_csv(source)
-      when '.json'
-        WaxTasks::Utils.validate_json(source)
-      when /\.ya?ml/
-        WaxTasks::Utils.validate_yaml(source)
-      else
-        raise Error::InvalidSource, "Can't load #{File.extname(source)} files. Culprit: #{source}"
-      end
+      metadata =  case File.extname(source)
+                  when '.csv'
+                    WaxTasks::Utils.validate_csv(source)
+                  when '.json'
+                    WaxTasks::Utils.validate_json(source)
+                  when /\.ya?ml/
+                    WaxTasks::Utils.validate_yaml(source)
+                  else
+                    raise Error::InvalidSource, "Can't load #{File.extname(source)} files. Culprit: #{source}"
+                  end
+
+      WaxTasks::Utils.assert_pids(metadata)
+      WaxTasks::Utils.assert_unique(metadata)
     end
 
     # Checks and asserts presence of `pid` value for each item
@@ -71,7 +74,7 @@ module WaxTasks
     # @return [Array] validated YAML data as an Array of Hashes
     # @raise  WaxTasks::Error::InvalidYAML
     def self.validate_yaml(source)
-      YAML.load_file(source)
+      SafeYAML.load_file(source)
     rescue StandardError => e
       raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
@@ -124,7 +127,7 @@ module WaxTasks
     end
 
     def self.lunr_normalize(val)
-      case val.class
+      case val
       when String || Integer
         WaxTasks::Utils.remove_diacritics(val.to_s)
       when Array

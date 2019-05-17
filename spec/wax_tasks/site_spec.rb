@@ -20,8 +20,8 @@ describe WaxTasks::Site do
         expect { WaxTasks::Site.new(config_from_file) }.not_to raise_error
       end
 
-      it 'merges config with defaults as Hashie::Mash' do
-        expect(WaxTasks::Site.new(config_from_file).config).to be_a(Hashie::Mash)
+      it 'merges config with defaults as Hash' do
+        expect(WaxTasks::Site.new(config_from_file).config).to be_a(WaxTasks::Config)
       end
     end
 
@@ -30,8 +30,8 @@ describe WaxTasks::Site do
         expect { WaxTasks::Site.new(empty_config) }.not_to raise_error
       end
 
-      it 'merges config with defaults as Hashie::Mash' do
-        expect(WaxTasks::Site.new(empty_config).config).to be_a(Hashie::Mash)
+      it 'merges config with defaults as Hash' do
+        expect(WaxTasks::Site.new(empty_config).config).to be_a(WaxTasks::Config)
       end
     end
 
@@ -68,7 +68,7 @@ describe WaxTasks::Site do
 
       it 'generates pages' do
         pages = Dir.glob("#{BUILD}/_#{csv}/*.md")
-        expect(pages.length).to be 4
+        expect(pages.length).to eq(4)
       end
     end
 
@@ -79,7 +79,7 @@ describe WaxTasks::Site do
 
       it 'generates correct pages' do
         pages = Dir.glob("#{BUILD}/_#{json}/*.md")
-        expect(pages.length).to be 4
+        expect(pages.length).to eq(4)
       end
     end
 
@@ -90,7 +90,7 @@ describe WaxTasks::Site do
 
       it 'generates correct pages' do
         pages = Dir.glob("#{BUILD}/_#{yaml}/*.md")
-        expect(pages.length).to be 4
+        expect(pages.length).to eq(4)
       end
     end
 
@@ -143,31 +143,6 @@ describe WaxTasks::Site do
     end
   end
 
-
-  describe '#generate_static_search' do
-    context 'with valid config' do
-      it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_static_search } }.not_to raise_error
-      end
-      it 'generates a search index as valid JSON to expected path' do
-        expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
-      end
-    end
-
-    context 'with empty search config' do
-      it 'throws WaxTasks::Error::InvalidSiteConfig' do
-        expect { site_from_empty_config.generate_static_search }.to raise_error(WaxTasks::Error::InvalidConfig)
-      end
-    end
-
-    context 'with invalid search config' do
-      it 'throws WaxTasks::Error::InvalidCollection' do
-        expect { site_from_invalid_config.generate_static_search }.to raise_error(WaxTasks::Error::InvalidCollection)
-      end
-    end
-  end
-
-
   describe '#generate_simple_derivatives' do
     let(:dir) { "#{BUILD}/img/derivatives/simple" }
     let(:item) { 'img_item_1' }
@@ -215,11 +190,37 @@ describe WaxTasks::Site do
     end
   end
 
-  # describe 'generate_iiif_derivatives' do
-  #   context 'when when given the name of a valid collection' do
-  #     it 'runs without errors' do
-  #       site_from_config_file.generate_iiif_derivatives(csv)
-  #     end
-  #   end
-  # end
+  describe 'generate_iiif_derivatives' do
+    context 'when when given the name of a valid collection' do
+      it 'runs without errors' do
+        site_from_config_file.generate_iiif_derivatives(csv)
+      end
+    end
+  end
+
+  describe '#generate_static_search' do
+    context 'with valid config' do
+      context 'and valid search name' do
+        it 'runs without errors' do
+          expect { quiet_stdout { site_from_config_file.generate_static_search('main') } }.not_to raise_error
+        end
+
+        it 'generates a search index as valid JSON to expected path' do
+          expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
+        end
+      end
+
+      context 'and invalid search name' do
+        it 'throws WaxTasks::Error::InvalidConfig' do
+          expect { site_from_config_file.generate_static_search('not_a_search') }.to raise_error(WaxTasks::Error::InvalidConfig)
+        end
+      end
+    end
+
+    context 'with empty search config' do
+      it 'throws WaxTasks::Error::InvalidConfig' do
+        expect { site_from_empty_config.generate_static_search('main') }.to raise_error(WaxTasks::Error::InvalidConfig)
+      end
+    end
+  end
 end

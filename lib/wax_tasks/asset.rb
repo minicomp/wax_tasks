@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require 'mini_magick'
+require 'wax_iiif'
+
 module WaxTasks
-  Derivative = Struct.new(:path, :img)
+  Derivative = Struct.new(:path, :label, :img)
   #
   class Asset
     def initialize(path, pid, variants)
@@ -24,7 +27,7 @@ module WaxTasks
 
         img.resize(width)
         img.format('jpg')
-        Derivative.new("#{@id}/#{label}.jpg", img)
+        Derivative.new("#{@id}/#{label}.jpg", label, img)
       end
     end
   end
