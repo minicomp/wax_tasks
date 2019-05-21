@@ -10,12 +10,16 @@ module WaxTasks
       @collections      = process_collections
     end
 
+    #
+    #
     def source
-      Utils.safe_join(Dir.pwd, @config.dig('source'))
+      @config.dig 'source'
     end
 
+    #
+    #
     def collections_dir
-      @config.dig('collections_dir')
+      @config.dig 'collections_dir'
     end
 
     #
@@ -23,7 +27,7 @@ module WaxTasks
     #
     # @return [String] the end of the permalink, either '/' or '.html'
     def ext
-      case @config.dig('permalink')
+      case @config.dig 'permalink'
       when 'pretty' || '/'
         '/'
       else
@@ -31,19 +35,8 @@ module WaxTasks
       end
     end
 
-    # def method_missing(method_name, *args)
-    #   str = method_name.to_s
-    #   if str.end_with? '='
-    #     @config[str.chomp('=')] = *args
-    #   else
-    #     @config.dig(str)
-    #   end
-    # end
     #
-    # def respond_to_missing?(method_name, include_private = false)
-    #   method_name.to_s || super
-    # end
-
+    #
     def process_collections
       if @config.key? 'collections'
         @config['collections'].map do |k, v|
@@ -54,8 +47,10 @@ module WaxTasks
       end
     end
 
+    #
+    #
     def search(name)
-      search_config = @config.dig('search', name)
+      search_config = @config.dig 'search', name
       raise WaxTasks::Error::InvalidConfig if search_config.nil?
       raise WaxTasks::Error::InvalidConfig unless search_config.dig('collections').is_a? Hash
 
@@ -64,9 +59,12 @@ module WaxTasks
         fields << 'content' if v.fetch('content', false)
         find_collection(k).tap { |c| c.search_fields = fields }
       end
+
       search_config
     end
 
+    #
+    #
     def find_collection(name)
       collection = @collections.find { |c| c.name == name }
       raise WaxTasks::Error::InvalidCollection, "Cannot find requested collection '#{name}'" if collection.nil?

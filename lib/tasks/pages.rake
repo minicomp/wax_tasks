@@ -9,7 +9,7 @@ namespace :wax do
     raise WaxTasks::Error::MissingArguments, Rainbow('You must specify a collection after wax:pages').magenta if args.empty?
 
     site = WaxTasks::Site.new
-    args.each { |a| site.generate_pages(a) }
+    args.each { |a| site.generate_pages a }
   end
 
   # alias :pagemaster to wax:pages for backwards compatibility

@@ -11,7 +11,7 @@ describe WaxTasks::Site do
   let(:yaml)                     { args_from_file[2] }
 
   before(:all) do
-    WaxTasks::Test.reset
+    Test.reset
   end
 
   describe '#new' do
@@ -143,6 +143,47 @@ describe WaxTasks::Site do
     end
   end
 
+  describe '#generate_static_search' do
+    context 'with valid config' do
+      context 'and valid search name' do
+        it 'runs without errors' do
+          expect { quiet_stdout { site_from_config_file.generate_static_search('main') } }.not_to raise_error
+        end
+
+        it 'generates a search index as valid JSON to expected path' do
+          expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
+        end
+      end
+
+      context 'and invalid search name' do
+        it 'throws WaxTasks::Error::InvalidConfig' do
+          expect { site_from_config_file.generate_static_search('not_a_search') }.to raise_error(WaxTasks::Error::InvalidConfig)
+        end
+      end
+    end
+
+    context 'with empty search config' do
+      it 'throws WaxTasks::Error::InvalidConfig' do
+        expect { site_from_empty_config.generate_static_search('main') }.to raise_error(WaxTasks::Error::InvalidConfig)
+      end
+    end
+  end
+
+  describe 'generate_iiif_derivatives' do
+    context 'with iiif config vars' do
+      it 'runs without errors' do
+        site_from_config_file.generate_iiif_derivatives(csv)
+      end
+    end
+
+    context 'without iiif config vars' do
+      it 'runs without errors' do
+        site_from_config_file.generate_iiif_derivatives(json)
+      end
+    end
+  end
+
+
   describe '#generate_simple_derivatives' do
     let(:dir) { "#{BUILD}/img/derivatives/simple" }
     let(:item) { 'img_item_1' }
@@ -186,40 +227,6 @@ describe WaxTasks::Site do
     context 'when given an invalid (too large) custom variant' do
       it 'raises WaxTasks::Error::InvalidConfig' do
         expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(yaml) } }.to raise_error(WaxTasks::Error::InvalidConfig)
-      end
-    end
-  end
-
-  describe 'generate_iiif_derivatives' do
-    context 'when when given the name of a valid collection' do
-      it 'runs without errors' do
-        site_from_config_file.generate_iiif_derivatives(csv)
-      end
-    end
-  end
-
-  describe '#generate_static_search' do
-    context 'with valid config' do
-      context 'and valid search name' do
-        it 'runs without errors' do
-          expect { quiet_stdout { site_from_config_file.generate_static_search('main') } }.not_to raise_error
-        end
-
-        it 'generates a search index as valid JSON to expected path' do
-          expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
-        end
-      end
-
-      context 'and invalid search name' do
-        it 'throws WaxTasks::Error::InvalidConfig' do
-          expect { site_from_config_file.generate_static_search('not_a_search') }.to raise_error(WaxTasks::Error::InvalidConfig)
-        end
-      end
-    end
-
-    context 'with empty search config' do
-      it 'throws WaxTasks::Error::InvalidConfig' do
-        expect { site_from_empty_config.generate_static_search('main') }.to raise_error(WaxTasks::Error::InvalidConfig)
       end
     end
   end

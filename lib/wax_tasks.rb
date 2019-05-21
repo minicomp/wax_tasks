@@ -7,7 +7,6 @@ require 'rubygems'
 require 'csv'
 require 'fileutils'
 require 'json'
-require 'tempfile'
 
 # 3rd party
 require 'rainbow'
@@ -26,9 +25,9 @@ require_relative 'wax_tasks/utils'
 
 #
 module WaxTasks
-  DEFAULT_CONFIG_FILE        = "#{Dir.pwd}/_config.yml"
-  IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
-
+  DEFAULT_CONFIG_FILE = './_config.yml'
+  #
+  #
   def self.config_from_file(file = nil)
     Utils.validate_yaml(file || DEFAULT_CONFIG)
   rescue StandardError => e

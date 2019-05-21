@@ -5,21 +5,20 @@ module WaxTasks
   module Utils
     #
     #
-    #
     def self.ingest(source)
-      metadata =  case File.extname(source)
+      metadata =  case File.extname source
                   when '.csv'
-                    WaxTasks::Utils.validate_csv(source)
+                    WaxTasks::Utils.validate_csv source
                   when '.json'
-                    WaxTasks::Utils.validate_json(source)
+                    WaxTasks::Utils.validate_json source
                   when /\.ya?ml/
-                    WaxTasks::Utils.validate_yaml(source)
+                    WaxTasks::Utils.validate_yaml source
                   else
-                    raise Error::InvalidSource, "Can't load #{File.extname(source)} files. Culprit: #{source}"
+                    raise Error::InvalidSource, "Can't load #{File.extname source} files. Culprit: #{source}"
                   end
 
-      WaxTasks::Utils.assert_pids(metadata)
-      WaxTasks::Utils.assert_unique(metadata)
+      WaxTasks::Utils.assert_pids metadata
+      WaxTasks::Utils.assert_unique metadata
     end
 
     # Checks and asserts presence of `pid` value for each item
@@ -28,7 +27,7 @@ module WaxTasks
     # @return [Array] same data unless a an item is missing the key `pid`
     # @raise WaxTasks::Error::MissingPid
     def self.assert_pids(data)
-      data.each_with_index { |d, i| raise Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
+      data.each_with_index { |d, i| raise Error::MissingPid, "Collection is missing pid for item #{i}." unless d.key? 'pid' }
       data
     end
 
@@ -62,8 +61,8 @@ module WaxTasks
     # @return [Array] validated JSON data as an Array of Hashes
     # @raise  WaxTasks::Error::InvalidJSON
     def self.validate_json(source)
-      file = File.read(source)
-      JSON.parse(file)
+      file = File.read source
+      JSON.parse file
     rescue StandardError => e
       raise Error::InvalidJSON, " #{e}"
     end
@@ -74,7 +73,7 @@ module WaxTasks
     # @return [Array] validated YAML data as an Array of Hashes
     # @raise  WaxTasks::Error::InvalidYAML
     def self.validate_yaml(source)
-      SafeYAML.load_file(source)
+      SafeYAML.load_file source
     rescue StandardError => e
       raise WaxTasks::Error::InvalidYAML, " #{e}"
     end
@@ -103,7 +102,7 @@ module WaxTasks
     def self.remove_diacritics(str)
       to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
       replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
-      str.to_s.tr(to_replace, replaced_by)
+      str.to_s.tr to_replace, replaced_by
     end
 
     # Converts string to snake case and swaps out special chars
@@ -115,7 +114,7 @@ module WaxTasks
     #
     #
     def self.safe_join(*args)
-      File.join(args.compact)
+      File.join args.compact
     end
 
     # Constructs the order variable for each page (if the collection
@@ -129,12 +128,23 @@ module WaxTasks
     def self.lunr_normalize(val)
       case val
       when String || Integer
-        WaxTasks::Utils.remove_diacritics(val.to_s)
+        WaxTasks::Utils.remove_diacritics val.to_s
       when Array
         return val if val.first.is_a? Hash
-        WaxTasks::Utils.remove_diacritics(val.join(', '))
+        WaxTasks::Utils.remove_diacritics val.join(', ')
       else
         val
+      end
+    end
+
+    def self.add_yaml_front_matter_to_file(file)
+      front_matter = "---\nlayout: none\n---\n"
+      filestring = File.read file
+      return if filestring.start_with? front_matter
+
+      File.open(file, 'w') do |f|
+        f.puts front_matter
+        f.puts filestring
       end
     end
   end

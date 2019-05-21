@@ -3,14 +3,12 @@
 QUIET = !ENV['DEBUG']
 
 # use codecov + add requirements
+require 'setup'
 require 'simplecov'
 SimpleCov.start do
   add_filter 'spec'
 end
-
-# load + setup
 require 'wax_tasks'
-require 'setup'
 
 # provide shared context for tests
 shared_context 'shared', :shared_context => :metadata do

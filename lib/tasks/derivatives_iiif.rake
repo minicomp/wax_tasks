@@ -10,7 +10,7 @@ namespace :wax do
       raise WaxTasks::Error::MissingArguments, Rainbow("You must specify a collection after 'wax:derivatives:iiif'").magenta if args.empty?
 
       site = WaxTasks::Site.new
-      args.each { |a| site.generate_iiif_derivatives(a) }
+      args.each { |a| site.generate_iiif_derivatives a }
     end
   end
 
