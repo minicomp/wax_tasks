@@ -9,6 +9,7 @@ require 'fileutils'
 require 'json'
 
 # 3rd party
+require 'progress_bar'
 require 'rainbow'
 require 'safe_yaml'
 
@@ -29,7 +30,7 @@ module WaxTasks
   #
   #
   def self.config_from_file(file = nil)
-    Utils.validate_yaml(file || DEFAULT_CONFIG)
+    Utils.validate_yaml(file || DEFAULT_CONFIG_FILE)
   rescue StandardError => e
     raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'.\n #{e}"
   end

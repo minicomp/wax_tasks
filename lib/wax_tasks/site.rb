@@ -10,7 +10,7 @@ module WaxTasks
     #
     #
     def initialize(config = nil)
-      @config = WaxTasks::Config.new(config || config_from_file)
+      @config = WaxTasks::Config.new(config || WaxTasks.config_from_file)
     end
 
     #

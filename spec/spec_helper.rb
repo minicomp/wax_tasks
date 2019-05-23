@@ -12,7 +12,7 @@ require 'wax_tasks'
 
 # provide shared context for tests
 shared_context 'shared', :shared_context => :metadata do
-   let(:config_from_file) { WaxTasks.config_from_file("#{BUILD}/_config.yml") }
+   let(:config_from_file) { WaxTasks.config_from_file }
    let(:invalid_content_config) { WaxTasks.config_from_file("#{BUILD}/_invalid_content_config.yml") }
    let(:invalid_format_config) { WaxTasks.config_from_file("#{BUILD}/_invalid_format_config.yml") }
    let(:empty_config) { Hash.new }

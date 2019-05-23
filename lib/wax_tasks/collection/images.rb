@@ -51,14 +51,14 @@ module WaxTasks
       #
       #
       def write_simple_derivatives(dir)
-        items_from_imagedata.map do |item|
+        puts Rainbow("Generating simple image derivatives for collection '#{@name}'\nThis might take awhile.").cyan
+        items_from_imagedata.each_with_progress.map do |item|
           item.simple_derivatives.each do |d|
             path = "#{dir}/#{d.path}"
             FileUtils.mkdir_p File.dirname(path)
             next if File.exist? path
 
             d.img.write path
-            puts Rainbow("Writing #{path}").cyan
             item.record.set d.label, path if item.record?
           end
           item
@@ -71,7 +71,7 @@ module WaxTasks
         build_opts = {
           base_url: "{{ '/' | absolute_url }}#{dir}",
           output_dir: dir,
-          variants: @image_variants,
+          # variants: @image_variants,
           collection_label: @name
         }
         WaxIiif::Builder.new(build_opts)
@@ -114,7 +114,7 @@ module WaxTasks
 
         builder.load iiif_data
 
-        puts Rainbow("Generating IIIF derivatives for collection '#{@name}.'\nThis might take awhile.").cyan
+        puts Rainbow("Generating IIIF derivatives for collection '#{@name}'\nThis might take awhile.").cyan
         builder.process_data
         add_font_matter_to_json_files dir
 
