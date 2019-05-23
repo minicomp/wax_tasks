@@ -33,6 +33,6 @@ search:
         fields:
           - gambrel
           - blasphemous
-    index_file: js/lunr-index.json
+    index: js/lunr-index.json
 title: "sample site"
 url: ""

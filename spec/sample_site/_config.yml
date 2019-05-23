@@ -37,7 +37,7 @@ collections:
 
 search:
   main:
-    index_file: 'js/lunr-index.json'
+    index: 'js/lunr-index.json'
     collections:
       csv_collection:
         fields: ['gambrel', 'blasphemous']

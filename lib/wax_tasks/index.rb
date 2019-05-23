@@ -8,7 +8,7 @@ module WaxTasks
     def initialize(config)
       @config      = config
       @collections = config.dig 'collections'
-      @path        = config.dig 'index_file'
+      @path        = config.dig 'index'
 
       raise WaxTasks::Error::NoSearchCollections if @collections.nil?
       raise WaxTasks::Error::InvalidConfig if @path.nil?
@@ -34,7 +34,7 @@ module WaxTasks
     #
     #
     def write_to(dir)
-      file_path = WaxTasks::Utils.safe_join dir, path
+      file_path = WaxTasks::Utils.safe_join Dir.pwd, dir, path
       FileUtils.mkdir_p File.dirname(file_path)
       File.open(file_path, 'w') do |f|
         f.puts "---\nlayout: none\n---\n"

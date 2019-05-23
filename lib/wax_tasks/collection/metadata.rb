@@ -56,7 +56,7 @@ module WaxTasks
                       when '.json'
                         json_string records
                       when /\.ya?ml/
-                        records.to_yaml
+                        yaml_string records
                       end
         File.open(@metadata_source, 'w') { |f| f.puts reformatted }
       end
@@ -88,6 +88,13 @@ module WaxTasks
       def json_string(records)
         hashes = records.map(&:hash)
         JSON.pretty_generate hashes
+      end
+
+      #
+      #
+      def yaml_string(records)
+        hashes = records.map(&:hash)
+        hashes.to_yaml
       end
     end
   end
