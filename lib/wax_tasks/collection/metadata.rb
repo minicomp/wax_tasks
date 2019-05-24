@@ -39,7 +39,7 @@ module WaxTasks
         metadata = Utils.ingest @metadata_source
         metadata.each_with_index.map do |meta, i|
           Record.new(meta).tap do |r|
-            r.set 'order', Utils.padded_int(i, metadata.length)
+            r.set 'order', Utils.padded_int(i, metadata.length) unless r.order?
             r.set 'layout', @config['layout'] if @config.key? 'layout'
             r.set 'collection', @name
           end
@@ -68,7 +68,7 @@ module WaxTasks
         lost_record_pids.each do |pid|
           new << original.find { |r| r.pid == pid }
         end
-        new
+        new.sort_by(&:order)
       end
 
       #

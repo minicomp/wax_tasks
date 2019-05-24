@@ -3,11 +3,12 @@
 module WaxTasks
   #
   class Record
-    attr_reader :pid, :hash
+    attr_reader :pid, :hash, :order
 
     def initialize(hash)
-      @hash = hash
-      @pid  = hash.dig 'pid'
+      @hash  = hash
+      @pid   = @hash.dig 'pid'
+      @order = @hash.dig 'order'
     end
 
     #
@@ -32,6 +33,12 @@ module WaxTasks
     #
     def permalink?
       @hash.key? 'permalink'
+    end
+
+    #
+    #
+    def order?
+      @order.is_a? String
     end
 
     #
