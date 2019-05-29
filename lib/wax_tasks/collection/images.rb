@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'mini_magick'
+require 'progress_bar'
+require 'progress_bar/core_ext/enumerable_with_progress'
 require 'wax_iiif'
 
 #
@@ -89,10 +91,10 @@ module WaxTasks
       #
       def add_iiif_results_to_records(records, manifests)
         records.map do |record|
-          return nil if record.nil?
+          next nil if record.nil?
 
           manifest = manifests.find { |m| m.base_id == record.pid }
-          return record if manifest.nil?
+          next record if manifest.nil?
 
           json = JSON.parse manifest.to_json
           @image_variants.each do |k, _v|
@@ -116,8 +118,8 @@ module WaxTasks
 
         puts Rainbow("Generating IIIF derivatives for collection '#{@name}'\nThis might take awhile.").cyan
         builder.process_data
-        add_font_matter_to_json_files dir
 
+        add_font_matter_to_json_files dir
         add_iiif_results_to_records items.map(&:record), builder.manifests
       end
     end

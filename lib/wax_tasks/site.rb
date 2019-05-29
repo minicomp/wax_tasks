@@ -48,25 +48,18 @@ module WaxTasks
 
     #
     #
-    def generate_simple_derivatives(name)
+    def generate_derivatives(name, type)
       collection = @config.find_collection name
       raise WaxTasks::Error::InvalidCollection if collection.nil?
+      raise WaxTasks::Error::InvalidConfig unless %w[iiif simple].include? type
 
       output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, 'simple'
-      records    = collection.write_simple_derivatives output_dir
-
-      collection.update_metadata records
-      puts Rainbow("\nDone ✔").green
-    end
-
-    #
-    #
-    def generate_iiif_derivatives(name)
-      collection = @config.find_collection name
-      raise WaxTasks::Error::InvalidCollection if collection.nil?
-
-      output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif'
-      records    = collection.write_iiif_derivatives output_dir
+      records = case type
+                when 'iiif'
+                  collection.write_iiif_derivatives output_dir
+                when 'simple'
+                  collection.write_simple_derivatives output_dir
+                end
 
       collection.update_metadata records
       puts Rainbow("\nDone ✔").green

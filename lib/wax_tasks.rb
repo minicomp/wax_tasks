@@ -9,7 +9,6 @@ require 'fileutils'
 require 'json'
 
 # 3rd party
-require 'progress_bar'
 require 'rainbow'
 require 'safe_yaml'
 

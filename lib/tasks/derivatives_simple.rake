@@ -10,7 +10,7 @@ namespace :wax do
       raise WaxTasks::Error::MissingArguments, Rainbow("You must specify a collection after 'wax:derivatives:simple'").magenta if args.empty?
 
       site = WaxTasks::Site.new
-      args.each { |a| site.generate_simple_derivatives a }
+      args.each { |a| site.generate_derivatives(a, 'simple') }
     end
   end
 end

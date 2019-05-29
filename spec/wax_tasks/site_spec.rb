@@ -3,17 +3,15 @@
 describe WaxTasks::Site do
   include_context 'shared'
 
-  let(:site_from_config_file)    { WaxTasks::Site.new(config_from_file) }
-  let(:site_from_empty_config)   { WaxTasks::Site.new(empty_config) }
-  let(:site_from_invalid_config) { WaxTasks::Site.new(invalid_content_config) }
-  let(:csv)                      { args_from_file.first }
-  let(:json)                     { args_from_file[1] }
-  let(:yaml)                     { args_from_file[2] }
-
   before(:all) do
     Test.reset
   end
 
+  #
+  # ===================================================
+  # SITE.NEW (CONFIG)
+  # ===================================================
+  #
   describe '#new' do
     context 'when initialized with valid config hash from file' do
       it 'runs without errors' do
@@ -42,6 +40,11 @@ describe WaxTasks::Site do
     end
   end
 
+  #
+  # ===================================================
+  # SITE.COLLECTIONS
+  # ===================================================
+  #
   describe '#collections' do
     context 'when initialized with config hash from file' do
       let(:collections) { site_from_config_file.collections }
@@ -60,6 +63,11 @@ describe WaxTasks::Site do
     end
   end
 
+  #
+  # ===================================================
+  # SITE.GENERATE_PAGES (NAME)
+  # ===================================================
+  #
   describe '#generate_pages' do
     context 'when given name of a valid csv collection' do
       it 'runs without errors' do
@@ -143,6 +151,11 @@ describe WaxTasks::Site do
     end
   end
 
+  #
+  # ===================================================
+  # SITE.GENERATE_STATIC_SEARCH (NAME)
+  # ===================================================
+  #
   describe '#generate_static_search' do
     context 'with valid config' do
       context 'and valid search name' do
@@ -169,22 +182,12 @@ describe WaxTasks::Site do
     end
   end
 
-  describe 'generate_iiif_derivatives' do
-    context 'with iiif config vars' do
-      it 'runs without errors' do
-        site_from_config_file.generate_iiif_derivatives(csv)
-      end
-    end
-
-    context 'without iiif config vars' do
-      it 'runs without errors' do
-        site_from_config_file.generate_iiif_derivatives(json)
-      end
-    end
-  end
-
-
-  describe '#generate_simple_derivatives' do
+  #
+  # ===================================================
+  # SITE.GENERATE_DERIVATIVES (NAME)
+  # ===================================================
+  #
+  describe '#generate_derivatives type=simple' do
     let(:dir) { "#{BUILD}/img/derivatives/simple" }
     let(:item) { 'img_item_1' }
     let(:defaults) { %w[thumbnail full] }
@@ -192,13 +195,13 @@ describe WaxTasks::Site do
 
     context 'when given the name of a valid collection' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(csv) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(csv, 'simple') } }.not_to raise_error
       end
     end
 
     context 'with given an invalid collection name' do
       it 'raises WaxTasks::Error::InvalidCollection' do
-        expect { quiet_stdout { site_from_empty_config.generate_simple_derivatives('test') } }.to raise_error(WaxTasks::Error::InvalidCollection)
+        expect { quiet_stdout { site_from_empty_config.generate_derivatives('test', 'simple') } }.to raise_error(WaxTasks::Error::InvalidCollection)
       end
     end
 
@@ -212,7 +215,7 @@ describe WaxTasks::Site do
 
     context 'when given valid custom variants widths' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(json) } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(json, 'simple') } }.not_to raise_error
       end
 
       it 'generates the default variants' do
@@ -226,7 +229,21 @@ describe WaxTasks::Site do
 
     context 'when given an invalid (too large) custom variant' do
       it 'raises WaxTasks::Error::InvalidConfig' do
-        expect { quiet_stdout { site_from_config_file.generate_simple_derivatives(yaml) } }.to raise_error(WaxTasks::Error::InvalidConfig)
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(yaml, 'simple') } }.to raise_error(WaxTasks::Error::InvalidConfig)
+      end
+    end
+  end
+
+  describe '#generate_derivatives type=iiif' do
+    context 'with iiif config vars' do
+      it 'runs without errors' do
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(csv, 'iiif') } }.not_to raise_error
+      end
+    end
+
+    context 'without iiif config vars' do
+      it 'runs without errors' do
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(json, 'iiif') } }.not_to raise_error
       end
     end
   end
