@@ -193,9 +193,15 @@ describe WaxTasks::Site do
     let(:defaults) { %w[thumbnail full] }
     let(:custom) { %w[tiny retina] }
 
-    context 'when given the name of a valid collection' do
+    context 'when given the name of a valid csv collection' do
       it 'runs without errors' do
         expect { quiet_stdout { site_from_config_file.generate_derivatives(csv, 'simple') } }.not_to raise_error
+      end
+    end
+
+    context 'when given an valid json collection' do
+      it 'runs without errors' do
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(json, 'simple') } }.not_to raise_error
       end
     end
 
@@ -229,7 +235,7 @@ describe WaxTasks::Site do
 
     context 'when given an invalid (too large) custom variant' do
       it 'raises WaxTasks::Error::InvalidConfig' do
-        expect { quiet_stdout { site_from_config_file.generate_derivatives(yaml, 'simple') } }.to raise_error(WaxTasks::Error::InvalidConfig)
+        expect { quiet_stdout { site_from_invalid_config.generate_derivatives('xl_variant', 'simple') } }.to raise_error(WaxTasks::Error::InvalidConfig)
       end
     end
   end
@@ -237,7 +243,7 @@ describe WaxTasks::Site do
   describe '#generate_derivatives type=iiif' do
     context 'with iiif config vars' do
       it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_derivatives(csv, 'iiif') } }.not_to raise_error
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(yaml, 'iiif') } }.not_to raise_error
       end
     end
 

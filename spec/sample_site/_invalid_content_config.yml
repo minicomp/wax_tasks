@@ -26,6 +26,14 @@ collections:
   xls_collection:
     metadata:
       source: invalid/.invalid.xls
+  xl_variant:
+    layout: default.html
+    metadata:
+      source: valid.yaml
+    images:
+      source: 'images/test_collection'
+      variants:
+        too_large: 200000
 search:
   missing-collection:
     collections:

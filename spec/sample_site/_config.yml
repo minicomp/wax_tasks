@@ -10,11 +10,6 @@ collections:
       source: valid.csv
     images:
       source: 'images/test_collection'
-      iiif:
-        label: gambrel
-        description: indescribable
-        attribution: blasphemous
-        logo: '/path/to/logo'
   json_collection:
     layout: default.html
     metadata:
@@ -30,8 +25,12 @@ collections:
       source: valid.yaml
     images:
       source: 'images/test_collection'
-      variants:
-        too_large: 200000
+      iiif:
+        label: gambrel
+        description: indescribable
+        attribution: blasphemous
+        logo: '/path/to/logo'
+
   page_collection:
     output: true
 
