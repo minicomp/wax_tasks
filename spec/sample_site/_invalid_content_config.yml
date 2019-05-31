@@ -1,0 +1,46 @@
+---
+baseurl: ""
+collections:
+  duplicate_pid_collection:
+    metadata:
+      source: invalid/duplicate_pid.csv
+  invalid_csv_collection:
+    metadata:
+      source: invalid/.invalid.csv
+  invalid_json_collection:
+    metadata:
+      source: invalid/.invalid.json
+  invalid_yaml_collection:
+    metadata:
+      source: invalid/.invalid.yml
+  missing_pid_collection:
+    metadata:
+      source: invalid/missing_pid.json
+  missing_source_collection:
+    images:
+      source: images/test_collection
+      variants:
+        too_large: 20000
+    metadata:
+      source: doesnt-exist.json
+  xls_collection:
+    metadata:
+      source: invalid/.invalid.xls
+  xl_variant:
+    layout: default.html
+    metadata:
+      source: valid.yaml
+    images:
+      source: 'images/test_collection'
+      variants:
+        too_large: 200000
+search:
+  missing-collection:
+    collections:
+      not_a_collection:
+        fields:
+          - gambrel
+          - blasphemous
+    index: js/lunr-index.json
+title: "sample site"
+url: ""

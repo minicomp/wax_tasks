@@ -1,18 +1,28 @@
 title: 'sample site'
 url: ''
 baseurl: ''
-collections_dir: ''
-source: ''
-js:
-  jquery:
-    cdn: link
-    version: version
+permalink: 'pretty'
+
 collections:
   csv_collection:
     layout: default.html
     metadata:
       source: valid.csv
-      labels: labels.yaml
+    images:
+      source: 'images/test_collection'
+  json_collection:
+    layout: default.html
+    metadata:
+      source: valid.json
+    images:
+      source: 'images/test_collection'
+      variants:
+        retina: 1400
+        tiny: 50
+  yaml_collection:
+    layout: default.html
+    metadata:
+      source: valid.yaml
     images:
       source: 'images/test_collection'
       iiif:
@@ -20,25 +30,13 @@ collections:
         description: indescribable
         attribution: blasphemous
         logo: '/path/to/logo'
-  json_collection:
-    layout: default.html
-    metadata:
-      source: valid.json
-      labels: labels.yaml
-    images:
-      source: 'images/test_collection'
-  yaml_collection:
-    layout: default.html
-    metadata:
-      source: valid.yaml
-      labels: labels.yaml
-    images:
-      source: 'images/test_collection'
 
+  page_collection:
+    output: true
 
-lunr_index:
-  - file: 'js/lunr-index.json'
-    ui:   'js/lunr-ui.js'
+search:
+  main:
+    index: 'js/lunr-index.json'
     collections:
       csv_collection:
         fields: ['gambrel', 'blasphemous']
@@ -46,3 +44,5 @@ lunr_index:
         fields: ['gambrel', 'blasphemous']
       yaml_collection:
         fields: ['gambrel', 'blasphemous']
+      page_collection:
+        content: true

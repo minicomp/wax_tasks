@@ -3,17 +3,22 @@
 module WaxTasks
   # Utility helper methods
   module Utils
-    # Contructs permalink extension from site `permalink` variable
     #
-    # @param site [Hash] the site config
-    # @return [String] the end of the permalink, either '/' or '.html'
-    def self.construct_permalink(site)
-      case site.fetch(:permalink, false)
-      when 'pretty' || '/'
-        '/'
-      else
-        '.html'
-      end
+    #
+    def self.ingest(source)
+      metadata =  case File.extname source
+                  when '.csv'
+                    WaxTasks::Utils.validate_csv source
+                  when '.json'
+                    WaxTasks::Utils.validate_json source
+                  when /\.ya?ml/
+                    WaxTasks::Utils.validate_yaml source
+                  else
+                    raise Error::InvalidSource, "Can't load #{File.extname source} files. Culprit: #{source}"
+                  end
+
+      WaxTasks::Utils.assert_pids metadata
+      WaxTasks::Utils.assert_unique metadata
     end
 
     # Checks and asserts presence of `pid` value for each item
@@ -22,7 +27,7 @@ module WaxTasks
     # @return [Array] same data unless a an item is missing the key `pid`
     # @raise WaxTasks::Error::MissingPid
     def self.assert_pids(data)
-      data.each_with_index { |d, i| raise Error::MissingPid, "Collection #{@name} is missing pid for item #{i}." unless d.key? 'pid' }
+      data.each_with_index { |d, i| raise Error::MissingPid, "Collection is missing pid for item #{i}." unless d.key? 'pid' }
       data
     end
 
@@ -35,6 +40,7 @@ module WaxTasks
       pids = data.map { |d| d['pid'] }
       not_unique = pids.select { |p| pids.count(p) > 1 }.uniq! || []
       raise Error::NonUniquePid, "#{@name} has the following nonunique pids:\n#{not_unique}" unless not_unique.empty?
+
       data
     end
 
@@ -55,8 +61,8 @@ module WaxTasks
     # @return [Array] validated JSON data as an Array of Hashes
     # @raise  WaxTasks::Error::InvalidJSON
     def self.validate_json(source)
-      file = File.read(source)
-      JSON.parse(file)
+      file = File.read source
+      JSON.parse file
     rescue StandardError => e
       raise Error::InvalidJSON, " #{e}"
     end
@@ -67,18 +73,9 @@ module WaxTasks
     # @return [Array] validated YAML data as an Array of Hashes
     # @raise  WaxTasks::Error::InvalidYAML
     def self.validate_yaml(source)
-      YAML.load_file(source)
+      SafeYAML.load_file source
     rescue StandardError => e
       raise WaxTasks::Error::InvalidYAML, " #{e}"
-    end
-
-    # Creates a file path valid file path with empty strings and
-    # null values dropped
-    #
-    # @param  args [Array] items to concatenate in path
-    # @return [String] file path
-    def self.root_path(*args)
-      ['.'].concat(args).compact.reject(&:empty?).join('/').gsub(%r{/+}, '/')
     end
 
     # Removes YAML front matter from a string
@@ -87,15 +84,12 @@ module WaxTasks
       str.to_s.gsub!(/\A---(.|\n)*?---/, '')
     end
 
-    def self.rm_liquid(str)
-      str.gsub(/{{.*}}/, '')
-    end
-
-    # Cleans YAML front matter + markdown pages for lunr indexing
+    # Scrubs yaml, liquid, html, and etc from content strings
     # @return [String]
-    def self.html_strip(str)
+    def self.content_clean(str)
       str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
       str.gsub!(/{%(.*)%}/, '') # remove functional liquid
+      str.gsub!(/{{.*}}/, '') # remove referential liquid
       str.gsub!(%r{<\/?[^>]*>}, '') # remove html
       str.gsub!('\\n', '') # remove newlines
       str.gsub!(/\s+/, ' ') # remove extra space
@@ -108,7 +102,7 @@ module WaxTasks
     def self.remove_diacritics(str)
       to_replace  = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž'
       replaced_by = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz'
-      str.to_s.tr(to_replace, replaced_by)
+      str.to_s.tr to_replace, replaced_by
     end
 
     # Converts string to snake case and swaps out special chars
@@ -116,87 +110,42 @@ module WaxTasks
     def self.slug(str)
       Utils.remove_diacritics(str).to_s.downcase.tr(' ', '_').gsub(/[^\w-]/, '')
     end
-  end
-end
 
-# Monkey-patched String class
-class String
-  # Normalizes string without diacritics for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    WaxTasks::Utils.remove_diacritics(self)
-  end
-
-  # Colorizes console output to magenta (errors)
-  # @return [String]
-  def magenta
-    "\e[35m#{self}\e[0m"
-  end
-
-  # Colorizes console output to cyan (messages)
-  # @return [String]
-  def cyan
-    "\e[36m#{self}\e[0m"
-  end
-
-  # Colorizes console output to orange (warnings)
-  # @return [String]
-  def orange
-    "\e[33m#{self}\e[0m"
-  end
-end
-
-# Monkey-patched Array class
-class Array
-  # Normalizes an array as a string or array of hashes
-  # without diacritics for lunr indexing
-  # @return [Hash || String] description
-  def lunr_normalize
-    if self.first.is_a? Hash
-      self
-    else
-      WaxTasks::Utils.remove_diacritics(self.join(', '))
+    #
+    #
+    def self.safe_join(*args)
+      File.join(args.compact)
     end
-  end
 
-  def except(value)
-    self - value
-  end
-end
-
-# Monkey-patched Hash class
-class Hash
-  # Normalizes hash as itself for lunr indexing
-  # @return [Hash]
-  def lunr_normalize
-    self
-  end
-
-  # Converts hash keys to symbols
-  # @return [Hash]
-  def symbolize_keys
-    hash = self
-    hash.clone.each_key do |key|
-      hash[key.to_sym || key] = hash.delete(key)
+    # Constructs the order variable for each page (if the collection
+    # needs to preserve the order of items from the file)
+    #
+    # @return [Integer] the order if the item padded with '0's for sorting
+    def self.padded_int(idx, max_idx)
+      idx.to_s.rjust(Math.log10(max_idx).to_i + 1, '0')
     end
-    hash
-  end
-end
 
-# Monkey-patched Integer class
-class Integer
-  # Normalizes integer as a string for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    self.to_s
-  end
-end
+    def self.lunr_normalize(val)
+      case val
+      when String || Integer
+        WaxTasks::Utils.remove_diacritics val.to_s
+      when Array
+        return val if val.first.is_a? Hash
+        WaxTasks::Utils.remove_diacritics val.join(', ')
+      else
+        val
+      end
+    end
 
-# Monkey-patched Nil class
-class NilClass
-  # Normalizes integer as a string for lunr indexing
-  # @return [String]
-  def lunr_normalize
-    self.to_s
+    def self.add_yaml_front_matter_to_file(file)
+      front_matter = "---\nlayout: none\n---\n"
+      filestring = File.read file
+      return if filestring.start_with? front_matter
+
+      File.open(file, 'w') do |f|
+        f.puts front_matter
+        f.puts filestring
+      end
+    end
   end
 end

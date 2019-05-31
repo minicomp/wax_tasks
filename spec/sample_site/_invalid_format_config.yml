@@ -1,0 +1,10 @@
+title: 'sample site'
+url: ''
+baseurl: ''
+
+collections:
+ bad_format:
+    layout: ''
+    metadata:
+      source: valid.csv
+    images: : :
