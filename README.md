@@ -5,11 +5,9 @@
 __wax_tasks__ is gem-packaged set of [Rake](https://ruby.github.io/rake/) tasks for creating minimal exhibition sites with [Wax](https://github.com/minicomp/wax/).
 
 It can be used to:
-- generate collection markdown pages from a metadata file ([wax:pagemaster](#waxpagemaster))
-- generate a client-side search index ([wax:lunr](#waxlunr))
+- generate collection markdown pages from a metadata file ([wax:pages](#waxpages))
+- generate a client-side search index ([wax:search](#waxsearch))
 - generate either IIIF-compliant derivatives ([wax:derivatives:iiif](#waxderivativesiiif)) or simple image derivatives ([wax:derivatives:simple](#waxderivativessimple)) from local image and pdf files
-
-.. and more.
 
 <br>
 <img src="https://raw.githubusercontent.com/minicomp/wiki/master/assets/wax_screen.gif"/>
