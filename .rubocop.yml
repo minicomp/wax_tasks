@@ -1,23 +1,15 @@
 AllCops:
   TargetRubyVersion: 2.4
-  Exclude: ['spec/**/*']
+  Exclude: ['spec/**/*', 'test_build/**/*']
 Metrics/LineLength:
-  IgnoredPatterns:
-    - 'raise'
-    - 'puts'
-    - '\A#'
-    - 'root_path'
-    - 'ÈÉÊË'
-    - 'EEEE'
-Style/FrozenStringLiteralComment:
-  Enabled: false
-Style/RedundantSelf:
-  Enabled: false
+  IgnoredPatterns: ['raise', 'puts', 'set', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join', 'spec']
 Metrics/AbcSize:
-  Max: 40
+  Max: 21
 Metrics/MethodLength:
-  Max: 30
-Style/DoubleNegation:
+  Max: 13
+Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+# Metrics/ClassLength:
+#   Enabled: false

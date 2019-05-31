@@ -1,28 +1,31 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.push File.expand_path('../lib')
 
-Gem::Specification.new do |s|
-  s.name          = 'wax_tasks'
-  s.version       = '1.0.0'
-  s.authors       = ['Marii Nyrop']
-  s.email         = ['m.nyrop@columbia.edu']
-  s.license       = 'MIT'
-  s.homepage      = 'https://github.com/minicomp/wax_tasks'
-  s.summary       = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
-  s.description   = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
+Gem::Specification.new do |spec|
+  spec.name          = 'wax_tasks'
+  spec.version       = '1.0.0'
+  spec.authors       = ['Marii Nyrop']
+  spec.email         = ['m.nyrop@columbia.edu']
+  spec.license       = 'MIT'
+  spec.homepage      = 'https://github.com/minicomp/wax_tasks'
+  spec.summary       = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
+  spec.description   = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
 
-  s.files = Dir['Gemfile', 'lib/**/*']
-  s.test_files    = Dir['spec/*']
-  s.require_paths = ['lib']
-  s.required_ruby_version = '>= 2.4'
+  spec.files                  = Dir['Gemfile', 'lib/**/*']
+  spec.test_files             = Dir['spec/*']
+  spec.require_paths          = ['lib']
+  spec.required_ruby_version  = '>= 2.4'
+  spec.metadata['yard.run']   = 'yri'
 
-  s.requirements << 'imagemagick'
-  s.requirements << 'ghostscript'
+  spec.requirements << 'imagemagick'
+  spec.requirements << 'ghostscript'
 
-  s.add_dependency 'html-proofer', '~> 3.10'
-  s.add_dependency 'jekyll', '~> 3.8'
-  s.add_dependency 'rake', '~> 12.3'
-  s.add_dependency 'wax_iiif', '~> 0.1.0'
+  spec.add_runtime_dependency 'progress_bar', '~> 1.3.0'
+  spec.add_runtime_dependency 'rainbow', '~> 3.0'
+  spec.add_runtime_dependency 'rake', '~> 12.3'
+  spec.add_runtime_dependency 'safe_yaml', '~> 1.0'
+  spec.add_runtime_dependency 'wax_iiif', '~> 0.1.0'
 
-  s.add_development_dependency 'bundler', '~> 2'
-  s.add_development_dependency 'rspec', '~> 3'
+  spec.add_development_dependency 'rspec', '~> 3'
 end
