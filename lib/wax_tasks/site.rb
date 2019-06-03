@@ -53,7 +53,7 @@ module WaxTasks
       raise WaxTasks::Error::InvalidCollection if collection.nil?
       raise WaxTasks::Error::InvalidConfig unless %w[iiif simple].include? type
 
-      output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, 'simple'
+      output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, type
       records = case type
                 when 'iiif'
                   collection.write_iiif_derivatives output_dir
