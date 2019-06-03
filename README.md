@@ -126,26 +126,26 @@ For more information on configuring Jekyll collections for __wax_tasks__, check 
 
 ### wax:pages
 
-Takes a CSV, JSON, or YAML file of collection metadata and generates a [markdown](https://daringfireball.net/projects/markdown/syntax) page for each record to a directory using a specified layout. [Read More](https://minicomp.github.io/wiki/#/wax/tasks/pagemaster?id=top).
+Takes a CSV, JSON, or YAML file of collection metadata and generates a [markdown](https://daringfireball.net/projects/markdown/syntax) page for each record to a directory using a specified layout. [Read More](#TODO).
 
-`$ bundle exec rake wax:pagemaster collection-name`
+`$ bundle exec rake wax:pages collection-name`
 
 ### wax:search
 
-Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/search?id=top).
+Generates a client-side JSON search index of your site for use with [ElasticLunr.js](http://elasticlunr.com/). [Read More](#TODO).
 
 `$ bundle exec rake wax:search search-name`
 
 
 ### wax:derivatives:simple
 
-Takes a local directory of images and pdf files and generates a few image derivatives (i.e., 'thumbnail' 250w and 'full' 1140w) for Jekyll layouts and includes to use. [Read More]().
+Takes a local directory of images and pdf files and generates a few image derivatives (i.e., 'thumbnail' 250w and 'full' 1140w) for Jekyll layouts and includes to use. [Read More](#TODO).
 
 `$ bundle exec rake wax:derivatives:iiif collection-name`
 
 ### wax:derivatives:iiif
 
-Takes a local directory of images and pdf files and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](https://minicomp.github.io/wiki/#/wax/tasks/iiif?id=top).
+Takes a local directory of images and pdf files and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](#TODO).
 
 `$ bundle exec rake wax:derivatives:iiif collection-name`
 
