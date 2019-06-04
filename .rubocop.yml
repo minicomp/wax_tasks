@@ -11,5 +11,3 @@ Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
-# Metrics/ClassLength:
-#   Enabled: false
