@@ -19,3 +19,9 @@ via their site's `_config.yml` file or how they invoke the tasks on the command 
 - :white_check_mark: The __page generation__ task `bundle exec rake wax:pagemaster NAME` has become `bundle exec rake wax:pages NAME`. However, this is currently aliased for backwards compatibility. 
 
 
+## v1.0.1
+#### Date: 06/05/2019
+
+#### Non-breaking Changes:
+- :white_check_mark: Uses `wax_iiif v0.1.2` with better progress bar handling on IIIF derivative generation
+- :white_check_mark: Has better progress bar handling on simple derivative generation
