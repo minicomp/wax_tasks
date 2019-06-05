@@ -10,11 +10,11 @@ module WaxTasks
     #
     #
     def initialize(path, variants)
-      @path        = path
-      @variants    = variants
-      @type        = type
-      @pid         = File.basename @path, '.*'
-      @assets      = assets
+      @path            = path
+      @variants        = variants
+      @type            = type
+      @pid             = File.basename @path, '.*'
+      @assets          = assets
     end
 
     #

@@ -4,9 +4,9 @@ AllCops:
 Metrics/LineLength:
   IgnoredPatterns: ['raise', 'puts', 'set', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join', 'spec']
 Metrics/AbcSize:
-  Max: 21
+  Max: 25
 Metrics/MethodLength:
-  Max: 13
+  Max: 15
 Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:

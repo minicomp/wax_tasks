@@ -2,7 +2,6 @@
 
 require 'mini_magick'
 require 'progress_bar'
-require 'progress_bar/core_ext/enumerable_with_progress'
 require 'wax_iiif'
 
 #
@@ -54,7 +53,9 @@ module WaxTasks
       #
       def write_simple_derivatives(dir)
         puts Rainbow("Generating simple image derivatives for collection '#{@name}'\nThis might take awhile.").cyan
-        items_from_imagedata.each_with_progress.map do |item|
+
+        bar = ProgressBar.new(items_from_imagedata.length)
+        items_from_imagedata.map do |item|
           item.simple_derivatives.each do |d|
             path = "#{dir}/#{d.path}"
             FileUtils.mkdir_p File.dirname(path)
@@ -63,6 +64,8 @@ module WaxTasks
             d.img.write path
             item.record.set d.label, path if item.record?
           end
+          bar.increment!
+          bar.write
           item
         end.flat_map(&:record)
       end
@@ -73,7 +76,6 @@ module WaxTasks
         build_opts = {
           base_url: "{{ '/' | absolute_url }}#{dir}",
           output_dir: dir,
-          # variants: @image_variants,
           collection_label: @name
         }
         WaxIiif::Builder.new(build_opts)
