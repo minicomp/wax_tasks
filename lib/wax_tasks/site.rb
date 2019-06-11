@@ -36,6 +36,21 @@ module WaxTasks
 
     #
     #
+    def generate_api(name)
+      result     = 0
+      collection = @config.find_collection name
+      raise WaxTasks::Error::InvalidCollection if collection.nil?
+
+      # collection.records_from_metadata.each do |record|
+      #   result += record.write_to_page(collection.page_source)
+      # end
+
+      puts Rainbow("#{result} pages were generated to #{collection.page_source}.").cyan
+      puts Rainbow("\nDone ✔").green
+    end
+
+    #
+    #
     def generate_static_search(name)
       search_config = @config.search name
       index = WaxTasks::Index.new(search_config)
