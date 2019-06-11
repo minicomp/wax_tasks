@@ -5,3 +5,4 @@ test_build
 docs
 .yardoc
 DIANE
+.ruby-*
