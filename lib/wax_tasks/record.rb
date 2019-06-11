@@ -61,5 +61,20 @@ module WaxTasks
         1
       end
     end
+
+    #
+    #
+    def write_to_api(dir)
+      raise Error::MissingPid if @pid.nil?
+
+      path = "#{dir}/#{Utils.slug(@pid)}.md"
+      if File.exist? path
+        0
+      else
+        FileUtils.mkdir_p File.dirname(path)
+        File.open(path, 'w') { |f| f.puts "#{@hash.to_yaml}---" }
+        1
+      end
+    end
   end
 end

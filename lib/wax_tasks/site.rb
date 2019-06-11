@@ -39,13 +39,14 @@ module WaxTasks
     def generate_api(name)
       result     = 0
       collection = @config.find_collection name
+      endpoint   = "api"
       raise WaxTasks::Error::InvalidCollection if collection.nil?
 
-      # collection.records_from_metadata.each do |record|
-      #   result += record.write_to_page(collection.page_source)
-      # end
+      collection.records_from_metadata.each do |record|
+        result += record.write_to_api("#{endpoint}/#{collection.page_source}")
+      end
 
-      puts Rainbow("#{result} pages were generated to #{collection.page_source}.").cyan
+      puts Rainbow("#{result} entries were generated to #{endpoint}/#{collection.page_source}.").cyan
       puts Rainbow("\nDone ✔").green
     end
 
