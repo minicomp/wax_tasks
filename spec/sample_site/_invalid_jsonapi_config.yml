@@ -46,5 +46,3 @@ search:
         fields: ['gambrel', 'blasphemous']
       page_collection:
         content: true
-
-jsonapi: ""

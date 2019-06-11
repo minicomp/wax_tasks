@@ -44,3 +44,4 @@ search:
     index: js/lunr-index.json
 title: "sample site"
 url: ""
+jsonapi: ""

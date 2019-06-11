@@ -49,6 +49,16 @@ module WaxTasks
 
     #
     #
+    def jsonapi_settings
+      if @config.key? 'jsonapi'
+        @config['jsonapi']
+      else
+        nil
+      end
+    end
+
+    #
+    #
     def search(name)
       search_config = @config.dig 'search', name
       raise WaxTasks::Error::InvalidConfig if search_config.nil?

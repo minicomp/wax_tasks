@@ -1,6 +1,7 @@
 title: 'sample site'
 url: ''
 baseurl: ''
+jsonapi: ''
 
 collections:
  bad_format:

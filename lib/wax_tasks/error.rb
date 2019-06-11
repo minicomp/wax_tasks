@@ -19,6 +19,10 @@ module WaxTasks
     class InvalidConfig < WaxTasksError; end
 
     # Custom Error:
+    # JSONAPI config cannot be found / parsed for the task at hand
+    class InvalidJSONAPIConfig < WaxTasksError; end
+
+    # Custom Error:
     # Collection specified cannot be found / parsed in site config
     class InvalidCollection < WaxTasksError; end
 

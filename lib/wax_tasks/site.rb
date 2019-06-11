@@ -39,8 +39,10 @@ module WaxTasks
     def generate_api(name)
       result     = 0
       collection = @config.find_collection name
-      endpoint   = "api"
       raise WaxTasks::Error::InvalidCollection if collection.nil?
+      jsonapi_settings = @config.jsonapi_settings
+      raise WaxTasks::Error::InvalidJSONAPIConfig if jsonapi_settings.nil?
+      endpoint = "api"
 
       collection.records_from_metadata.each do |record|
         result += record.write_to_api("#{endpoint}/#{collection.page_source}")

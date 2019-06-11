@@ -97,8 +97,10 @@ describe WaxTasks::Site do
       end
     end
 
-    context 'when there is missing api-specific metadata in _config.yml' do
-      it 'raises WaxTasks::Error::WaxTasks::Error::MissingAPIMetadata'
+    context 'when there is invalid api-specific metadata in _config.yml' do
+      it 'raises WaxTasks::Error::InvalidJSONAPIConfig' do
+        expect { quiet_stdout { site_from_invalid_jsonapi_config.generate_api(csv) } }.to raise_error(WaxTasks::Error::InvalidJSONAPIConfig)
+      end
     end
   end
 
