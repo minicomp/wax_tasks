@@ -76,7 +76,9 @@ module WaxTasks
       else
         FileUtils.mkdir_p path
         document = {}
-        document['meta'] = jsonapi_settings[collection_name]['meta'] ||= nil
+        if jsonapi_settings[collection_name] && jsonapi_settings[collection_name]['meta']
+          document['meta'] = jsonapi_settings[collection_name]['meta']
+        end
         document['data'] = {
           id: @pid,
           type: collection_name,

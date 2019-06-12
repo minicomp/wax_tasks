@@ -32,6 +32,12 @@ describe WaxTasks::Site do
         expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
       end
 
+      it 'produces a page with a meta object' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/*/index.json")
+        expect(JSON.parse(File.read(pages[0]))['meta']).to eql({ "copyright" => "2019 someone", "authors" => ["CSV Author One", "CSV Author Two"]})
+      end
+
     end
 
     context 'when given name of a valid json collection' do
@@ -49,6 +55,12 @@ describe WaxTasks::Site do
         jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
         pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/*/index.json")
         expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
+      end
+
+      it 'produces a page with a meta object' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/*/index.json")
+        expect(JSON.parse(File.read(pages[0]))['meta']).to eql({ "copyright" => "2019 someone", "authors" => ["JSON Author One", "JSON Author Two"]})
       end
 
     end
@@ -69,6 +81,13 @@ describe WaxTasks::Site do
         pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/*/index.json")
         expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
       end
+
+      it 'produces a page without a meta object' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/*/index.json")
+        expect(JSON.parse(File.read(pages[0]))['meta']).to be nil
+      end
+
 
     end
 
