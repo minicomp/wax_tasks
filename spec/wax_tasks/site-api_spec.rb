@@ -43,6 +43,11 @@ describe WaxTasks::Site do
         expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/index.json"))['data'].length).to eql 4
       end
 
+      it 'produces an array that is valid JSONAPI' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect { JSONAPI.parse_response!(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/index.json"))) }.to_not raise_error
+      end
+
     end
 
     context 'when given name of a valid json collection' do
@@ -73,6 +78,11 @@ describe WaxTasks::Site do
         expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/index.json"))['data'].length).to eql 4
       end
 
+      it 'produces an array that is valid JSONAPI' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect { JSONAPI.parse_response!(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/index.json"))) }.to_not raise_error
+      end
+
     end
 
     context 'when given name of a valid yaml collection' do
@@ -101,6 +111,11 @@ describe WaxTasks::Site do
       it 'produces an array of objects representing the collection as a whole' do
         jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
         expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/index.json"))['data'].length).to eql 4
+      end
+
+      it 'produces an array that is valid JSONAPI' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect { JSONAPI.parse_response!(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/index.json"))) }.to_not raise_error
       end
 
     end
