@@ -79,17 +79,23 @@ module WaxTasks
         if jsonapi_settings[collection_name] && jsonapi_settings[collection_name]['meta']
           document['meta'] = jsonapi_settings[collection_name]['meta']
         end
-        document['data'] = {
-          id: @pid,
-          type: collection_name,
-          attributes: @hash,
-          links: {
-            self: "/" + path
-          }
-        }
+        document['data'] = jsonapi_object collection_name, path
         File.open(file, 'w') { |f| f.puts JSON.pretty_generate document }
         1
       end
+    end
+
+    #
+    #
+    def jsonapi_object(collection_name, path)
+      {
+        id: @pid,
+        type: collection_name,
+        attributes: @hash,
+        links: {
+          self: '/' + path
+        }
+      }
     end
   end
 end
