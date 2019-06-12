@@ -38,6 +38,11 @@ describe WaxTasks::Site do
         expect(JSON.parse(File.read(pages[0]))['meta']).to eql({ "copyright" => "2019 someone", "authors" => ["CSV Author One", "CSV Author Two"]})
       end
 
+      it 'produces an array of objects representing the collection as a whole' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/index.json"))['data'].length).to eql 4
+      end
+
     end
 
     context 'when given name of a valid json collection' do
@@ -61,6 +66,11 @@ describe WaxTasks::Site do
         jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
         pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/*/index.json")
         expect(JSON.parse(File.read(pages[0]))['meta']).to eql({ "copyright" => "2019 someone", "authors" => ["JSON Author One", "JSON Author Two"]})
+      end
+
+      it 'produces an array of objects representing the collection as a whole' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/index.json"))['data'].length).to eql 4
       end
 
     end
@@ -88,6 +98,10 @@ describe WaxTasks::Site do
         expect(JSON.parse(File.read(pages[0]))['meta']).to be nil
       end
 
+      it 'produces an array of objects representing the collection as a whole' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        expect(JSON.parse(File.read("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/index.json"))['data'].length).to eql 4
+      end
 
     end
 

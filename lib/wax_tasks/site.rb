@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'json'
 
 #
 module WaxTasks
@@ -39,13 +40,28 @@ module WaxTasks
     def generate_api(name)
       result     = 0
       collection = @config.find_collection name
+      collection_name = collection.page_source[1..-1]
       raise WaxTasks::Error::InvalidCollection if collection.nil?
       jsonapi_settings = @config.jsonapi_settings
       raise WaxTasks::Error::InvalidJSONAPIConfig if jsonapi_settings.nil?
-      jsonapi_path = "#{jsonapi_settings['prefix']}/#{collection.page_source[1..-1]}"
+      jsonapi_path = "#{jsonapi_settings['prefix']}/#{collection_name}"
 
       collection.records_from_metadata.each do |record|
         result += record.write_to_api(jsonapi_path, jsonapi_settings)
+      end
+
+      file = jsonapi_path + '/index.json'
+      unless File.exist? file
+        FileUtils.mkdir_p jsonapi_path
+        document = {}
+        if jsonapi_settings[collection_name] && jsonapi_settings[collection_name]['meta']
+          document['meta'] = jsonapi_settings[collection_name]['meta']
+        end
+        document['links'] = { self: '/' + jsonapi_path }
+        document['data'] = collection.records_from_metadata.map do |record|
+          record.jsonapi_object collection_name, "#{jsonapi_path}/#{record.pid}"
+        end
+        File.open(file, 'w') { |f| f.puts JSON.pretty_generate document }
       end
 
       puts Rainbow("#{result} entries were generated to #{jsonapi_path}.").cyan
