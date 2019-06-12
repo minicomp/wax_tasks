@@ -42,13 +42,13 @@ module WaxTasks
       raise WaxTasks::Error::InvalidCollection if collection.nil?
       jsonapi_settings = @config.jsonapi_settings
       raise WaxTasks::Error::InvalidJSONAPIConfig if jsonapi_settings.nil?
-      endpoint = "api"
+      jsonapi_path = "#{jsonapi_settings['prefix']}/#{collection.page_source[1..-1]}"
 
       collection.records_from_metadata.each do |record|
-        result += record.write_to_api("#{endpoint}/#{collection.page_source}")
+        result += record.write_to_api(jsonapi_path, jsonapi_settings)
       end
 
-      puts Rainbow("#{result} entries were generated to #{endpoint}/#{collection.page_source}.").cyan
+      puts Rainbow("#{result} entries were generated to #{jsonapi_path}.").cyan
       puts Rainbow("\nDone ✔").green
     end
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'jsonapi/parser'
+
 describe WaxTasks::Site do
   include_context 'shared'
 
@@ -18,11 +20,18 @@ describe WaxTasks::Site do
         expect { quiet_stdout { site_from_config_file.generate_api(csv) } }.not_to raise_error
       end
 
-      it 'generates correct pages'
+      it 'generates the correct number of pages' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/*/index.json")
+        expect(pages.length).to eq 4
+      end
 
-      it 'produces a valid JSONAPI instance'
+      it 'produces a valid JSONAPI page' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{csv}/*/index.json")
+        expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
+      end
 
-      it 'reports that 4 json objects were generated to the api'
     end
 
     context 'when given name of a valid json collection' do
@@ -30,11 +39,18 @@ describe WaxTasks::Site do
         expect { quiet_stdout { site_from_config_file.generate_api(json) } }.not_to raise_error
       end
 
-      it 'generates correct pages'
+      it 'generates the correct number of pages' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/*/index.json")
+        expect(pages.length).to eq 4
+      end
 
-      it 'produces a valid JSONAPI instance'
+      it 'produces a valid JSONAPI page' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{json}/*/index.json")
+        expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
+      end
 
-      it 'reports that 4 json objects were generated to the api'
     end
 
     context 'when given name of a valid yaml collection' do
@@ -42,11 +58,18 @@ describe WaxTasks::Site do
         expect { quiet_stdout { site_from_config_file.generate_api(yaml) } }.not_to raise_error
       end
 
-      it 'generates correct pages' 
+      it 'generates the correct number of pages' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/*/index.json")
+        expect(pages.length).to eq 4
+      end
 
-      it 'produces a valid JSONAPI instance'
+      it 'produces a valid JSONAPI page' do
+        jsonapi_config = WaxTasks::Site.new(config_from_file).config.jsonapi_settings
+        pages = Dir.glob("#{BUILD}/#{jsonapi_config['prefix']}/#{yaml}/*/index.json")
+        expect { JSONAPI.parse_response!(JSON.parse(File.read(pages[0]))) }.to_not raise_error
+      end
 
-      it 'reports that 4 json objects were generated to the api'
     end
 
     context 'when given the name of a non-existing collection' do

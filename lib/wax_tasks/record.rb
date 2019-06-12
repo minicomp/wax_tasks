@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'json'
 
 module WaxTasks
   #
@@ -64,15 +65,27 @@ module WaxTasks
 
     #
     #
-    def write_to_api(dir)
+    def write_to_api(dir, jsonapi_settings)
       raise Error::MissingPid if @pid.nil?
 
-      path = "#{dir}/#{Utils.slug(@pid)}.md"
-      if File.exist? path
+      collection_name = @hash['collection']
+      path = "#{dir}/#{Utils.slug(@pid)}/"
+      file = path + 'index.json'
+      if File.exist? file
         0
       else
-        FileUtils.mkdir_p File.dirname(path)
-        File.open(path, 'w') { |f| f.puts "#{@hash.to_yaml}---" }
+        FileUtils.mkdir_p path
+        document = {}
+        document['meta'] = jsonapi_settings[collection_name]['meta'] ||= nil
+        document['data'] = {
+          id: @pid,
+          type: collection_name,
+          attributes: @hash,
+          links: {
+            self: "/" + path
+          }
+        }
+        File.open(file, 'w') { |f| f.puts JSON.pretty_generate document }
         1
       end
     end

@@ -1,6 +1,6 @@
 title: 'sample site'
-url: ''
-baseurl: ''
+url: 'http://testing-example.com'
+baseurl: '/wax'
 permalink: 'pretty'
 
 collections:
@@ -47,4 +47,26 @@ search:
       page_collection:
         content: true
 
-jsonapi: ""
+jsonapi:
+  prefix: 'api/v1'
+  csv_collection:
+    id: 'pid'
+    meta:
+      copyright: '2019 someone'
+      authors:
+        - 'CSV Author One'
+        - 'CSV Author Two'
+  json_collection:
+    id: 'pid'
+    meta:
+      copyright: '2019 someone'
+      authors:
+        - 'JSON Author One'
+        - 'JSON Author Two'
+  yaml_collection:
+    id: 'pid'
+    meta:
+      copyright: '2019 someone'
+      authors:
+        - 'YAML Author One'
+        - 'YAML Author Two'
