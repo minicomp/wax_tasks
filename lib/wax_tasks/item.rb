@@ -20,13 +20,13 @@ module WaxTasks
     #
     #
     def accepted_image_formats
-      %w[.png .jpg .jpeg .tiff]
+      %w[.png .jpg .jpeg .tiff .tif]
     end
 
     #
     #
     def type
-      Dir.exist?(@path) ? 'dir' : File.extname(@path)
+      Dir.exist?(@path) ? 'dir' : File.extname(@path).downcase
     end
 
     #

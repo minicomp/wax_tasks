@@ -27,12 +27,14 @@ module WaxTasks
         records = records_from_metadata
         Dir.glob(Utils.safe_join(@imagedata_source, '*')).map do |path|
           item = WaxTasks::Item.new(path, @image_variants)
-          next unless item.valid?
-
-          item.record      = records.find { |r| r.pid == item.pid }
-          item.iiif_config = @config.dig 'images', 'iiif'
-          warn Rainbow("\nWarning:\nCould not find record in #{@metadata_source} for image item #{path}.\n").orange if item.record.nil?
-          item
+          if item.valid?
+            item.record      = records.find { |r| r.pid == item.pid }
+            item.iiif_config = @config.dig 'images', 'iiif'
+            warn Rainbow("\nWarning:\nCould not find record in #{@metadata_source} for image item #{path}.\n").orange if item.record.nil?
+            item
+          else
+            puts Rainbow("Skipping #{path} because type #{item.type} is not an accepted format").yellow unless item.type == '.pdf'
+          end
         end.compact
       end
 
