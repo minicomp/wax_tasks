@@ -26,7 +26,7 @@ module WaxTasks
     #
     #
     def type
-      Dir.exist?(@path) ? 'dir' : File.extname(@path)
+      Dir.exist?(@path) ? 'dir' : File.extname(@path).downcase
     end
 
     #
