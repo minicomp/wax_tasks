@@ -25,3 +25,12 @@ via their site's `_config.yml` file or how they invoke the tasks on the command 
 #### Non-breaking Changes:
 - :white_check_mark: Uses `wax_iiif v0.1.2` with better progress bar handling on IIIF derivative generation
 - :white_check_mark: Has better progress bar handling on simple derivative generation
+
+## v1.0.2
+#### Date: 06/12/2019
+
+#### Non-breaking Changes:
+- :white_check_mark: Fixes [32](https://github.com/minicomp/wax_tasks/issues/32); accepts narrow images (< 1140px)
+- :white_check_mark: Fixes [33](https://github.com/minicomp/wax_tasks/issues/33); better image extension handling
+- :white_check_mark: Fixes [34](https://github.com/minicomp/wax_tasks/issues/34); ^
+- :white_check_mark: Fixes [36](https://github.com/minicomp/wax_tasks/issues/36); fixes bug if an image item doesn't have a record
