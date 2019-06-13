@@ -233,9 +233,9 @@ describe WaxTasks::Site do
       end
     end
 
-    context 'when given an invalid (too large) custom variant' do
-      it 'raises WaxTasks::Error::InvalidConfig' do
-        expect { quiet_stdout { site_from_invalid_config.generate_derivatives('xl_variant', 'simple') } }.to raise_error(WaxTasks::Error::InvalidConfig)
+    context 'when requesting an invalid (too large) custom variant' do
+      it 'skips resizing, warns, and uses the original image' do
+        expect { quiet_stdout { site_from_invalid_config.generate_derivatives('xl_variant', 'simple') } }.not_to raise_error
       end
     end
   end

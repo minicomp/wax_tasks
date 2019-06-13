@@ -27,9 +27,12 @@ module WaxTasks
     def simple_derivatives
       @variants.map do |label, width|
         img = MiniMagick::Image.open(@path)
-        raise WaxTasks::Error::InvalidConfig, "Requested variant width '#{width}' is larger than original image width." if width > img.width
+        if width > img.width
+          warn Rainbow("Tried to create derivative #{width}px wide, but asset #{@id} for item #{@pid} only has a width of #{img.width}px.").yellow
+        else
+          img.resize width
+        end
 
-        img.resize width
         img.format 'jpg'
         Derivative.new("#{@id}/#{label}.jpg", label, img)
       end
