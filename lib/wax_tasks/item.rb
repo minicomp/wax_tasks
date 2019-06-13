@@ -20,7 +20,7 @@ module WaxTasks
     #
     #
     def accepted_image_formats
-      %w[.png .jpg .jpeg .tiff]
+      %w[.png .jpg .jpeg .tiff .tif]
     end
 
     #
