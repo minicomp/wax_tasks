@@ -30,7 +30,7 @@ module WaxTasks
           if item.valid?
             item.record      = records.find { |r| r.pid == item.pid }
             item.iiif_config = @config.dig 'images', 'iiif'
-            warn Rainbow("\nWarning:\nCould not find record in #{@metadata_source} for image item #{path}.\n").orange if item.record.nil?
+            warn Rainbow("\nCould not find record in #{@metadata_source} for image item #{path}.\n").orange if item.record.nil?
             item
           else
             puts Rainbow("Skipping #{path} because type #{item.type} is not an accepted format").yellow unless item.type == '.pdf'
@@ -69,7 +69,7 @@ module WaxTasks
           bar.increment!
           bar.write
           item
-        end.flat_map(&:record)
+        end.flat_map(&:record).compact
       end
 
       #
@@ -122,9 +122,10 @@ module WaxTasks
 
         puts Rainbow("Generating IIIF derivatives for collection '#{@name}'\nThis might take awhile.").cyan
         builder.process_data
+        records = items.map(&:record).compact
 
         add_font_matter_to_json_files dir
-        add_iiif_results_to_records items.map(&:record), builder.manifests
+        add_iiif_results_to_records records, builder.manifests
       end
     end
   end
