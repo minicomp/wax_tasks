@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   Exclude: ['spec/**/*', 'test_build/**/*']
 Metrics/LineLength:
   IgnoredPatterns: ['raise', 'puts', 'set', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join', 'spec']

@@ -7,6 +7,8 @@ namespace :wax do
     desc 'generate iiif derivatives from local image files'
     task :iiif do
       args = ARGV.drop(1).each { |a| task a.to_sym }
+      args.reject! { |a| a.start_with? '-' }
+
       raise WaxTasks::Error::MissingArguments, Rainbow("You must specify a collection after 'wax:derivatives:iiif'").magenta if args.empty?
 
       site = WaxTasks::Site.new

@@ -19,15 +19,13 @@ module WaxTasks
         warn Rainbow("There are no pages in #{@page_source} to index.").orange if paths.empty?
 
         paths.map do |path|
-          begin
-            content = WaxTasks::Utils.content_clean File.read(path)
-            Record.new(SafeYAML.load_file(path)).tap do |r|
-              r.set 'content', content
-              r.set 'permalink', "/#{@name}/#{r.pid}#{@ext}" unless r.permalink?
-            end
-          rescue StandardError => e
-            raise Error::PageLoad, "Cannot load page #{path}\n#{e}"
+          content = WaxTasks::Utils.content_clean File.read(path)
+          Record.new(SafeYAML.load_file(path)).tap do |r|
+            r.set 'content', content
+            r.set 'permalink', "/#{@name}/#{r.pid}#{@ext}" unless r.permalink?
           end
+        rescue StandardError => e
+          raise Error::PageLoad, "Cannot load page #{path}\n#{e}"
         end
       end
 

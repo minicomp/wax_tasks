@@ -4,7 +4,7 @@ $LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |spec|
   spec.name          = 'wax_tasks'
-  spec.version       = '1.0.2'
+  spec.version       = '1.0.3'
   spec.authors       = ['Marii Nyrop']
   spec.email         = ['m.nyrop@columbia.edu']
   spec.license       = 'MIT'
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.files                  = Dir['Gemfile', 'lib/**/*']
   spec.test_files             = Dir['spec/*']
   spec.require_paths          = ['lib']
-  spec.required_ruby_version  = '>= 2.4'
+  spec.required_ruby_version  = '>= 2.5'
   spec.metadata['yard.run']   = 'yri'
 
   spec.requirements << 'imagemagick'
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'rainbow', '~> 3.0'
   spec.add_runtime_dependency 'rake', '~> 12.3'
   spec.add_runtime_dependency 'safe_yaml', '~> 1.0'
-  spec.add_runtime_dependency 'wax_iiif', '>= 0.1.2', '< 0.2'
+  spec.add_runtime_dependency 'wax_iiif', '>= 0.1.2', '< 0.3'
 
   spec.add_development_dependency 'rspec', '~> 3'
 end
