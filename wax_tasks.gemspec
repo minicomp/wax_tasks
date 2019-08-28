@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.files                  = Dir['Gemfile', 'lib/**/*']
   spec.test_files             = Dir['spec/*']
   spec.require_paths          = ['lib']
-  spec.required_ruby_version  = '>= 2.5'
+  spec.required_ruby_version  = '>= 2.4'
   spec.metadata['yard.run']   = 'yri'
 
   spec.requirements << 'imagemagick'
