@@ -1,4 +1,4 @@
-sudo: true
+# sudo: true
 language: ruby
 rvm:
   - 2.4
@@ -22,6 +22,6 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - bundle exec rubocop
-  - DEBUG=true bundle exec rspec
+  - bundle exec rspec
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
