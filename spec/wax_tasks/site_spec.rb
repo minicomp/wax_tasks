@@ -7,180 +7,180 @@ describe WaxTasks::Site do
     Test.reset
   end
 
+  # #
+  # # ===================================================
+  # # SITE.NEW (CONFIG)
+  # # ===================================================
+  # #
+  # describe '#new' do
+  #   context 'when initialized with valid config hash from file' do
+  #     it 'runs without errors' do
+  #       expect { WaxTasks::Site.new(config_from_file) }.not_to raise_error
+  #     end
   #
-  # ===================================================
-  # SITE.NEW (CONFIG)
-  # ===================================================
+  #     it 'merges config with defaults as Hash' do
+  #       expect(WaxTasks::Site.new(config_from_file).config).to be_a(WaxTasks::Config)
+  #     end
+  #   end
   #
-  describe '#new' do
-    context 'when initialized with valid config hash from file' do
-      it 'runs without errors' do
-        expect { WaxTasks::Site.new(config_from_file) }.not_to raise_error
-      end
-
-      it 'merges config with defaults as Hash' do
-        expect(WaxTasks::Site.new(config_from_file).config).to be_a(WaxTasks::Config)
-      end
-    end
-
-    context 'when initialized with empty config hash' do
-      it 'runs without errors' do
-        expect { WaxTasks::Site.new(empty_config) }.not_to raise_error
-      end
-
-      it 'merges config with defaults as Hash' do
-        expect(WaxTasks::Site.new(empty_config).config).to be_a(WaxTasks::Config)
-      end
-    end
-
-    context 'when initialized with an invalid config file' do
-      it 'raises WaxTasks::Error::InvalidConfig' do
-        expect { WaxTasks::Site.new(invalid_format_config) }.to raise_error(WaxTasks::Error::InvalidConfig)
-      end
-    end
-  end
-
+  #   context 'when initialized with empty config hash' do
+  #     it 'runs without errors' do
+  #       expect { WaxTasks::Site.new(empty_config) }.not_to raise_error
+  #     end
   #
-  # ===================================================
-  # SITE.COLLECTIONS
-  # ===================================================
+  #     it 'merges config with defaults as Hash' do
+  #       expect(WaxTasks::Site.new(empty_config).config).to be_a(WaxTasks::Config)
+  #     end
+  #   end
   #
-  describe '#collections' do
-    context 'when initialized with config hash from file' do
-      let(:collections) { site_from_config_file.collections }
-      it 'returns an array of Collection objects' do
-        expect(collections).to be_an(Array)
-        expect(collections.first).to be_a(WaxTasks::Collection)
-      end
-    end
-
-    context 'when initialized with empty config hash' do
-      let(:collections) { site_from_empty_config.collections }
-      it 'returns an empty array' do
-        expect(collections).to be_an(Array)
-        expect(collections).to be_empty
-      end
-    end
-  end
-
+  #   context 'when initialized with an invalid config file' do
+  #     it 'raises WaxTasks::Error::InvalidConfig' do
+  #       expect { WaxTasks::Site.new(invalid_format_config) }.to raise_error(WaxTasks::Error::InvalidConfig)
+  #     end
+  #   end
+  # end
   #
-  # ===================================================
-  # SITE.GENERATE_PAGES (NAME)
-  # ===================================================
+  # #
+  # # ===================================================
+  # # SITE.COLLECTIONS
+  # # ===================================================
+  # #
+  # describe '#collections' do
+  #   context 'when initialized with config hash from file' do
+  #     let(:collections) { site_from_config_file.collections }
+  #     it 'returns an array of Collection objects' do
+  #       expect(collections).to be_an(Array)
+  #       expect(collections.first).to be_a(WaxTasks::Collection)
+  #     end
+  #   end
   #
-  describe '#generate_pages' do
-    context 'when given name of a valid csv collection' do
-      it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(csv) } }.not_to raise_error
-      end
-
-      it 'generates pages' do
-        pages = Dir.glob("#{BUILD}/_#{csv}/*.md")
-        expect(pages.length).to eq(4)
-      end
-    end
-
-    context 'when given name of a valid json collection' do
-      it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(json) } }.not_to raise_error
-      end
-
-      it 'generates correct pages' do
-        pages = Dir.glob("#{BUILD}/_#{json}/*.md")
-        expect(pages.length).to eq(4)
-      end
-    end
-
-    context 'when given name of a valid yaml collection' do
-      it 'runs without errors' do
-        expect { quiet_stdout { site_from_config_file.generate_pages(yaml) } }.not_to raise_error
-      end
-
-      it 'generates correct pages' do
-        pages = Dir.glob("#{BUILD}/_#{yaml}/*.md")
-        expect(pages.length).to eq(4)
-      end
-    end
-
-    context 'when given the name of a non-existing collection' do
-      it 'raises WaxTasks::Error::InvalidCollection' do
-        expect { quiet_stdout { site_from_config_file.generate_pages('not_a_collection') } }.to raise_error(WaxTasks::Error::InvalidCollection)
-      end
-    end
-
-    context 'when given an invalid metadata file format (.xls)' do
-      it 'raises WaxTasks::Error::InvalidSource' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('xls_collection') } }.to raise_error(WaxTasks::Error::InvalidSource)
-      end
-    end
-
-    context 'when given path to a metadata file that doesnt exist' do
-      it 'raises WaxTasks::Error::MissingSource' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_source_collection') } }.to raise_error(WaxTasks::Error::MissingSource)
-      end
-    end
-
-    context 'when given an invalid csv as a metadata file' do
-      it 'raises WaxTasks::Error::InvalidCSV' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_csv_collection') } }.to raise_error(WaxTasks::Error::InvalidCSV)
-      end
-    end
-
-    context 'when given an invalid json as a metadata file' do
-      it 'raises WaxTasks::Error::InvalidJSON' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_json_collection') } }.to raise_error(WaxTasks::Error::InvalidJSON)
-      end
-    end
-
-    context 'when given an invalid yaml as a metadata file' do
-      it 'raises WaxTasks::Error::InvalidYAML' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_yaml_collection') } }.to raise_error(WaxTasks::Error::InvalidYAML)
-      end
-    end
-
-    context 'when given a metadata file with duplicate pid values' do
-      it 'raises WaxTasks::Error::WaxTasks::Error::NonUniquePid' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('duplicate_pid_collection') } }.to raise_error(WaxTasks::Error::NonUniquePid)
-      end
-    end
-
-    context 'when given a metadata file records missing a pid value' do
-      it 'raises WaxTasks::Error::WaxTasks::Error::MissingPid' do
-        expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_pid_collection') } }.to raise_error(WaxTasks::Error::MissingPid)
-      end
-    end
-  end
-
+  #   context 'when initialized with empty config hash' do
+  #     let(:collections) { site_from_empty_config.collections }
+  #     it 'returns an empty array' do
+  #       expect(collections).to be_an(Array)
+  #       expect(collections).to be_empty
+  #     end
+  #   end
+  # end
   #
-  # ===================================================
-  # SITE.GENERATE_STATIC_SEARCH (NAME)
-  # ===================================================
+  # #
+  # # ===================================================
+  # # SITE.GENERATE_PAGES (NAME)
+  # # ===================================================
+  # #
+  # describe '#generate_pages' do
+  #   context 'when given name of a valid csv collection' do
+  #     it 'runs without errors' do
+  #       expect { quiet_stdout { site_from_config_file.generate_pages(csv) } }.not_to raise_error
+  #     end
   #
-  describe '#generate_static_search' do
-    context 'with valid config' do
-      context 'and valid search name' do
-        it 'runs without errors' do
-          expect { quiet_stdout { site_from_config_file.generate_static_search('main') } }.not_to raise_error
-        end
-
-        it 'generates a search index as valid JSON to expected path' do
-          expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
-        end
-      end
-
-      context 'and invalid search name' do
-        it 'throws WaxTasks::Error::InvalidConfig' do
-          expect { site_from_config_file.generate_static_search('not_a_search') }.to raise_error(WaxTasks::Error::InvalidConfig)
-        end
-      end
-    end
-
-    context 'with empty search config' do
-      it 'throws WaxTasks::Error::InvalidConfig' do
-        expect { site_from_empty_config.generate_static_search('main') }.to raise_error(WaxTasks::Error::InvalidConfig)
-      end
-    end
-  end
+  #     it 'generates pages' do
+  #       pages = Dir.glob("#{BUILD}/_#{csv}/*.md")
+  #       expect(pages.length).to eq(4)
+  #     end
+  #   end
+  #
+  #   context 'when given name of a valid json collection' do
+  #     it 'runs without errors' do
+  #       expect { quiet_stdout { site_from_config_file.generate_pages(json) } }.not_to raise_error
+  #     end
+  #
+  #     it 'generates correct pages' do
+  #       pages = Dir.glob("#{BUILD}/_#{json}/*.md")
+  #       expect(pages.length).to eq(4)
+  #     end
+  #   end
+  #
+  #   context 'when given name of a valid yaml collection' do
+  #     it 'runs without errors' do
+  #       expect { quiet_stdout { site_from_config_file.generate_pages(yaml) } }.not_to raise_error
+  #     end
+  #
+  #     it 'generates correct pages' do
+  #       pages = Dir.glob("#{BUILD}/_#{yaml}/*.md")
+  #       expect(pages.length).to eq(4)
+  #     end
+  #   end
+  #
+  #   context 'when given the name of a non-existing collection' do
+  #     it 'raises WaxTasks::Error::InvalidCollection' do
+  #       expect { quiet_stdout { site_from_config_file.generate_pages('not_a_collection') } }.to raise_error(WaxTasks::Error::InvalidCollection)
+  #     end
+  #   end
+  #
+  #   context 'when given an invalid metadata file format (.xls)' do
+  #     it 'raises WaxTasks::Error::InvalidSource' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('xls_collection') } }.to raise_error(WaxTasks::Error::InvalidSource)
+  #     end
+  #   end
+  #
+  #   context 'when given path to a metadata file that doesnt exist' do
+  #     it 'raises WaxTasks::Error::MissingSource' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_source_collection') } }.to raise_error(WaxTasks::Error::MissingSource)
+  #     end
+  #   end
+  #
+  #   context 'when given an invalid csv as a metadata file' do
+  #     it 'raises WaxTasks::Error::InvalidCSV' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_csv_collection') } }.to raise_error(WaxTasks::Error::InvalidCSV)
+  #     end
+  #   end
+  #
+  #   context 'when given an invalid json as a metadata file' do
+  #     it 'raises WaxTasks::Error::InvalidJSON' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_json_collection') } }.to raise_error(WaxTasks::Error::InvalidJSON)
+  #     end
+  #   end
+  #
+  #   context 'when given an invalid yaml as a metadata file' do
+  #     it 'raises WaxTasks::Error::InvalidYAML' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('invalid_yaml_collection') } }.to raise_error(WaxTasks::Error::InvalidYAML)
+  #     end
+  #   end
+  #
+  #   context 'when given a metadata file with duplicate pid values' do
+  #     it 'raises WaxTasks::Error::WaxTasks::Error::NonUniquePid' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('duplicate_pid_collection') } }.to raise_error(WaxTasks::Error::NonUniquePid)
+  #     end
+  #   end
+  #
+  #   context 'when given a metadata file records missing a pid value' do
+  #     it 'raises WaxTasks::Error::WaxTasks::Error::MissingPid' do
+  #       expect { quiet_stdout { site_from_invalid_config.generate_pages('missing_pid_collection') } }.to raise_error(WaxTasks::Error::MissingPid)
+  #     end
+  #   end
+  # end
+  #
+  # #
+  # # ===================================================
+  # # SITE.GENERATE_STATIC_SEARCH (NAME)
+  # # ===================================================
+  # #
+  # describe '#generate_static_search' do
+  #   context 'with valid config' do
+  #     context 'and valid search name' do
+  #       it 'runs without errors' do
+  #         expect { quiet_stdout { site_from_config_file.generate_static_search('main') } }.not_to raise_error
+  #       end
+  #
+  #       it 'generates a search index as valid JSON to expected path' do
+  #         expect { JSON.parse(WaxTasks::Utils.remove_yaml(File.read("#{BUILD}/js/lunr-index.json"))) }.not_to raise_error
+  #       end
+  #     end
+  #
+  #     context 'and invalid search name' do
+  #       it 'throws WaxTasks::Error::InvalidConfig' do
+  #         expect { site_from_config_file.generate_static_search('not_a_search') }.to raise_error(WaxTasks::Error::InvalidConfig)
+  #       end
+  #     end
+  #   end
+  #
+  #   context 'with empty search config' do
+  #     it 'throws WaxTasks::Error::InvalidConfig' do
+  #       expect { site_from_empty_config.generate_static_search('main') }.to raise_error(WaxTasks::Error::InvalidConfig)
+  #     end
+  #   end
+  # end
 
   #
   # ===================================================

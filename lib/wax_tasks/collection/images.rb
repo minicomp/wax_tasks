@@ -46,6 +46,10 @@ module WaxTasks
           next unless Dir.glob("#{target_dir}/*").empty?
 
           puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
+
+          puts Rainbow(path).indianred
+          puts Rainbow(File.dirname(target_dir)).indianred
+
           opts = { output_dir: File.dirname(target_dir) }
           WaxIiif::Utilities::PdfSplitter.split(path, opts)
         end
@@ -57,6 +61,7 @@ module WaxTasks
         puts Rainbow("Generating simple image derivatives for collection '#{@name}'\nThis might take awhile.").cyan
 
         bar = ProgressBar.new(items_from_imagedata.length)
+        bar.write
         items_from_imagedata.map do |item|
           item.simple_derivatives.each do |d|
             path = "#{dir}/#{d.path}"
