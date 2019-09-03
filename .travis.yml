@@ -12,6 +12,7 @@ env:
   global:
     - CC_TEST_REPORTER_ID=4bff8432781049a5d67ff0f07ced7b5fc248ec37f1624b54d14daa5807b55eaf
 before_install:
+  - convert --version
   - gem update --system
   - gem install bundler
 before_script:
