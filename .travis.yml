@@ -6,6 +6,7 @@ rvm:
 addons:
   apt:
     packages:
+      - imagemagick
       - ghostscript
       - tree
 env:
