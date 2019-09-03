@@ -47,9 +47,6 @@ module WaxTasks
 
           puts Rainbow("\nPreprocessing #{path} into image files. This may take a minute.\n").cyan
 
-          puts Rainbow(path).indianred
-          puts Rainbow(File.dirname(target_dir)).indianred
-
           opts = { output_dir: File.dirname(target_dir) }
           WaxIiif::Utilities::PdfSplitter.split(path, opts)
         end
