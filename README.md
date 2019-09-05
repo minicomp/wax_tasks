@@ -101,6 +101,15 @@ collections:
       source: 'objects.csv' # path to the metadata file, must be within '_data'
     images:
       source 'source_images/objects' # path to the directory of source images, must be within '_data'
+      iiif_config: #allows for custom iiif fields to be defined. Only important for the created manifest.
+        attribution: attribution_field #by default 'attribution'. This does not need to be set if the metadata has a field named 'attribution'
+        description: description_field #by default 'description'
+        label: title_field #by default 'label' field, when no label field 'pid' field
+        skip_keys: #list of fields which should not go in the manifest 'metadata' field. This can also be set to a string of 'all' and no metadata field will be created. Default fields skipped: ['manifest', 'thumbnail', 'full', 'pid', 'order', 'label', 'layout']
+          - title
+          - manifest
+
+
 
 # wax search index settings
 lunr_index:

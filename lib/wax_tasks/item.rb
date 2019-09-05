@@ -68,26 +68,43 @@ module WaxTasks
     end
 
     def label
-      label_key = @iiif_config&.dig 'label'
-      if @record && label_key
-        @record.hash.dig label_key
-      else
-        @pid
-      end
+      label_key = @iiif_config&.dig 'label' if @iiif_config
+      label_key ||= 'label'
+      label = @record.hash.dig label_key if @record && label_key
+      label ||= @pid
+      label
     end
 
     #
     #
     def description
-      description_key = @iiif_config&.dig 'description'
+      description_key = @iiif_config&.dig 'description' if @iiif_config
+      description_key ||= 'description'
       @record.hash.dig description_key if description_key && @record
     end
 
     #
     #
     def attribution
-      attribution_key = @iiif_config.dig 'attribution'
+      attribution_key = @iiif_config.dig 'attribution' if @iiif_config
+      attribution_key ||= 'attribution'
       @record.hash.dig attribution_key if attribution_key && @record
+    end
+
+    #
+    #
+    def metadata
+      csv_metadata = []
+      skip_keys = @iiif_config.dig 'skipkeys' if @iiif_config
+      skip_keys ||= %w[manifest thumbnail full pid order label layout]
+      if @record.hash.class == Hash && skip_keys != 'all'
+        @record.hash.each do |key, value|
+          unless skip_keys.include? key
+            csv_metadata.push('label': key, 'value': value)
+          end
+        end
+      end
+      csv_metadata
     end
 
     #
@@ -105,11 +122,11 @@ module WaxTasks
     #
     def base_opts
       opts = { label: label }
-      return opts unless @iiif_config
-
       opts[:logo]        = logo if logo
+
       opts[:description] = description.to_s if description
       opts[:attribution] = attribution.to_s if attribution
+      opts[:metadata] = metadata if metadata
       opts
     end
   end
