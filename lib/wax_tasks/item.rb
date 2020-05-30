@@ -47,7 +47,7 @@ module WaxTasks
       if accepted_image_formats.include? @type
         [Asset.new(@path, @pid, @variants)]
       elsif @type == 'dir'
-        paths = Dir.glob("#{@path}/*{#{accepted_image_formats.join(',')}}")
+        paths = Dir.glob("#{@path}/*{#{accepted_image_formats.join(',')}}").sort
         paths.map { |p| Asset.new(p, @pid, @variants) }
       else
         []
