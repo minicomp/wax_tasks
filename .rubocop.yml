@@ -1,7 +1,7 @@
 AllCops:
   TargetRubyVersion: 2.4
   Exclude: ['spec/**/*', 'test_build/**/*']
-Metrics/LineLength:
+Layout/LineLength:
   IgnoredPatterns: ['raise', 'puts', 'set', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join', 'spec']
 Metrics/AbcSize:
   Max: 26
