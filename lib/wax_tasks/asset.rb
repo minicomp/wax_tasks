@@ -42,11 +42,13 @@ module WaxTasks
     #
     def to_iiif_image_record(is_only, index, base_opts)
       opts = base_opts.clone
+
       opts[:is_primary]    = index.zero?
       opts[:section_label] = "Page #{index + 1}" unless is_only
       opts[:path]          = @path
       opts[:manifest_id]   = @pid
       opts[:id]            = @id
+      opts[:variants]      = @variants
 
       WaxIiif::ImageRecord.new(opts)
     end

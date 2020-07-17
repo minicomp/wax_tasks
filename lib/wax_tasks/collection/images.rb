@@ -77,10 +77,12 @@ module WaxTasks
       #
       #
       def iiif_builder(dir)
+        puts image_variants
         build_opts = {
           base_url: "{{ '/' | absolute_url }}#{dir}",
           output_dir: dir,
-          collection_label: @name
+          collection_label: @name,
+          variants: image_variants
         }
         WaxIiif::Builder.new(build_opts)
       end
