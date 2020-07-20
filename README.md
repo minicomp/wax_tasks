@@ -1,8 +1,8 @@
 # wax_tasks 🐝
-[![Build Status](https://img.shields.io/travis/minicomp/wax_tasks.svg?color=96c400)](https://travis-ci.org/minicomp/wax_tasks) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
+[![Build Status](https://travis-ci.com/minicomp/wax_tasks.svg?branch=master)](https://travis-ci.com/minicomp/wax_tasks) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks)
 [![Gem Downloads](https://img.shields.io/gem/dt/wax_tasks.svg?color=046d0b)](https://badge.fury.io/rb/wax_tasks)
-[![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg?style=flat)](https://www.rubydoc.info/github/minicomp/wax_tasks/) 
+[![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg?style=flat)](https://www.rubydoc.info/github/minicomp/wax_tasks/)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/maintainability)](https://codeclimate.com/github/minicomp/wax_tasks/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/14408e7e962b9b84ec65/test_coverage)](https://codeclimate.com/github/minicomp/wax_tasks/test_coverage)
@@ -153,6 +153,14 @@ Takes a local directory of images and pdf files and generates a few image deriva
 Takes a local directory of images and pdf files and generates tiles and data that work with a IIIF compliant image viewer like [OpenSeaDragon](https://openseadragon.github.io/), [Mirador](http://projectmirador.org/), or [Leaflet IIIF](https://github.com/mejackreed/Leaflet-IIIF). [Read More](#TODO).
 
 `$ bundle exec rake wax:derivatives:iiif collection-name`
+
+### wax:clobber
+
+Destroys (or "clobbers") wax-generated files, i.e., pages generated from `wax:pagemaster`, derivatives generated from `wax:derivatives`, and search indexes generated with `wax:search` so you can start from scratch.
+
+This task does *not* touch your source metadata or source image files! Instead, it simply clears a path for you to regenerate your collection materials in case you add/edit source materials.
+
+`$ bundle exec rake wax:clobber collection-name`
 
 # Contributing
 
