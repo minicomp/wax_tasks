@@ -6,8 +6,12 @@ module WaxTasks
     attr_reader :collections
 
     def initialize(config)
-      @config           = config
-      @collections      = process_collections
+      @config         = config
+      @collections    = process_collections
+    end
+
+    def self
+      @config
     end
 
     #

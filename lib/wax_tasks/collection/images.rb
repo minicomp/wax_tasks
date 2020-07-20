@@ -54,14 +54,14 @@ module WaxTasks
 
       #
       #
-      def write_simple_derivatives(dir)
+      def write_simple_derivatives
         puts Rainbow("Generating simple image derivatives for collection '#{@name}'\nThis might take awhile.").cyan
 
         bar = ProgressBar.new(items_from_imagedata.length)
         bar.write
         items_from_imagedata.map do |item|
           item.simple_derivatives.each do |d|
-            path = "#{dir}/#{d.path}"
+            path = "#{@simple_derivative_source}/#{d.path}"
             FileUtils.mkdir_p File.dirname(path)
             next if File.exist? path
 
@@ -80,9 +80,10 @@ module WaxTasks
         build_opts = {
           base_url: "{{ '/' | absolute_url }}#{dir}",
           output_dir: dir,
-          collection_label: @name
+          collection_label: @name,
+          variants: image_variants
         }
-        WaxIiif::Builder.new(build_opts)
+        WaxIiif::Builder.new build_opts
       end
 
       #
@@ -115,10 +116,10 @@ module WaxTasks
 
       #
       #
-      def write_iiif_derivatives(dir)
+      def write_iiif_derivatives
         items     = items_from_imagedata
         iiif_data = items.map(&:iiif_image_records).flatten
-        builder   = iiif_builder(dir)
+        builder   = iiif_builder @iiif_derivative_source
 
         builder.load iiif_data
 
@@ -126,7 +127,7 @@ module WaxTasks
         builder.process_data
         records = items.map(&:record).compact
 
-        add_font_matter_to_json_files dir
+        add_font_matter_to_json_files @iiif_derivative_source
         add_iiif_results_to_records records, builder.manifests
       end
     end

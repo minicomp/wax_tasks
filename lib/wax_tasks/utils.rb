@@ -114,7 +114,7 @@ module WaxTasks
     #
     #
     def self.safe_join(*args)
-      File.join(args.compact)
+      File.join(args.compact).sub %r{^\/}, ''
     end
 
     # Constructs the order variable for each page (if the collection

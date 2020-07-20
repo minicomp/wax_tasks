@@ -5,7 +5,6 @@ module WaxTasks
   #
   class Site
     attr_reader :config
-    IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
 
     #
     #
@@ -17,6 +16,25 @@ module WaxTasks
     #
     def collections
       @config.collections
+    end
+
+    #
+    #
+    def clobber(name)
+      collection = @config.find_collection name
+      raise WaxTasks::Error::InvalidCollection if collection.nil?
+
+      collection.clobber_pages
+      collection.clobber_derivatives
+
+      @config.self.dig('search').each do |_name, search|
+        next unless search.key? 'index'
+        index = Utils.safe_join @config.source, search['index']
+        puts Rainbow("Removing search index #{index}").cyan
+        FileUtils.rm index if File.exist? index
+      end
+
+      puts Rainbow("\nDone ✔").green
     end
 
     #
@@ -53,13 +71,11 @@ module WaxTasks
       raise WaxTasks::Error::InvalidCollection if collection.nil?
       raise WaxTasks::Error::InvalidConfig unless %w[iiif simple].include? type
 
-      output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, type
-
       records = case type
                 when 'iiif'
-                  collection.write_iiif_derivatives output_dir
+                  collection.write_iiif_derivatives
                 when 'simple'
-                  collection.write_simple_derivatives output_dir
+                  collection.write_simple_derivatives
                 end
 
       collection.update_metadata records

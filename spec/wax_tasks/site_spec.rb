@@ -11,7 +11,7 @@ describe WaxTasks::Site do
   # ===================================================
   # SITE.NEW (CONFIG)
   # ===================================================
-  #
+
   describe '#new' do
     context 'when initialized with valid config hash from file' do
       it 'runs without errors' do
@@ -241,6 +241,11 @@ describe WaxTasks::Site do
   end
 
   describe '#generate_derivatives type=iiif' do
+    let(:dir) { "#{BUILD}/img/derivatives/iiif/images" }
+    let(:item) { 'img_item_1' }
+    let(:defaults) { %w[250 1140] }
+    let(:custom) { %w[50 1400] }
+
     context 'with iiif config vars' do
       it 'runs without errors' do
         expect { quiet_stdout { site_from_config_file.generate_derivatives(yaml, 'iiif') } }.not_to raise_error
@@ -250,6 +255,20 @@ describe WaxTasks::Site do
     context 'without iiif config vars' do
       it 'runs without errors' do
         expect { quiet_stdout { site_from_config_file.generate_derivatives(json, 'iiif') } }.not_to raise_error
+      end
+    end
+
+    context 'when given valid custom variants widths' do
+      it 'runs without errors' do
+        expect { quiet_stdout { site_from_config_file.generate_derivatives(json, 'iiif') } }.not_to raise_error
+      end
+
+      it 'generates the default variants' do
+        defaults.each { |v| expect(File.exist?("#{dir}/#{item}/full/#{v},/0/default.jpg")) }
+      end
+
+      it 'generates the custom variants' do
+        custom.each { |v| expect(File.exist?("#{dir}/#{item}/full/#{v},/0/default.jpg")) }
       end
     end
   end
