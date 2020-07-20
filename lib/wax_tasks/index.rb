@@ -34,7 +34,7 @@ module WaxTasks
     #
     #
     def write_to(dir)
-      file_path = WaxTasks::Utils.safe_join Dir.pwd, dir, path
+      file_path = WaxTasks::Utils.safe_join dir, @path
       FileUtils.mkdir_p File.dirname(file_path)
       File.open(file_path, 'w') do |f|
         f.puts "---\nlayout: none\n---\n"
