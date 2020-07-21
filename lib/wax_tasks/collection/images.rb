@@ -12,14 +12,6 @@ module WaxTasks
     module Images
       #
       #
-      def image_variants
-        default_variants = { 'thumbnail' => 250, 'full' => 1140 }
-        custom_variants  = @config.dig('images', 'variants') || {}
-        default_variants.merge custom_variants
-      end
-
-      #
-      #
       def items_from_imagedata
         raise Error::MissingSource, "Cannot find image data source '#{@imagedata_source}'" unless Dir.exist? @imagedata_source
 
@@ -81,7 +73,7 @@ module WaxTasks
           base_url: "{{ '/' | absolute_url }}#{dir}",
           output_dir: dir,
           collection_label: @name,
-          variants: image_variants
+          variants: @image_variants.dup.tap { |h| h.delete 'full' }
         }
         WaxIiif::Builder.new build_opts
       end

@@ -28,7 +28,7 @@ module WaxTasks
       @iiif_derivative_source   = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif', @name
       @simple_derivative_source = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'simple', @name
       @search_fields            = %w[pid label thumbnail permalink collection]
-      @image_variants           = image_variants
+      @image_variants           = @config.dig('images', 'variants') || {}
     end
 
     #
