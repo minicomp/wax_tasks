@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.email         = ['marii@nyu.edu']
   spec.license       = 'MIT'
   spec.homepage      = 'https://github.com/minicomp/wax_tasks'
-  spec.summary       = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
-  spec.description   = 'Rake tasks for minimal exhibition sites with Jekyll Wax.'
+  spec.summary       = 'Rake tasks for minimal exhibition sites with Minicomp/Wax.'
+  spec.description   = 'Rake tasks for minimal exhibition sites with Minicomp/Wax.'
 
   spec.files                  = Dir['Gemfile', 'lib/**/*']
   spec.test_files             = Dir['spec/*']
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'rainbow', '~> 3.0'
   spec.add_runtime_dependency 'rake', '~> 13.0'
   spec.add_runtime_dependency 'safe_yaml', '~> 1.0'
-  spec.add_runtime_dependency 'wax_iiif', '>= 0.1.2', '< 0.3'
+  spec.add_runtime_dependency 'wax_iiif', '~> 0.2'
 
   spec.add_development_dependency 'rspec', '~> 3'
 end

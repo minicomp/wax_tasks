@@ -30,8 +30,9 @@ module WaxTasks
       @config.self.dig('search').each do |_name, search|
         next unless search.key? 'index'
         index = Utils.safe_join @config.source, search['index']
+        next unless File.exist? index
         puts Rainbow("Removing search index #{index}").cyan
-        FileUtils.rm index if File.exist? index
+        FileUtils.rm index
       end
 
       puts Rainbow("\nDone ✔").green

@@ -3,21 +3,24 @@
 #
 module WaxTasks
   Derivative = Struct.new(:path, :label, :img)
-  attr_reader :id, :path
 
   #
   class Asset
+    attr_reader :id, :path
+
+    DEFAULT_VARIANTS = { 'thumbnail' => 250, 'full' => 1140 }.freeze
+
     def initialize(path, pid, variants)
       @path     = path
       @pid      = pid
       @id       = asset_id
-      @variants = variants
+      @variants = DEFAULT_VARIANTS.merge variants
     end
 
     #
     #
     def asset_id
-      id = File.basename(@path, '.*')
+      id = File.basename @path, '.*'
       id.prepend "#{@pid}_" unless id == @pid
       id
     end
@@ -26,7 +29,7 @@ module WaxTasks
     #
     def simple_derivatives
       @variants.map do |label, width|
-        img = MiniMagick::Image.open(@path)
+        img = MiniMagick::Image.open @path
         if width > img.width
           warn Rainbow("Tried to create derivative #{width}px wide, but asset #{@id} for item #{@pid} only has a width of #{img.width}px.").yellow
         else
