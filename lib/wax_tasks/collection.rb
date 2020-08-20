@@ -25,8 +25,8 @@ module WaxTasks
       @page_source              = Utils.safe_join source, collections_dir, "_#{@name}"
       @metadata_source          = Utils.safe_join source, '_data', config.dig('metadata', 'source')
       @imagedata_source         = Utils.safe_join source, '_data', config.dig('images', 'source')
-      @iiif_derivative_source   = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif', @name
-      @simple_derivative_source = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'simple', @name
+      @iiif_derivative_source   = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif'
+      @simple_derivative_source = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'simple'
       @search_fields            = %w[pid label thumbnail permalink collection]
       @image_variants           = @config.dig('images', 'variants') || {}
     end
