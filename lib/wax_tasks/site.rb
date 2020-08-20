@@ -27,7 +27,7 @@ module WaxTasks
       collection.clobber_pages
       collection.clobber_derivatives
 
-      @config.self.dig('search').each do |_name, search|
+      @config.self.fetch('search', {}).each do |_name, search|
         next unless search.key? 'index'
         index = Utils.safe_join @config.source, search['index']
         next unless File.exist? index
