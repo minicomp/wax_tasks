@@ -21,7 +21,6 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - bundle exec rubocop
   - bundle exec bundle-audit
   - bundle exec rspec
 after_script:
