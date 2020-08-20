@@ -1,5 +1,5 @@
 # wax_tasks 🐝
-[![Build Status](https://travis-ci.com/minicomp/wax_tasks.svg?branch=master)](https://travis-ci.com/minicomp/wax_tasks) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
+[![Build Status](https://travis-ci.com/minicomp/wax_tasks.svg?branch=main)](https://travis-ci.com/minicomp/wax_tasks) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks)
 [![Gem Downloads](https://img.shields.io/gem/dt/wax_tasks.svg?color=046d0b)](https://badge.fury.io/rb/wax_tasks)
 [![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg?style=flat)](https://www.rubydoc.info/github/minicomp/wax_tasks/)
