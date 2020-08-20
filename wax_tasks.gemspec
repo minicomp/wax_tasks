@@ -4,7 +4,7 @@ $LOAD_PATH.push File.expand_path('../lib')
 
 Gem::Specification.new do |spec|
   spec.name          = 'wax_tasks'
-  spec.version       = '1.0.3'
+  spec.version       = '1.1.0'
   spec.authors       = ['Marii Nyrop']
   spec.email         = ['marii@nyu.edu']
   spec.license       = 'MIT'
