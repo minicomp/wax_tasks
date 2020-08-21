@@ -16,7 +16,7 @@ It can be used to:
 - generate either IIIF-compliant derivatives ([wax:derivatives:iiif](#waxderivativesiiif)) or simple image derivatives ([wax:derivatives:simple](#waxderivativessimple)) from local image and pdf files
 
 <br>
-<img src="https://raw.githubusercontent.com/minicomp/wiki/master/assets/wax_screen.gif"/>
+<img src="https://github.com/minicomp/wiki/blob/main/assets/wax_screen.gif?raw=true"/>
 
 
 # Getting Started
