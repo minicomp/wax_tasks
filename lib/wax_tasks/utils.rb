@@ -27,7 +27,7 @@ module WaxTasks
     # @return [Array] same data unless a an item is missing the key `pid`
     # @raise WaxTasks::Error::MissingPid
     def self.assert_pids(data)
-      data.each_with_index { |d, i| raise Error::MissingPid, "Collection is missing pid for item #{i}." unless d.key? 'pid' }
+      data.each_with_index { |d, i| raise Error::MissingPid, "Collection is missing pid for item #{i}.\nHint: review common .csv formatting issues (such as hidden characters) in the documentation: https://minicomp.github.io/wiki/wax/preparing-your-collection-data/metadata/" unless d.key? 'pid' }
       data
     end
 
