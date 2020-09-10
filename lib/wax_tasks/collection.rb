@@ -14,6 +14,7 @@ module WaxTasks
     include Collection::Images
 
     IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
+    DEFAULT_VARIANTS = { 'thumbnail' => 250, 'fullwidth' => 1140 }.freeze
 
     #
     #
@@ -28,7 +29,14 @@ module WaxTasks
       @iiif_derivative_source   = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif'
       @simple_derivative_source = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'simple'
       @search_fields            = %w[pid label thumbnail permalink collection]
-      @image_variants           = @config.dig('images', 'variants') || {}
+      @image_variants           = image_variants
+    end
+
+    #
+    #
+    def image_variants
+      vars = @config.dig('images', 'variants') || {}
+      DEFAULT_VARIANTS.merge vars
     end
 
     #
