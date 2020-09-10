@@ -8,13 +8,13 @@ module WaxTasks
   class Asset
     attr_reader :id, :path
 
-    DEFAULT_VARIANTS = { 'thumbnail' => 250, 'full' => 1140 }.freeze
+
 
     def initialize(path, pid, variants)
       @path     = path
       @pid      = pid
       @id       = asset_id
-      @variants = DEFAULT_VARIANTS.merge variants
+      @variants = variants
     end
 
     #

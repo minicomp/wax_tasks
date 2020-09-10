@@ -23,9 +23,13 @@ module WaxTasks
       @hash.keys
     end
 
-    #
+    # PATCH :: rename 'fullwidth' to 'full' to
+    # (1) avoid breaking wax_iiif with special 'full' variant label
+    # (2) avoid breaking wax_theme which still expects 'full' to provide an image path
+    # this can be deprecated when a new version of wax_theme looks for another fullsize key
     #
     def set(key, value)
+      key = 'full' if key == 'fullwidth'
       @hash[key] = value
     end
 
