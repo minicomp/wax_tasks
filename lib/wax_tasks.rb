@@ -22,6 +22,7 @@ require_relative 'wax_tasks/item'
 require_relative 'wax_tasks/record'
 require_relative 'wax_tasks/site'
 require_relative 'wax_tasks/utils'
+require_relative 'wax_tasks/version'
 
 #
 module WaxTasks
