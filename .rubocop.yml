@@ -1,13 +1,16 @@
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.4
   Exclude: ['spec/**/*', 'test_build/**/*']
 Layout/LineLength:
   IgnoredPatterns: ['raise', 'puts', 'set', 'warn', 'ÈÉÊË', 'EEEE', 'safe_join', 'spec']
 Metrics/AbcSize:
-  Max: 26
+  Max: 28
 Metrics/MethodLength:
   Max: 15
 Layout/EmptyComment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+Style/SingleArgumentDig:
   Enabled: false

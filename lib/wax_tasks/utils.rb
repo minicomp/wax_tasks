@@ -90,7 +90,7 @@ module WaxTasks
       str.gsub!(/\A---(.|\n)*?---/, '') # remove yaml front matter
       str.gsub!(/{%(.*)%}/, '') # remove functional liquid
       str.gsub!(/{{.*}}/, '') # remove referential liquid
-      str.gsub!(%r{<\/?[^>]*>}, '') # remove html
+      str.gsub!(%r{</?[^>]*>}, '') # remove html
       str.gsub!('\\n', '') # remove newlines
       str.gsub!(/\s+/, ' ') # remove extra space
       str.tr!('"', "'") # replace double quotes with single
@@ -114,7 +114,7 @@ module WaxTasks
     #
     #
     def self.safe_join(*args)
-      File.join(args.compact).sub %r{^\/}, ''
+      File.join(args.compact).sub %r{^/}, ''
     end
 
     # Constructs the order variable for each page (if the collection
