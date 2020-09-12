@@ -8,8 +8,6 @@ module WaxTasks
   class Asset
     attr_reader :id, :path
 
-
-
     def initialize(path, pid, variants)
       @path     = path
       @pid      = pid

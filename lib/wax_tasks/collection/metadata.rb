@@ -68,7 +68,7 @@ module WaxTasks
         lost_record_pids.each do |pid|
           new << original.find { |r| r.pid == pid }
         end
-        new
+        new.sort_by(&:order)
       end
 
       #
