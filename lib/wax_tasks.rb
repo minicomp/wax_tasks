@@ -27,9 +27,10 @@ require_relative 'wax_tasks/version'
 #
 module WaxTasks
   DEFAULT_CONFIG_FILE = './_config.yml'
+
   #
   #
-  def self.config_from_file(file = nil)
+  def self.config_from_file(file)
     Utils.validate_yaml(file || DEFAULT_CONFIG_FILE)
   rescue StandardError => e
     raise WaxTasks::Error::InvalidConfig, "Cannot open config file '#{file}'.\n #{e}"

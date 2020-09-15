@@ -9,7 +9,16 @@ module WaxTasks
     #
     #
     def initialize(config = nil)
-      @config = WaxTasks::Config.new(config || WaxTasks.config_from_file)
+      @config = case config
+                when Hash
+                  WaxTasks::Config.new config
+                when String, NilClass
+                  WaxTasks.config_from_file config
+                when WaxTasks::Config
+                  config
+                else
+                  raise WaxTasks::Error::InvalidConfig
+                end
     end
 
     #

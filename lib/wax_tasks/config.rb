@@ -5,8 +5,10 @@ module WaxTasks
   class Config
     attr_reader :collections
 
-    def initialize(config)
-      @config         = config
+    def initialize(hash)
+      raise WaxTasks::Error::InvalidConfig unless hash.is_a? Hash
+
+      @config         = hash
       @collections    = process_collections
     end
 

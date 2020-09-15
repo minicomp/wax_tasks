@@ -6,5 +6,6 @@ describe WaxTasks::Site do
   before(:all) do
     Test.reset
   end
-
+  subject(:site_from_default) { WaxTasks::Site.new }
+  it { should be_a(WaxTasks::Site) }
 end
