@@ -272,4 +272,46 @@ describe WaxTasks::Site do
       end
     end
   end
+
+  #
+  # ===================================================
+  # SITE.GENERATE_ANNOTATIONLISTS (NAME)
+  # ===================================================
+  #
+
+  describe '#generate_annotationlists' do
+    before(:each) do
+      FileUtils.mkdir_p "#{BUILD}/_data/annotations/test_collection/dir_imgs_item/"
+      FileUtils.cp Dir.glob("#{ROOT}/spec/sample_hocr/*.yaml"), "#{BUILD}/_data/annotations/test_collection/dir_imgs_item/"
+      FileUtils.mkdir_p "#{BUILD}/img/derivatives/iiif/test_collection/"
+      FileUtils.cp Dir.glob("#{ROOT}/spec/sample_hocr/manifest.json"), "#{BUILD}/img/derivatives/iiif/test_collection/"
+    end
+
+    # TODO: mock or stub the annotation and manifest files, break up this block
+    context 'when generates sample annotationlist' do
+      it 'generates annotationlist and updates manifest' do
+ 
+        expect { site_from_config_file.generate_annotations('csv_collection') }.not_to raise_error
+
+        json_file = "#{BUILD}/img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json"
+        expect(File).to exist(json_file)
+        raw_yaml, raw_json = File.read(json_file).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
+        annotation = JSON.parse(raw_json)['resources'].first
+        expect(annotation['on']).to eq("{{ '/' | absolute_url }}img/derivatives/iiif/canvas/test_collection_img_item_1.json#xywh=20,668,171,100")
+        expect(annotation['resource']['chars']).to eq('If the ax falls the')
+
+        manifest_path = "#{BUILD}/img/derivatives/iiif/test_collection/manifest.json"
+        raw_yaml, raw_json = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
+        manifest = JSON.parse(raw_json)
+        expect(manifest['sequences'][0]['canvases'][0]['otherContent']).not_to be_nil
+        expect(manifest['sequences'][0]['canvases'][0]['otherContent'][0]['@id']).to eq("{{ '/' | absolute_url }}img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json")
+      end
+    end
+
+    after(:each) do
+      FileUtils.rm Dir.glob("#{BUILD}/_data/annotations/test_collection/dir_imgs_item/*.yaml")
+      FileUtils.rm Dir.glob("#{BUILD}/img/derivatives/iiif/test_collection/manifest.json")
+    end
+  end
+
 end

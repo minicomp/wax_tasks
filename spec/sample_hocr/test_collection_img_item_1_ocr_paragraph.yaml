@@ -1,0 +1,7 @@
+---
+id: 'img_item_1'
+label: img_item_1-annotation-list-paragraph
+target: "{{ '/' | absolute_url }}img/derivatives/iiif/canvas/test_collection_img_item_1.json"
+resources:
+- xywh: '20,668,171,100'
+  chars: If the ax falls the
