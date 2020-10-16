@@ -290,16 +290,18 @@ describe WaxTasks::Site do
     # TODO: mock or stub the annotation and manifest files, break up this block
     context 'when generates sample annotationlist' do
       it 'generates annotationlist and updates manifest' do
- 
+ byebug
         expect { site_from_config_file.generate_annotations('csv_collection') }.not_to raise_error
-
+byebug
         json_file = "#{BUILD}/img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json"
         expect(File).to exist(json_file)
+
         raw_yaml, raw_json = File.read(json_file).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
         annotation = JSON.parse(raw_json)['resources'].first
         expect(annotation['on']).to eq("{{ '/' | absolute_url }}img/derivatives/iiif/canvas/test_collection_img_item_1.json#xywh=20,668,171,100")
         expect(annotation['resource']['chars']).to eq('If the ax falls the')
 
+        # link to annotation list has been added to manifest
         manifest_path = "#{BUILD}/img/derivatives/iiif/test_collection/manifest.json"
         raw_yaml, raw_json = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
         manifest = JSON.parse(raw_json)

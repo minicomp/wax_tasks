@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'byebug'
 #
 module WaxTasks
   #
@@ -39,7 +39,7 @@ module WaxTasks
             annotationlist = WaxTasks::AnnotationList.new(YAML.load_file(p, safe: true))
             File.write(path, "---\nlayout: none\n---\n#{annotationlist.to_json}\n")
 
-            add_annotationlist_to_manfest(dir, annotationlist, path)
+            add_annotationlist_to_manifest(annotationlist, path)
           end
 
           # TODO: do we want to update the item-level csv?
@@ -52,11 +52,17 @@ module WaxTasks
 
       #
       #
-      def add_annotationlist_to_manfest(dir, annotationlist, path)
+      def add_annotationlist_to_manifest(annotationlist, path)
+        # dir: img/derivatives/iiif/annotation
+        # annotationlist: <WaxTasks::AnnotationList>
+        # path: img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json
+byebug
+        dir = 'img/derivatives/iiif/annotation'
         collection_dir_name = File.basename(@annotationdata_source)
+        byebug
         manifest_path = Utils.safe_join File.dirname(dir), collection_dir_name, 'manifest.json'
-        raw_yaml, raw_json = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
-        manifest = JSON.parse(raw_json)
+        manifest_front_matter, manifest_body = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
+        manifest = JSON.parse(manifest_body)
         canvas_id = "#{collection_dir_name}_#{annotationlist.name}"
 
         this_canvas = manifest['sequences'][0]['canvases'].find do |canvas|
@@ -76,7 +82,7 @@ module WaxTasks
               '@type' => 'sc:AnnotationList'
             }
           ]
-          File.open(manifest_path, 'w') { |f| f.write("#{raw_yaml}#{manifest.to_json}") }
+          File.open(manifest_path, 'w') { |f| f.write("#{manifest_front_matter}#{manifest.to_json}") }
         end
       end
     end

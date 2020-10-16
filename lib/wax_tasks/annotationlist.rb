@@ -3,13 +3,16 @@
 module WaxTasks
   #
   class AnnotationList
-    attr_reader :name
+    attr_reader :name, :label
 
     def initialize(annotation_list)
       # input is in format of annotation list yaml
+      @uri        = annotation_list['uri']
+      @collection = annotation_list['collection']
       @name       = annotation_list['id']
       @label      = annotation_list['label']
       @target     = annotation_list['target']
+
       @type       = 'sc:AnnotationList'
       @resources  = annotation_list["resources"].map do |resource|
         {

@@ -1,29 +1,33 @@
-require 'nokogiri'
 require 'addressable/template'
 require 'json'
+require 'nokogiri'
 require 'yaml'
+
 require 'byebug'
 
-# adapted from Okracoke: 
+# adapted from Okracoke:
 # https://github.com/NCSU-Libraries/ocracoke/blob/master/app/processing_helpers/hocr_open_annotation_creator.rb
-
+module WaxTasks
 class HocrOpenAnnotationCreator
 
   def initialize(args)
-    @canvas_uri = "{{ '/' | absolute_url }}\
-img/derivatives/iiif/canvas/\
-#{args[:collection]}_#{args[:canvas]}.json"
-
     @hocr = File.open(args[:hocr_path]){ |f| Nokogiri::XML(f) }
     @collection = args[:collection]
     @identifier = args[:canvas]
     @granularity = args[:granularity]
 
+    @uri_root = "{{ '/' | absolute_url }}\img/derivatives/iiif"
+    @canvas_root = "#{@collection}_#{@identifier}"
+    @label = "#{@canvas_root}_ocr_#{@granularity}"
+
+    @canvas_uri = "#{@uri_root}/canvas/#{@canvas_root}.json"
+    @list_uri = "#{@uri_root}/annotation/#{@label}.json"
+
     @selector = get_selector
   end
 
   def manifest_canvas_on_xywh(id, xywh)
-    @canvas_uri + "#xywh=#{xywh}"
+    "#{@canvas_uri}#xywh=#{xywh}"
   end
 
   def get_selector
@@ -67,7 +71,7 @@ img/derivatives/iiif/canvas/\
       :"@context" => "http://iiif.io/api/presentation/2/context.json",
       :"@id" => annotation_list_id,
       :"@type" => "sc:AnnotationList",
-      :"@label" => "OCR text granularity of #{@granularity}",
+      :"@label" => "OCR text with granularity of #{@granularity}",
       resources: resources
     }
   end
@@ -117,8 +121,10 @@ img/derivatives/iiif/canvas/\
 
   def to_yaml
     yaml_list = {
+      'uri' => @list_uri,
+      'collection' => @collection,
       'id' => @identifier,
-      'label' => @identifier + '-annotation-list-' + @granularity,
+      'label' => @label,
       'target' => @canvas_uri,
       'resources' => []
     }
@@ -134,9 +140,11 @@ img/derivatives/iiif/canvas/\
   def save
     FileUtils.mkdir_p("./_data/annotations/#{@collection}/#{@collection}")
     # TODO: handle item as distinct from collection
+    # TODO: do not overwrite existing file without asking
     File.open("./_data/annotations/#{@collection}/#{@collection}/#{@collection}_#{@identifier}_ocr_#{@granularity}.yaml", 'w') do |file|
       file.write(to_yaml)
     end
   end
 
+end
 end
