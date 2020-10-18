@@ -1,7 +1,7 @@
 ---
 uri: "{{ '/' | absolute_url }}img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json"
 collection: test_collection
-id: 'img_item_1'
+canvas: 'img_item_1'
 label: test_collection_img_item_1_ocr_paragraph
 target: "{{ '/' | absolute_url }}img/derivatives/iiif/canvas/test_collection_img_item_1.json"
 resources:

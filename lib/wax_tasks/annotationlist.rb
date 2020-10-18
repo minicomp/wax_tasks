@@ -3,13 +3,13 @@
 module WaxTasks
   #
   class AnnotationList
-    attr_reader :name, :label
+    attr_reader :canvas, :label
 
     def initialize(annotation_list)
       # input is in format of annotation list yaml
       @uri        = annotation_list['uri']
       @collection = annotation_list['collection']
-      @name       = annotation_list['id']
+      @canvas       = annotation_list['canvas']
       @label      = annotation_list['label']
       @target     = annotation_list['target']
 
@@ -23,17 +23,17 @@ module WaxTasks
           # TODO: extend or subclass this as needed for other kinds of annotations
         }
       end
+      byebug
     end
 
     def to_json
       {
         :@context => 'http://iiif.io/api/presentation/2/context.json',
-        :@id => 'id placeholder',
+        :@id =>  @uri,
         :@type => @type,
         label: @label,
         resources: @resources.map do |resource|
           {
-            :@id => "id placeholder/#{resource[:xywh]}",
             :@type => 'oa:Annotation',
             motivation: 'sc:painting',
             resource: {

@@ -92,6 +92,7 @@ module WaxTasks
 
       output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif/annotation'
       records = collection.write_annotations output_dir
+      byebug
       collection.update_metadata records
       puts Rainbow("\nDone ✔").green
     end

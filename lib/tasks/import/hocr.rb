@@ -123,7 +123,7 @@ img/derivatives/iiif/canvas/\
     yaml_list = {
       'uri' => @list_uri,
       'collection' => @collection,
-      'id' => @identifier,
+      'canvas' => @identifier,
       'label' => @label,
       'target' => @canvas_uri,
       'resources' => []
