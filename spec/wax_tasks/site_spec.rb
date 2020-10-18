@@ -283,8 +283,6 @@ describe WaxTasks::Site do
     before(:example) do
       FileUtils.mkdir_p "#{BUILD}/_data/annotations/test_collection/dir_imgs_item/"
       FileUtils.cp Dir.glob("#{ROOT}/spec/sample_hocr/*.yaml"), "#{BUILD}/_data/annotations/test_collection/dir_imgs_item/"
-      FileUtils.mkdir_p "#{BUILD}/img/derivatives/iiif/test_collection/"
-      FileUtils.cp Dir.glob("#{ROOT}/spec/sample_hocr/manifest.json"), "#{BUILD}/img/derivatives/iiif/test_collection/"
     end
 
     # TODO: mock or stub the annotation and manifest files, break up this block

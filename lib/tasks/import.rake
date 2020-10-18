@@ -2,8 +2,6 @@
 
 require_relative './import/hocr.rb'
 
-require 'byebug'
-
 namespace :wax do
   namespace :import do
     task :hocr, [:hocr_path, :collection, :canvas, :granularity] do |_t, args|

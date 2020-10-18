@@ -23,7 +23,6 @@ module WaxTasks
           # TODO: extend or subclass this as needed for other kinds of annotations
         }
       end
-      byebug
     end
 
     def to_json

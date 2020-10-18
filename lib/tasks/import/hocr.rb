@@ -3,8 +3,6 @@ require 'json'
 require 'nokogiri'
 require 'yaml'
 
-require 'byebug'
-
 # adapted from Okracoke:
 # https://github.com/NCSU-Libraries/ocracoke/blob/master/app/processing_helpers/hocr_open_annotation_creator.rb
 module WaxTasks

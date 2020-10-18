@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'byebug'
 #
 module WaxTasks
   #
@@ -76,7 +75,7 @@ module WaxTasks
         manifest_path = Utils.safe_join File.dirname(dir), collection_dir_name, 'manifest.json'
         manifest_front_matter, manifest_body = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
         manifest = JSON.parse(manifest_body)
-            byebug
+
         annotationlists.each do |list_path|
           source_type = get_source_type list_path
 
@@ -119,8 +118,7 @@ module WaxTasks
           canvas['@id'] ==
             "{{ '/' | absolute_url }}img/derivatives/iiif/canvas/#{canvas_id}.json"
         end
-byebug
-        # TODO: this has to run for annotationlists which are created as json in img/derivatives/iiif/annotations
+
         this_canvas['otherContent'] ||= []
 
         # TODO: remove entries for annotationlists that have been deleted
