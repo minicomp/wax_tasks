@@ -2,7 +2,7 @@
 
 require_relative '../../lib/tasks/import/hocr.rb'
 
-describe HocrOpenAnnotationCreator do
+describe WaxTasks::HocrOpenAnnotationCreator do
   include_context 'shared'
 
   before(:all) do
@@ -19,7 +19,7 @@ describe HocrOpenAnnotationCreator do
 
     context 'parses hocr file not to raise error' do
       it 'runs without errors' do
-        expect { HocrOpenAnnotationCreator.new({
+        expect { WaxTasks::HocrOpenAnnotationCreator.new({
           hocr_path: "#{ROOT}/spec/sample_hocr/img_item_1.hocr",
           collection: 'test_collection',
           canvas: 'img_item_1',
@@ -33,7 +33,7 @@ describe HocrOpenAnnotationCreator do
     include_context 'shared'
 
     context 'hocr yaml file' do
-      hocr = HocrOpenAnnotationCreator.new({
+      hocr = WaxTasks::HocrOpenAnnotationCreator.new({
         hocr_path: "#{ROOT}/spec/sample_hocr/img_item_1.hocr",
         collection: 'test_collection',
         canvas: 'img_item_1',
