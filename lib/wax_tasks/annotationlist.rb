@@ -9,17 +9,17 @@ module WaxTasks
       # input is in format of annotation list yaml
       @uri        = annotation_list['uri']
       @collection = annotation_list['collection']
-      @canvas       = annotation_list['canvas']
+      @canvas     = annotation_list['canvas']
       @label      = annotation_list['label']
       @target     = annotation_list['target']
 
       @type       = 'sc:AnnotationList'
-      @resources  = annotation_list["resources"].map do |resource|
+      @resources  = annotation_list['resources'].map do |resource|
         {
-          :@type =>     resource['type'] || 'cnt:ContentAsText',
-          chars:        resource['chars'] || '',
-          format:       resource['format'] || 'text/plain',
-          xywh:         resource['xywh'] || ''
+          :@type => resource['type'] || 'cnt:ContentAsText',
+          chars: resource['chars'] || '',
+          format: resource['format'] || 'text/plain',
+          xywh: resource['xywh'] || ''
           # TODO: extend or subclass this as needed for other kinds of annotations
         }
       end
@@ -28,7 +28,7 @@ module WaxTasks
     def to_json
       {
         :@context => 'http://iiif.io/api/presentation/2/context.json',
-        :@id =>  @uri,
+        :@id => @uri,
         :@type => @type,
         label: @label,
         resources: @resources.map do |resource|

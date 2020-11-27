@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'addressable/template'
 require 'json'
 require 'nokogiri'
@@ -6,10 +8,10 @@ require 'yaml'
 # adapted from Okracoke:
 # https://github.com/NCSU-Libraries/ocracoke/blob/master/app/processing_helpers/hocr_open_annotation_creator.rb
 module WaxTasks
+#
 class HocrOpenAnnotationCreator
-
   def initialize(args)
-    @hocr = File.open(args[:hocr_path]){ |f| Nokogiri::XML(f) }
+    @hocr = File.open(args[:hocr_path]) { |f| Nokogiri::XML(f) }
     @collection = args[:collection]
     @identifier = args[:canvas]
     @granularity = args[:granularity]
@@ -24,19 +26,19 @@ class HocrOpenAnnotationCreator
     @selector = get_selector
   end
 
-  def manifest_canvas_on_xywh(id, xywh)
+  def manifest_canvas_on_xywh(xywh)
     "#{@canvas_uri}#xywh=#{xywh}"
   end
 
   def get_selector
-    if @granularity == "word"
-     "ocrx_word"
-    elsif @granularity == "line"
-     "ocr_line"
-    elsif @granularity == "paragraph"
-      "ocr_par"
+    if @granularity == 'word'
+     'ocrx_word'
+    elsif @granularity == 'line'
+     'ocr_line'
+    elsif @granularity == 'paragraph'
+      'ocr_par'
     else
-      ""
+      ''
      end
  end
 
@@ -106,7 +108,7 @@ img/derivatives/iiif/canvas/\
   end
 
   def on_canvas(xywh)
-    manifest_canvas_on_xywh(@identifier, xywh)
+    manifest_canvas_on_xywh(xywh)
   end
 
   def to_json

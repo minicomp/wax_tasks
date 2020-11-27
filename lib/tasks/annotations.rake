@@ -21,17 +21,23 @@ namespace :wax do
     raise WaxTasks::Error::MissingArguments, Rainbow("You must specify a collection after 'wax:updatemanifest'").magenta if args.empty?
 
     site = WaxTasks::Site.new
-    config = WaxTasks.config_from_file
 
-    dir = 'img/derivatives/iiif/annotation'
-
-    args.each do |collection_name| 
+    args.each do |collection_name|
       collection = site.collections.find { |c| c.name == collection_name }
       annotationdata_source = collection.annotationdata_source
-  
-      collection.add_annotationlists_to_manifest(
-        Dir.glob("#{annotationdata_source}/**/*.{yaml,yml,json}").sort
-      )
+
+      # TODO: just crawl the item directories
+      files = Dir.glob("#{annotationdata_source}/**/*.{yaml,yml,json}").sort
+      annotationlists = {}
+      files.each do |file|
+        # path like _data/annotations/documents/doc9031/doc9031_1.yaml
+        filepath = Pathname.new(file)
+        pid = filepath.dirname.basename.to_s # doc9031
+        annotationlists[pid] ||= []
+        annotationlists[pid] << file
+      end
+
+      collection.add_annotationlists_to_manifest(annotationlists)
     end
   end
 end

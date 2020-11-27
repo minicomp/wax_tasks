@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 module WaxTasks
   #
@@ -22,7 +23,7 @@ module WaxTasks
 
         Dir.glob(Utils.safe_join(@annotationdata_source, '*')).map do |path|
           item = WaxTasks::Item.new(path, {})
-          item.record      = records.find { |r| r.pid == item.pid }
+          item.record = records.find { |r| r.pid == item.pid }
           item.annotation_config = @config.dig 'annotations'
           warn Rainbow("\nCould not find record in #{@annotationdata_source} for image item #{path}.\n").orange if item.record.nil?
           item
@@ -70,37 +71,40 @@ module WaxTasks
       #
       def add_annotationlists_to_manifest(annotationlists)
         dir = 'img/derivatives/iiif/annotation'
-        collection_dir_name = File.basename(@annotationdata_source)
 
-        manifest_path = Utils.safe_join File.dirname(dir), collection_dir_name, 'manifest.json'
-        manifest_front_matter, manifest_body = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
-        manifest = JSON.parse(manifest_body)
+        annotationlists.each_key do |pid|
+          manifest_path = Utils.safe_join File.dirname(dir), pid, 'manifest.json'
+          manifest_front_matter, manifest_body = File.read(manifest_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
+          manifest = JSON.parse(manifest_body)
 
-        annotationlists.each do |list_path|
-          source_type = get_source_type list_path
+          annotationlists[pid].each do |list_path|
+            source_type = get_source_type list_path
 
-          list = nil
-          canvas_id = nil
+            list = nil
+            canvas_id = nil
 
-          case source_type
-          when '.yaml'
-            list = SafeYAML.load_file(list_path)
-            canvas_id = "#{list['collection']}_#{list['canvas']}"
-          when '.json'
-            # TODO: encapsulate this yaml/json handling in a class
-            list_front_matter, list_body = File.read(list_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
-            list_yaml = YAML.load list_front_matter
-            list = JSON.parse(list_body)
-            canvas_id = "#{list_yaml['collection']}_#{list_yaml['canvas']}"
+            case source_type
+            # TODO: handle '.yml'
+            when '.yaml'
+              list = SafeYAML.load_file(list_path)
+              canvas_id = list['target']
+            when '.json'
+              # TODO: encapsulate this yaml/json handling in a class
+              list_front_matter, list_body = File.read(list_path).match(/(---\n.+?\n---\n)(.*)/m)[1..2]
+              list_yaml = YAML.safe_load(list_front_matter)
+              list = JSON.parse(list_body)
+              # TODO: confirm this has correct canvas_id
+              canvas_id = list_yaml['target']
+            end
+
+            add_annotationlist_to_manifest(manifest, list, canvas_id)
           end
-          add_annotationlist_to_manifest(manifest, list, canvas_id)
-        end
 
-        # TODO : save only if changed
-        File.open(manifest_path, 'w') do |f|
-          f.write("#{manifest_front_matter}#{manifest.to_json}")
+          # TODO : save only if changed
+          File.open(manifest_path, 'w') do |f|
+            f.write("#{manifest_front_matter}#{manifest.to_json}")
+          end
         end
-
       end
 
       #
@@ -109,14 +113,12 @@ module WaxTasks
         # dir: img/derivatives/iiif/annotation
         # annotationlist: <WaxTasks::AnnotationList>
         # annotationlist_uri: img/derivatives/iiif/annotation/test_collection_img_item_1_ocr_paragraph.json
-        dir = 'img/derivatives/iiif/annotation'
-        annotationlist_uri = annotationlist['uri'] 
+        annotationlist_uri = annotationlist['uri']
         annotationlist_uri ||= annotationlist['@id']
 
         # TODO: deal with multiple sequences, possibly containing same canvas (?)
         this_canvas = manifest['sequences'][0]['canvases'].find do |canvas|
-          canvas['@id'] ==
-            "{{ '/' | absolute_url }}img/derivatives/iiif/canvas/#{canvas_id}.json"
+          canvas['@id'] == canvas_id
         end
 
         this_canvas['otherContent'] ||= []
