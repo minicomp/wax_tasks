@@ -90,7 +90,7 @@ module WaxTasks
 
       raise WaxTasks::Error::InvalidCollection if collection.nil?
 
-      output_dir = Utils.safe_join @config.source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif/annotation'
+      output_dir = Utils.safe_join @config.source, collection.iiif_derivative_source, 'annotation'
       records = collection.write_annotations output_dir
       collection.update_metadata records
       puts Rainbow("\nDone ✔").green
