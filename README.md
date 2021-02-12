@@ -103,6 +103,7 @@ collections:
     layout: 'iiif-image-page'
     output: true # this must be true for your .md pages to be built to html!
     metadata:
+      pipe_list: true # takes metadata values and splits them into a list if a "|" character id found; default is true
       source: 'objects.csv' # path to the metadata file, must be within '_data'
     images:
       source 'source_images/objects' # path to the directory of source images, must be within '_data'
