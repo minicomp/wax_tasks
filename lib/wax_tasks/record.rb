@@ -6,7 +6,7 @@ module WaxTasks
     attr_reader :pid, :hash, :order
 
     def initialize(hash)
-      @hash  = hash.compact
+      @hash  = hash
       @pid   = @hash.dig 'pid'
       @order = @hash.dig 'order'
     end
@@ -14,16 +14,7 @@ module WaxTasks
     #
     #
     def lunr_normalize_values
-      @hash.transform_values! { |v| Utils.lunr_normalize v }
-    end
-
-    #
-    #
-    def split_lists
-      @hash.transform_values! do |v|
-        next v unless v.include? '|'
-        v.split('|').map(&:strip)
-      end
+      @hash.transform_values { |v| Utils.lunr_normalize v }
     end
 
     #

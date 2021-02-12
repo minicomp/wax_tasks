@@ -42,16 +42,8 @@ module WaxTasks
             r.set 'order', Utils.padded_int(i, metadata.length) unless r.order?
             r.set 'layout', @config['layout'] if @config.key? 'layout'
             r.set 'collection', @name
-            r.split_lists if pipe_list?
           end
         end
-      end
-
-      # checks for a key 'pipe_list' within 'metadata'
-      # sets to false if explicitly false. defaults to true
-      def pipe_list?
-        v = @config.dig 'metadata', 'pipe_list'
-        v.nil? ? true : !!v
       end
 
       #
