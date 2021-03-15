@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'vips'
 
 #
 module WaxTasks
@@ -27,14 +28,12 @@ module WaxTasks
     #
     def simple_derivatives
       @variants.map do |label, width|
-        img = MiniMagick::Image.open @path
+        img = Vips::Image.new_from_file @path
         if width > img.width
           warn Rainbow("Tried to create derivative #{width}px wide, but asset #{@id} for item #{@pid} only has a width of #{img.width}px.").yellow
         else
-          img.resize width
+          img = img.thumbnail_image width, height: 10000000
         end
-
-        img.format 'jpg'
         Derivative.new("#{@id}/#{label}.jpg", label, img)
       end
     end

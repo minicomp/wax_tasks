@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-require 'mini_magick'
 require 'progress_bar'
+begin
+  require 'vips'
+rescue LoadError
+  raise WaxTasks::Error::MissingRequirements, "Wax now uses Libvips to create derivatives instead of ImageMagick!\nPlease install Libvips using the instructions at https://libvips.github.io/libvips/install.html."
+end
 require 'wax_iiif'
 
 #
@@ -56,7 +60,8 @@ module WaxTasks
             FileUtils.mkdir_p File.dirname(path)
             next if File.exist? path
 
-            d.img.write path
+            GC.start
+            d.img.write_to_file path
             item.record.set d.label, path if item.record?
           end
           bar.increment!

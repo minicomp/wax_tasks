@@ -9,3 +9,6 @@ gem 'diane', require: false
 gem 'rubocop', require: false
 gem 'simplecov', '0.17.1', require: false
 gem 'yard', require: false
+
+# new version test
+gem 'wax_iiif', github: 'minicomp/wax_iiif', branch: 'chore/vips'

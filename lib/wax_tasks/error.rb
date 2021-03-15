@@ -61,5 +61,9 @@ module WaxTasks
     # Custom Error:
     # Search index in site config has no valid collections to index
     class NoSearchCollections < WaxTasksError; end
+
+    # Custom Error:
+    # A requirement was not found on the system; user must install first
+    class MissingRequirements < WaxTasksError; end
   end
 end
