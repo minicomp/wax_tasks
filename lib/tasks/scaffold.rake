@@ -12,7 +12,7 @@ namespace :wax do
     raise WaxTasks::Error::MissingArguments, Rainbow('You must specify a collection after wax:scaffold').magenta if args.empty?
 
     config_text = File.read("#{Dir.pwd}/_config.yml")
-    config = YAML::load(config_text)
+    config = YAML::safe_load(config_text)
     
     args.each do |coll|
       next if config.dig("collections", coll)
@@ -35,17 +35,10 @@ namespace :wax do
     puts "Add CORS stanza to _config.yml"
     config["webrick"] = { "header" => { "Access-Control-Allow-Origin" => "*" } }
     
-    FileUtils.cp "#{Dir.pwd}/_config.yml", "#{Dir.pwd}/_config.yml,bak"
-    File.open("_config.yml", "w"){|f| YAML.dump(config, f)}
+    # FileUtils.cp "#{Dir.pwd}/_config.yml", "#{Dir.pwd}/_config.yml,bak"
+    File.open("_config_new.yml", "w"){|f| YAML.dump(config, f)}
     
-    framework = File.join(File.dirname(File.expand_path(__FILE__)), '../../wax-framework.zip')
-
-    Zip::File.open(framework) do |zip_file|
-      # Handle entries one by one
-      zip_file.each do |entry|
-        byebug
-        entry.extract
-      end
-    end
+    framework = File.join(File.dirname(File.expand_path(__FILE__)), '../../wax-framework/.')
+    cp_r framework, Dir.pwd
   end
 end

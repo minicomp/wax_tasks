@@ -1,0 +1,15 @@
+{% assign collection = site.data[include.collection] %}
+
+{% for item in collection %}
+  {% capture url %}{{ item.collection }}/{{ item.pid }}.html{% endcapture %}
+  {% capture manifest %}/img/derivatives/iiif/{{ item.pid }}/manifest.json{% endcapture %}
+
+  <div class='gallery-item'>
+    <a href='{{ url | absolute_url }}'>
+        <img src='{{ item.thumbnail | absolute_url }}' alt='{{ item.label }}'/>
+        <br/>
+        <strong>{{ item.label }}</strong>
+    </a>
+    <p>Manifest: <a href="{{ manifest | absolute_url }}">{{ manifest | absolute_url }}</a></p>
+  </div>
+{% endfor %}

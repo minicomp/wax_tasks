@@ -1,0 +1,23 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import "minima";
+
+/* OpenSeadragon image viewer */
+
+.item-view {
+  width:           110%;
+  display:         inline-flex;
+  flex-wrap:       nowrap;
+  justify-content: space-between;
+  align-items:     center;
+  margin-left:     -5%;
+}
+.image-viewer {
+  position: relative;
+  text-align: center;
+  height:   80vh;
+  max-height: 80vh;
+  width:    100%;
+}

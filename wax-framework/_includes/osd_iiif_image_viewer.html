@@ -1,0 +1,27 @@
+<div id="osd" class="image-viewer"></div>
+<script async defer src="{{ '/assets/openseadragon/openseadragon.min.js' | absolute_url }}"></script>
+
+<script>
+  $(document).ready(function () {
+    var manifestUrl = "{{ include.pid | prepend: "/img/derivatives/iiif/" | append: "/manifest.json" | absolute_url }}";
+    $.getJSON(manifestUrl, function(data) {
+      var tileSources = [];
+      $.each(data.sequences[0].canvases, function(k, val) {
+        tileSources.push(val.images[0].resource.service['@id'] + '/info.json');
+      });
+      OpenSeadragon({
+        id: "osd",
+        sequenceMode: true,
+        prefixUrl: "{{ '/assets/openseadragon/images/' | absolute_url }}",
+        tileSources: tileSources,
+        homeFillsViewer: false,
+        showReferenceStrip: true,
+        showRotationControl: true,
+        // Enable touch rotation on tactile devices
+        gestureSettingsTouch: {
+            pinchRotate: true
+        }
+      });
+    });
+  });
+</script>
