@@ -108,7 +108,7 @@ collections:
       source 'source_images/objects' # path to the directory of source images, must be within '_data'
 
 # wax search index settings
-lunr_index:
+search:
   main:
     index: 'js/lunr-index.json' # where the index will be generated
     collections: # the collections to index
