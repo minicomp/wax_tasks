@@ -24,7 +24,7 @@ jobs:
         bundler-cache: true
     - name: install
       run: gem install bundler && bundle
-    - name: audit gems
-      run: bundle exec bundle-audit && bundle outdated
+    - name: check for outdated gems
+      run: bundle outdated
     - name: test
       run: bundle exec rspec
