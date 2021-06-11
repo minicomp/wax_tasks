@@ -1,0 +1,30 @@
+name: ci:test
+on:
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+  push:
+    paths-ignore:
+      - '**/README.md'
+
+jobs:
+   rspec:
+    runs-on: ubuntu-latest
+    steps:
+    - name: change imagemagick policy to allow pdf->png conversion.
+      run: |
+        sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
+    - name: install ghostscript
+      run: sudo apt-get update && sudo apt-get install -y ghostscript
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: install
+      run: gem install bundler && bundle
+    - name: check for outdated gems
+      run: bundle outdated
+    - name: test
+      run: bundle exec rspec
