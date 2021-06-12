@@ -3,12 +3,15 @@
 module WaxTasks
   #
   class Record
-    attr_reader :pid, :hash, :order
+    attr_reader :pid, :hash
 
     def initialize(hash)
       @hash  = hash
       @pid   = @hash.dig 'pid'
-      @order = @hash.dig 'order'
+    end
+
+    def order
+      @hash.dig 'order'
     end
 
     #
@@ -42,7 +45,7 @@ module WaxTasks
     #
     #
     def order?
-      @order.is_a? String
+      !order.to_s.empty?
     end
 
     #
