@@ -26,7 +26,7 @@ It can be used to:
 You'll need `Ruby >= 2.4` with `bundler` installed. Check your versions with:
 ```bash
 $ ruby -v
-  ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-darwin15]
+  ruby 2.7.2p137 (2020-10-01 revision 5445e04352) [x86_64-darwin18]
 
 $ bundler -v
   Bundler version 1.16.1
