@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'rake', '~> 13.0'
   spec.add_runtime_dependency 'safe_yaml', '~> 1.0'
   spec.add_runtime_dependency 'wax_iiif', '~> 0.2'
+  spec.add_runtime_dependency 'rubyzip'
 
   spec.add_development_dependency 'rspec', '~> 3'
 end
