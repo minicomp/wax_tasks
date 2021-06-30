@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'collection/annotations'
 require_relative 'collection/images'
 require_relative 'collection/metadata'
 
@@ -8,10 +9,12 @@ module WaxTasks
   class Collection
     attr_reader :name, :config, :ext, :search_fields,
                 :page_source, :metadata_source, :imagedata_source,
-                :iiif_derivative_source, :simple_derivative_source
+                :iiif_derivative_source, :simple_derivative_source,
+                :annotationdata_source
 
     include Collection::Metadata
     include Collection::Images
+    include Collection::Annotations
 
     IMAGE_DERIVATIVE_DIRECTORY = 'img/derivatives'
     DEFAULT_VARIANTS = { 'thumbnail' => 250, 'fullwidth' => 1140 }.freeze
@@ -27,6 +30,7 @@ module WaxTasks
       @metadata_source          = Utils.safe_join source, '_data', config.dig('metadata', 'source')
       @imagedata_source         = Utils.safe_join source, '_data', config.dig('images', 'source')
       @iiif_derivative_source   = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'iiif'
+      @annotationdata_source    = Utils.safe_join source, '_data', config.dig('annotations', 'source')
       @simple_derivative_source = Utils.safe_join source, IMAGE_DERIVATIVE_DIRECTORY, 'simple'
       @search_fields            = %w[pid label thumbnail permalink collection]
       @image_variants           = image_variants

@@ -10,6 +10,8 @@ collections:
       source: valid.csv
     images:
       source: 'images/test_collection'
+    annotations:
+      source: 'annotations/test_collection'
   json_collection:
     layout: default.html
     metadata:

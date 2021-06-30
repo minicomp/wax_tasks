@@ -82,5 +82,18 @@ module WaxTasks
       collection.update_metadata records
       puts Rainbow("\nDone ✔").green
     end
+
+    #
+    #
+    def generate_annotations(name)
+      collection = @config.find_collection name
+
+      raise WaxTasks::Error::InvalidCollection if collection.nil?
+
+      output_dir = Utils.safe_join @config.source, collection.iiif_derivative_source, 'annotation'
+      records = collection.write_annotations output_dir
+      collection.update_metadata records
+      puts Rainbow("\nDone ✔").green
+    end
   end
 end

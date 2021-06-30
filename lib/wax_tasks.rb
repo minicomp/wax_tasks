@@ -13,6 +13,8 @@ require 'rainbow'
 require 'safe_yaml'
 
 # relative
+require_relative 'wax_tasks/annotation'
+require_relative 'wax_tasks/annotationlist'
 require_relative 'wax_tasks/asset'
 require_relative 'wax_tasks/collection'
 require_relative 'wax_tasks/config'

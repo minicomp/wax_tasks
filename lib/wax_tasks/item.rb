@@ -3,7 +3,7 @@
 module WaxTasks
   #
   class Item
-    attr_accessor :record, :iiif_config
+    attr_accessor :record, :iiif_config, :annotation_config
     attr_reader :pid
 
     #
@@ -58,6 +58,13 @@ module WaxTasks
     #
     def simple_derivatives
       @assets.map(&:simple_derivatives).flatten
+    end
+
+    #
+    #
+    def annotations
+      # TODO: integrate this with assets handling?
+      Dir.glob("#{@path}/*").sort
     end
 
     #
