@@ -3,20 +3,21 @@
 module WaxTasks
   #
   class Record
-    attr_reader :pid, :hash, :order
+    attr_reader :pid, :hash
 
     def initialize(hash)
-      @hash  = hash.compact
+      @hash  = hash
       @pid   = @hash.dig 'pid'
-      @order = @hash.dig 'order'
     end
 
-    #
-    #
+    def order
+      @hash.dig 'order'
+    end
+
     def lunr_normalize_values
-      @hash.transform_values! { |v| Utils.lunr_normalize v }
+      @hash.transform_values { |v| Utils.lunr_normalize v }
     end
-
+        
     def split_lists!(config)
       config.each do |field, separator|
         return unless @hash.key? field
@@ -49,7 +50,7 @@ module WaxTasks
     #
     #
     def order?
-      @order.is_a? String
+      !order.to_s.empty?
     end
 
     #

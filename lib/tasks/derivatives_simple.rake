@@ -4,7 +4,7 @@ require 'wax_tasks'
 
 namespace :wax do
   namespace :derivatives do
-    desc 'generate iiif derivatives from local image files'
+    desc 'generate simple derivatives from local image files'
     task :simple do
       args = ARGV.drop(1).each { |a| task a.to_sym }
       args.reject! { |a| a.start_with? '-' }

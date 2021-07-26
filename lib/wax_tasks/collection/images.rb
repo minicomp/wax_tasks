@@ -57,7 +57,7 @@ module WaxTasks
             next if File.exist? path
 
             d.img.write path
-            item.record.set d.label, path if item.record?
+            item.record.set d.label, "/#{path}" if item.record?
           end
           bar.increment!
           bar.write

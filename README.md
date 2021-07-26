@@ -1,5 +1,5 @@
 # wax_tasks 🐝
-[![Build Status](https://travis-ci.com/minicomp/wax_tasks.svg?branch=main)](https://travis-ci.com/minicomp/wax_tasks) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
+[![ci:test](https://github.com/minicomp/wax_tasks/actions/workflows/ci.yml/badge.svg)](https://github.com/minicomp/wax_tasks/actions/workflows/ci.yml) [![Depfu](https://badges.depfu.com/badges/6105c55b9634e74b1c27055b19bad8f0/overview.svg)](https://depfu.com/github/minicomp/wax_tasks?project_id=10548)
 [![Gem Version](https://badge.fury.io/rb/wax_tasks.svg)](https://badge.fury.io/rb/wax_tasks)
 [![Gem Downloads](https://img.shields.io/gem/dt/wax_tasks.svg?color=046d0b)](https://badge.fury.io/rb/wax_tasks)
 [![docs](http://img.shields.io/badge/docs-rdoc.info-blue.svg?style=flat)](https://www.rubydoc.info/github/minicomp/wax_tasks/)
@@ -16,7 +16,7 @@ It can be used to:
 - generate either IIIF-compliant derivatives ([wax:derivatives:iiif](#waxderivativesiiif)) or simple image derivatives ([wax:derivatives:simple](#waxderivativessimple)) from local image and pdf files
 
 <br>
-<img src="https://github.com/minicomp/wiki/blob/main/assets/wax_screen.gif?raw=true"/>
+<img src="https://raw.githubusercontent.com/minicomp/wiki/main/src/assets/wax_screen.gif?raw=true?raw=true"/>
 
 
 # Getting Started
@@ -26,7 +26,7 @@ It can be used to:
 You'll need `Ruby >= 2.4` with `bundler` installed. Check your versions with:
 ```bash
 $ ruby -v
-  ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-darwin15]
+  ruby 2.7.2p137 (2020-10-01 revision 5445e04352) [x86_64-darwin18]
 
 $ bundler -v
   Bundler version 1.16.1
@@ -103,13 +103,12 @@ collections:
     layout: 'iiif-image-page'
     output: true # this must be true for your .md pages to be built to html!
     metadata:
-      pipe_list: true # takes metadata values and splits them into a list if a "|" character id found; default is true
       source: 'objects.csv' # path to the metadata file, must be within '_data'
     images:
       source 'source_images/objects' # path to the directory of source images, must be within '_data'
 
 # wax search index settings
-lunr_index:
+search:
   main:
     index: 'js/lunr-index.json' # where the index will be generated
     collections: # the collections to index
