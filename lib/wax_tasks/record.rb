@@ -17,12 +17,10 @@ module WaxTasks
       @hash.transform_values! { |v| Utils.lunr_normalize v }
     end
 
-    #
-    #
-    def split_lists
-      @hash.transform_values! do |v|
-        next v unless v.include? '|'
-        v.split('|').map(&:strip)
+    def split_lists!(config)
+      config.each do |field, separator|
+        return unless @hash.key? field
+        @hash[field] = @hash[field].split(separator).map(&:strip)
       end
     end
 
