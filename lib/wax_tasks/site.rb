@@ -46,6 +46,7 @@ module WaxTasks
       raise WaxTasks::Error::InvalidCollection if collection.nil?
 
       collection.records_from_metadata.each do |record|
+        record.split_lists! collection.split_config if collection.split?
         result += record.write_to_page(collection.page_source)
       end
 

@@ -14,10 +14,15 @@ module WaxTasks
       @hash.dig 'order'
     end
 
-    #
-    #
     def lunr_normalize_values
       @hash.transform_values { |v| Utils.lunr_normalize v }
+    end
+        
+    def split_lists!(config)
+      config.each do |field, separator|
+        return unless @hash.key? field
+        @hash[field] = @hash[field].split(separator).map(&:strip)
+      end
     end
 
     #

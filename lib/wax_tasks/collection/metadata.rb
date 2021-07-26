@@ -6,6 +6,17 @@ module WaxTasks
   class Collection
     #
     module Metadata
+      # checks for a key 'split' within 'metadata'
+      # defaults to false
+      def split?
+        v = @config.dig 'metadata', 'split'
+        v.nil? ? false : !!v
+      end
+
+      def split_config
+        @config.dig('metadata', 'split') || {}
+      end
+
       #
       #
       def search_fields=(fields)
