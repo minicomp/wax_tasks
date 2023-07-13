@@ -14,14 +14,10 @@ jobs:
         sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
     - name: install ghostscript
       run: sudo apt-get update && sudo apt-get install -y ghostscript
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 1
+    - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
-    - name: install
-      run: gem install bundler && bundle
     - name: check for outdated gems
       run: bundle outdated
     - name: test
