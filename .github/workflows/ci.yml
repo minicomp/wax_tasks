@@ -1,11 +1,9 @@
 name: ci:test
 on:
+  push: 
+    branches: [main, development]
   pull_request:
-    paths-ignore:
-      - '**/README.md'
-  push:
-    paths-ignore:
-      - '**/README.md'
+    branches: [main, development]
 
 jobs:
    rspec:
