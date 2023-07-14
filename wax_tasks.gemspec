@@ -30,4 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'wax_iiif', '~> 0.2'
 
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'yard'
 end
