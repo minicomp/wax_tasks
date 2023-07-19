@@ -17,17 +17,18 @@ Gem::Specification.new do |spec|
   end
 
   spec.test_files             = Dir['spec/*']
-  spec.required_ruby_version  = '>= 2.4'
+  spec.required_ruby_version  = '>= 3.0'
   spec.metadata['yard.run']   = 'yri'
 
   spec.requirements << 'imagemagick'
   spec.requirements << 'ghostscript'
 
-  spec.add_runtime_dependency 'progress_bar', '~> 1.3'
-  spec.add_runtime_dependency 'rainbow', '~> 3.0'
-  spec.add_runtime_dependency 'rake', '~> 13.0'
-  spec.add_runtime_dependency 'safe_yaml', '~> 1.0'
+  spec.add_runtime_dependency 'progress_bar'
+  spec.add_runtime_dependency 'rainbow'
+  spec.add_runtime_dependency 'rake'
+  spec.add_runtime_dependency 'safe_yaml'
   spec.add_runtime_dependency 'wax_iiif', '~> 0.2'
 
-  spec.add_development_dependency 'rspec', '~> 3'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'yard'
 end
