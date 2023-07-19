@@ -6,7 +6,7 @@ module WaxTasks
     attr_reader :pid, :hash
 
     def initialize(hash)
-      @hash  = hash
+      @hash  = hash.compact
       @pid   = @hash.dig 'pid'
     end
 
@@ -56,6 +56,12 @@ module WaxTasks
 
     #
     #
+    def drop_empties!
+      @hash.reject! { |_k, v| v.nil? || v&.empty? }
+    end
+
+    #
+    #
     def write_to_page(dir)
       raise Error::MissingPid if @pid.nil?
 
@@ -63,6 +69,7 @@ module WaxTasks
       if File.exist? path
         0
       else
+        self.drop_empties!
         FileUtils.mkdir_p File.dirname(path)
         File.open(path, 'w') { |f| f.puts "#{@hash.to_yaml}---" }
         1
