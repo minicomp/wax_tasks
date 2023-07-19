@@ -5,3 +5,4 @@ test_build
 doc
 .yardoc
 DIANE
+*.gem
