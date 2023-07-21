@@ -147,5 +147,9 @@ module WaxTasks
         f.puts filestring
       end
     end
+
+    def self.prune_dir(path, dir)
+      path.gsub(dir, '').gsub(/\/+/, '/')
+    end
   end
 end

@@ -57,7 +57,7 @@ module WaxTasks
             next if File.exist? path
 
             d.img.write path
-            item.record.set d.label, "/#{path}" if item.record?
+            item.record.set d.label, Utils.prune_dir("/#{path}", @site_source) if item.record?
           end
           bar.increment!
           bar.write
@@ -69,7 +69,7 @@ module WaxTasks
       #
       def iiif_builder(dir)
         build_opts = {
-          base_url: "{{ '/' | absolute_url }}#{dir}",
+          base_url: "{{ '' | absolute_url }}#{Utils.prune_dir(dir, @site_source)}",
           output_dir: dir,
           collection_label: @name,
           variants: @image_variants.dup.tap { |h| h.delete 'full' }
@@ -79,7 +79,7 @@ module WaxTasks
 
       #
       #
-      def add_font_matter_to_json_files(dir)
+      def add_front_matter_to_json_files(dir)
         Dir.glob("#{dir}/**/*.json").each do |f|
           Utils.add_yaml_front_matter_to_file f
         end
@@ -97,10 +97,10 @@ module WaxTasks
           json = JSON.parse manifest.to_json
           @image_variants.each do |k, _v|
             value = json.fetch k, ''
-            record.set k, "/#{Utils.content_clean(value)}" unless value.empty?
+            record.set k, "#{Utils.content_clean(value)}" unless value.empty?
           end
 
-          record.set 'manifest', "/#{Utils.content_clean(manifest.id)}"
+          record.set 'manifest', "#{Utils.content_clean(manifest.id)}"
           record
         end.compact
       end
@@ -115,10 +115,10 @@ module WaxTasks
         builder.load iiif_data
 
         puts Rainbow("Generating IIIF derivatives for collection '#{@name}'\nThis might take awhile.").cyan
-        builder.process_data
+        builder.process_data 
         records = items.map(&:record).compact
 
-        add_font_matter_to_json_files @iiif_derivative_source
+        add_front_matter_to_json_files @iiif_derivative_source
         add_iiif_results_to_records records, builder.manifests
       end
     end
