@@ -17,13 +17,13 @@ module WaxTasks
     #
     #
     def source
-      @config.dig 'source'
+      @config.fetch 'source', ''
     end
 
     #
     #
     def collections_dir
-      @config.dig 'collections_dir'
+      @config.fetch 'collections_dir', ''
     end
 
     #
